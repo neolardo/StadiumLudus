@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 /// <summary>
 /// Represents a playable character of this game.
 /// </summary>
+[RequireComponent(typeof(NavMeshAgent))]
 public abstract class Character : MonoBehaviour
 {
     #region Properties and fields
@@ -25,6 +27,8 @@ public abstract class Character : MonoBehaviour
     protected Rigidbody rb;
 
     public CharacterAnimationManager animationManager;
+    public NavMeshAgent agent;
+    public GameObject debugNextPoint;
 
     public bool IsAlive => health > 0;
 
@@ -32,7 +36,19 @@ public abstract class Character : MonoBehaviour
 
     #region Movement
 
-    public Vector2 NextPosition { get; set; }
+    private Vector3 _nextPosition;
+    public Vector3 NextPosition
+    {
+        get
+        {
+            return _nextPosition;
+        }
+        set
+        {
+            _nextPosition = value;
+            agent.destination = value;
+        }
+    }
     protected float movementSpeed;
     private const float positionThreshold = 0.6f;
 
@@ -50,6 +66,9 @@ public abstract class Character : MonoBehaviour
     protected virtual void OnStart()
     {
         rb = GetComponent<Rigidbody>();
+        agent = GetComponent<NavMeshAgent>();
+        agent.updatePosition = false;
+        agent.updateRotation = false;
         ClearNextPosition();
     }
 
@@ -82,6 +101,7 @@ public abstract class Character : MonoBehaviour
             else
             {
                 animationManager.Die(direction);
+                rb.constraints = RigidbodyConstraints.FreezeAll;
             }
         }
     }
@@ -112,26 +132,29 @@ public abstract class Character : MonoBehaviour
 
     private void HandleMove()
     {
-        var currentPos = new Vector2(rb.position.x, rb.position.z);
-        if ((currentPos - NextPosition).magnitude > positionThreshold)
+        var currentNextPosition = agent.path.corners.Length > 0 ? agent.path.corners[0] : NextPosition;
+        Debug.Log($"current next pos: { currentNextPosition}");
+        debugNextPoint.transform.position = currentNextPosition;
+        if ((rb.position - NextPosition).magnitude > positionThreshold)
         {
-            var targetRotation = Quaternion.LookRotation(new Vector3(NextPosition.x, 0, NextPosition.y) - rb.position);
-            transform.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+            var targetRotation = Quaternion.LookRotation( currentNextPosition - rb.position);
+            rb.transform.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
             movementSpeed = Mathf.Min(movementSpeed + Time.fixedDeltaTime * acceleration, movementSpeedMaximum);
-            transform.position += rb.transform.forward * movementSpeed * Time.fixedDeltaTime;
+            rb.MovePosition(rb.transform.position + movementSpeed * Time.fixedDeltaTime * (currentNextPosition - rb.transform.position).normalized);//(rb.transform.position + movementSpeed * Time.fixedDeltaTime * rb.transform.forward);//(rb.transform.position +  ( currentNextPosition - rb.transform.position ) * Time.fixedDeltaTime * 10);
             animationManager.Move(true);
         }
         else
         {
+            ClearNextPosition();
             movementSpeed = Mathf.Max(movementSpeed - Time.fixedDeltaTime * deceleration, 0);
             animationManager.Move(false);
         }
         animationManager.SetMovementSpeed(movementSpeed / movementSpeedMaximum);
     }
 
-    private void ClearNextPosition()
+    protected void ClearNextPosition()
     {
-        NextPosition = new Vector2(rb.position.x, rb.position.z);
+        NextPosition = rb.position;
     }
 
     private void FixedUpdate()

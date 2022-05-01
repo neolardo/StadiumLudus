@@ -33,15 +33,14 @@ public class CharacterController : MonoBehaviour
 
     private void HandlePositionSetting()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             RaycastHit hit;
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit, 20, 1 << Globals.GroundLayer))
             {
                 // if ground is valid...
-                character.NextPosition = new Vector2(hit.point.x, hit.point.z);
+                character.NextPosition = hit.point;
             }
         }
     }

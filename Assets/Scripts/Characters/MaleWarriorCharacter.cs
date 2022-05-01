@@ -27,6 +27,7 @@ public class MaleWarriorCharacter : Character
     {
         if (!animationManager.IsInterrupted && !animationManager.IsAttacking)
         {
+            ClearNextPosition();
             animationManager.Attack();
             movementSpeed = 0;
             StartCoroutine(ManageAttackTrigger());
