@@ -10,4 +10,6 @@ public static class Globals
     public const string CharacterTag = "Character";
 
     public const float CompareDelta = 0.001f;
+
+    public const int GroundLayer = 7;
 }
