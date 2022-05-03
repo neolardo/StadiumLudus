@@ -26,6 +26,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e5427545b46bac4c88d9995a338bd2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  character: {fileID: 1508549705930642385}
 --- !u!1 &1508549705875412660
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,6 +132,7 @@ GameObject:
   - component: {fileID: 1508549705930642397}
   - component: {fileID: 1508549705930642398}
   - component: {fileID: 1811659448017157256}
+  - component: {fileID: 4854068487792889174}
   m_Layer: 0
   m_Name: Male Warrior
   m_TagString: Untagged
@@ -199,14 +201,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   stamina: 100
-  rotationSpeed: 360
   movementSpeedMaximum: 3.5
   acceleration: 4
   deceleration: 4
+  rotationSpeed: 720
+  attackRotationSpeed: 900
+  guardRotationSpeed: 900
+  attackRange: 2
   animationManager: {fileID: 1508549707411865146}
   battleAxeTrigger: {fileID: 2578960106465792582}
-  battleAxeMinimumDamage: 5
-  battleAxeMaximumDamage: 15
+  battleAxeMinimumDamage: 50
+  battleAxeMaximumDamage: 70
+--- !u!195 &4854068487792889174
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1508549705930642385}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.3
+  m_Speed: 4
+  m_Acceleration: 40
+  avoidancePriority: 50
+  m_AngularSpeed: 900
+  m_StoppingDistance: 0.1
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1.8
+  m_BaseOffset: 0
+  m_WalkableMask: 1
+  m_ObstacleAvoidanceType: 2
 --- !u!1 &1508549706703293241
 GameObject:
   m_ObjectHideFlags: 0

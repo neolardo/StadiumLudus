@@ -1,18 +1,30 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Represents the male warrior character of the game.
+/// </summary>
 public class MaleWarriorCharacter : Character
 {
+    #region Properties and Fields
+
     public AttackTrigger battleAxeTrigger;
     [Tooltip("Represents the minimum damage of the battle axe weapon.")]
-    public float battleAxeMinimumDamage;
+    [SerializeField]
+    private float battleAxeMinimumDamage;
     [Tooltip("Represents the maximum damage of the battle axe weapon.")]
-    public float battleAxeMaximumDamage;
+    [SerializeField]
+    private float battleAxeMaximumDamage;
 
-    protected override void OnStart()
+    #endregion
+
+    #region Methods
+
+    protected override void Start()
     {
-        base.OnStart();
-        battleAxeTrigger.SetDamage(battleAxeMinimumDamage, battleAxeMaximumDamage);
+        base.Start();
+        battleAxeTrigger.MinimumDamage = battleAxeMinimumDamage;
+        battleAxeTrigger.MaximumDamage = battleAxeMaximumDamage;
         if (battleAxeMaximumDamage < Globals.CompareDelta)
         {
             Debug.LogWarning("Battle axe maximum damage for a male warrior character is set to a non-positive value.");
@@ -23,17 +35,12 @@ public class MaleWarriorCharacter : Character
         }
     }
 
-    public override bool TryAttack()
+    #region Attack
+
+    protected override void OnAttack(Vector3 attackTarget)
     {
-        if (!animationManager.IsInterrupted && !animationManager.IsAttacking)
-        {
-            ClearNextPosition();
-            animationManager.Attack();
-            movementSpeed = 0;
-            StartCoroutine(ManageAttackTrigger());
-            return true;
-        }
-        return false;
+        StartCoroutine(ManageAttackTrigger());
+        StartCoroutine(RotateToAttackDirection(attackTarget));
     }
 
     private IEnumerator ManageAttackTrigger()
@@ -42,4 +49,8 @@ public class MaleWarriorCharacter : Character
         yield return new WaitWhile(() => animationManager.IsAttacking);
         battleAxeTrigger.IsActive = false;
     }
+
+    #endregion
+
+    #endregion
 }

@@ -6,8 +6,21 @@ using UnityEngine;
 /// </summary>
 public class AttackTrigger : MonoBehaviour
 {
-    private float minimumDamage;
-    private float maximumDamage;
+    #region Properties and Fields
+
+    [Tooltip("The character which uses this attack trigger. Required to calculate hit directions.")]
+    [SerializeField]
+    private GameObject character;
+
+    /// <summary>
+    /// The minimum possible damage of this attack trigger.
+    /// </summary>
+    public float MinimumDamage { get; set; }
+
+    /// <summary>
+    /// The maximum possible damage of this attack trigger.
+    /// </summary>
+    public float MaximumDamage { get; set; }
 
     /// <summary>
     /// A list of gameobjects representing the previously damaged character.
@@ -21,11 +34,11 @@ public class AttackTrigger : MonoBehaviour
     /// The trigger should be activated for as long as the attack animation takes.
     /// </summary>
     public bool IsActive {
-        get 
+        get
         {
-            return _isActive; 
+            return _isActive;
         }
-            
+
         set
         {
             _isActive = value;
@@ -36,18 +49,45 @@ public class AttackTrigger : MonoBehaviour
         }
     }
 
-    public void SetDamage(float minimum, float maximum)
+    #endregion
+
+    #region Methods
+
+    private void Start()
     {
-        minimumDamage = minimum;
-        maximumDamage = maximum;
+        if (character == null)
+        {
+            Debug.LogWarning("An attack trigger's character field is null.");
+        }
+    }
+
+    private HitDirection CalculateHitDirection(Vector3 otherForward)
+    {
+        float angle = Vector3.SignedAngle(character.transform.forward, otherForward, Vector3.up);
+        if (Mathf.Abs(angle) < 90)
+        {
+            return HitDirection.Back;
+        }
+        else if (angle > 0)
+        {
+            return HitDirection.FrontLeft;
+        }
+        else
+        {
+            return HitDirection.FrontRight;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (IsActive && other.tag.Contains(Globals.CharacterTag) && !DamagedCharacters.Contains(other.gameObject))
         {
-            other.GetComponent<Character>().TakeDamage(Random.Range(minimumDamage, maximumDamage), HitDirection.Back);
-            DamagedCharacters.Add(other.gameObject);
+            if (other.GetComponent<Character>().TryTakeDamage(Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(other.transform.forward)))
+            {
+                DamagedCharacters.Add(other.gameObject);
+            }
         }
     }
+
+    #endregion
 }

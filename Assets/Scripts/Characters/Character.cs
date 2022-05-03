@@ -1,10 +1,11 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-/// <summary>
-/// Represents a playable character of this game.
-/// </summary>
 [RequireComponent(typeof(NavMeshAgent))]
+/// <summary>
+/// Represents a playable character of the game.
+/// </summary>
 public abstract class Character : MonoBehaviour
 {
     #region Properties and fields
@@ -12,31 +13,59 @@ public abstract class Character : MonoBehaviour
     #region Stats
 
     [Tooltip("Represents the health of the charater.")]
-    public float health = 100;
+    [SerializeField]
+    private float health = 100f;
+
     [Tooltip("Represents the energy of the charater which alllows it to interract, attack and block.")]
-    public float stamina = 100;
-    [Tooltip("Represents the rotation speed of the character in deg/sec.")]
-    public float rotationSpeed = 360;
-    [Tooltip("Represents the maximum movement speed of the character.")]
-    public float movementSpeedMaximum = 3.5f;
-    [Tooltip("Represents the acceleration of the character.")]
-    public float acceleration = 4f;
-    [Tooltip("Represents the deceleration of the character.")]
-    public float deceleration = 4f;
+    [SerializeField]
+    private float stamina = 100f;
 
-    protected Rigidbody rb;
-
-    public CharacterAnimationManager animationManager;
-    public NavMeshAgent agent;
-    public GameObject debugNextPoint;
-
+    /// <summary>
+    /// Indicates whether this character is alive or not.
+    /// </summary>
     public bool IsAlive => health > 0;
 
     #endregion
 
     #region Movement
 
+    [Tooltip("Represents the maximum movement speed of the character.")]
+    [SerializeField]
+    private float movementSpeedMaximum = 3.5f;
+
+    [Tooltip("Represents the acceleration of the character.")]
+    [SerializeField]
+    private float acceleration = 4f;
+
+    [Tooltip("Represents the deceleration of the character.")]
+    [SerializeField]
+    private float deceleration = 4f;
+
+    [Tooltip("Represents the rotation speed for the character's movement in deg/sec.")]
+    [SerializeField]
+    private float rotationSpeed = 540f;
+
+    [Tooltip("Represents the rotation speed of a character during attacking in deg/sec.")]
+    [SerializeField]
+    protected float attackRotationSpeed = 700f;
+
+    [Tooltip("Represents the rotation speed of a character during guarding in deg/sec.")]
+    [SerializeField]
+    protected float guardRotationSpeed = 700f;
+
+    [Tooltip("Represents the radial attack range of this character.")]
+    [SerializeField]
+    protected float attackRange = 1f;
+
+    protected float movementSpeed;
+    protected const float positionThreshold = 0.6f;
+    protected const float rotationThreshold = 2f;
+
     private Vector3 _nextPosition;
+
+    /// <summary>
+    /// The next position where the character is headed.
+    /// </summary>
     public Vector3 NextPosition
     {
         get
@@ -49,8 +78,10 @@ public abstract class Character : MonoBehaviour
             agent.destination = value;
         }
     }
-    protected float movementSpeed;
-    private const float positionThreshold = 0.6f;
+
+    public CharacterAnimationManager animationManager;
+    protected Rigidbody rb;
+    private NavMeshAgent agent;
 
     #endregion
 
@@ -58,12 +89,7 @@ public abstract class Character : MonoBehaviour
 
     #region Methods
 
-    void Start()
-    {
-        OnStart();
-    }
-
-    protected virtual void OnStart()
+    protected virtual void Start()
     {
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
@@ -71,15 +97,82 @@ public abstract class Character : MonoBehaviour
         agent.updateRotation = false;
         ClearNextPosition();
     }
+    private void FixedUpdate()
+    {
+        if (animationManager.CanMove)
+        {
+            HandleMove();
+        }
+    }
 
     #region Attack
-    public abstract bool TryAttack();
+
+    public bool IsTargetInAttackRange(Vector3 attackTarget)
+    {
+        return (attackTarget - rb.position).magnitude < attackRange;
+    }
+
+    public void Attack(Vector3 attackTarget)
+    {
+        if (!animationManager.IsInterrupted && !animationManager.IsAttacking)
+        {
+            ClearNextPosition();
+            animationManager.Attack();
+            movementSpeed = 0;
+            OnAttack(attackTarget);
+        }
+    }
+
+    protected abstract void OnAttack(Vector3 attackTarget);
+
+    protected IEnumerator RotateToAttackDirection(Vector3 attackTarget)
+    {
+        attackTarget = new Vector3(attackTarget.x, rb.position.y, attackTarget.z);
+        var targetRotation = Quaternion.LookRotation(attackTarget - rb.position);
+        while (Quaternion.Angle(targetRotation, rb.rotation) > rotationThreshold)
+        {
+            rb.transform.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, attackRotationSpeed * Time.fixedDeltaTime);
+            yield return null;
+        }
+    }
+
+    #endregion
+
+    #region Guarding
+
+    public void StartGuarding()
+    {
+        if (!animationManager.IsInterrupted && !animationManager.IsGuarding)
+        {
+            ClearNextPosition();
+            animationManager.StartGuarding();
+            movementSpeed = 0;
+        }
+    }
+
+    public void RotateToGuardDirection(Vector3 guardTarget) // TODO: do not rotate after release
+    {
+        if (animationManager.IsGuarding)
+        {
+            guardTarget = new Vector3(guardTarget.x, rb.position.y, guardTarget.z);
+            var targetRotation = Quaternion.LookRotation(guardTarget - rb.position);
+            if (Quaternion.Angle(targetRotation, rb.rotation) > rotationThreshold)
+            {
+                rb.transform.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, guardRotationSpeed * Time.fixedDeltaTime);
+            }
+        }
+    }
+
+    public void EndGuarding()
+    {
+        animationManager.EndGuarding();
+    }
 
     #endregion
 
     #region Take Damage
 
-    public void TakeDamage(float amount, HitDirection direction)
+    public bool TryTakeDamage(float amount, HitDirection direction)
     {
         if (IsAlive && animationManager.CanBeInterrupted)
         {
@@ -95,7 +188,7 @@ public abstract class Character : MonoBehaviour
                 animationManager.Impact(stamina > 0 && animationManager.IsGuarding, direction);
                 if (stamina < Globals.CompareDelta && animationManager.IsGuarding)
                 {
-                    animationManager.Guard(false);
+                    EndGuarding();
                 }
             }
             else
@@ -103,27 +196,9 @@ public abstract class Character : MonoBehaviour
                 animationManager.Die(direction);
                 rb.constraints = RigidbodyConstraints.FreezeAll;
             }
-        }
-    }
-
-    #endregion
-
-    #region Guarding
-
-    public bool TryStartGuarding()
-    {
-        if (!animationManager.IsInterrupted)
-        {
-            animationManager.Guard(true);
-            movementSpeed = 0;
             return true;
         }
         return false;
-    }
-
-    public void EndGuarding()
-    {
-        animationManager.Guard(false);
     }
 
     #endregion
@@ -133,14 +208,13 @@ public abstract class Character : MonoBehaviour
     private void HandleMove()
     {
         var currentNextPosition = agent.path.corners.Length > 0 ? agent.path.corners[0] : NextPosition;
-        Debug.Log($"current next pos: { currentNextPosition}");
-        debugNextPoint.transform.position = currentNextPosition;
         if ((rb.position - NextPosition).magnitude > positionThreshold)
         {
             var targetRotation = Quaternion.LookRotation( currentNextPosition - rb.position);
             rb.transform.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
             movementSpeed = Mathf.Min(movementSpeed + Time.fixedDeltaTime * acceleration, movementSpeedMaximum);
-            rb.MovePosition(rb.transform.position + movementSpeed * Time.fixedDeltaTime * (currentNextPosition - rb.transform.position).normalized);//(rb.transform.position + movementSpeed * Time.fixedDeltaTime * rb.transform.forward);//(rb.transform.position +  ( currentNextPosition - rb.transform.position ) * Time.fixedDeltaTime * 10);
+            var dir = rb.transform.forward;
+            rb.MovePosition(rb.transform.position + movementSpeed * Time.fixedDeltaTime * dir);
             animationManager.Move(true);
         }
         else
@@ -155,14 +229,6 @@ public abstract class Character : MonoBehaviour
     protected void ClearNextPosition()
     {
         NextPosition = rb.position;
-    }
-
-    private void FixedUpdate()
-    {
-        if (animationManager.CanMove)
-        {
-            HandleMove();
-        }
     }
 
     #endregion

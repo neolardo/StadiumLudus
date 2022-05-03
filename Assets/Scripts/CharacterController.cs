@@ -6,16 +6,21 @@ using UnityEngine;
 /// </summary>
 public class CharacterController : MonoBehaviour
 {
+    #region Properties and Fields
+
     [Tooltip("The character which is controlled.")]
-    public Character character;
+    [SerializeField]
+    private Character character;
     private Camera mainCamera;
+
+    #endregion
+
+    #region Methods
 
     private void Start()
     {
         mainCamera = Camera.main;
     }
-
-    #region Inputs
 
     private void Update()
     {
@@ -24,48 +29,53 @@ public class CharacterController : MonoBehaviour
             HandleInputs();
         }
     }
+
+    #region Inputs
+
     private void HandleInputs()
     {
-        HandlePositionSetting();
-        HandleAttack();
-        HandleGuarding();
+        HandleMouseClick();
     }
 
-    private void HandlePositionSetting()
-    {
-        if (Input.GetMouseButton(0))
-        {
-            RaycastHit hit;
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, 20, 1 << Globals.GroundLayer))
-            {
-                // if ground is valid...
-                character.NextPosition = hit.point;
-            }
-        }
-    }
-
-    private void HandleAttack()
+    private void HandleMouseClick()
     {
         if (Input.GetMouseButtonDown(1))
         {
-            character.TryAttack();
+            character.StartGuarding();
         }
-    }
-
-    private void HandleGuarding()
-    {
-        // test
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            character.TryStartGuarding();
-        }
-        else if (Input.GetKeyUp(KeyCode.Space))
+        else if (Input.GetMouseButtonUp(1))
         {
             character.EndGuarding();
+        };
+        bool isLeftMouseButton = Input.GetMouseButton(0);
+        bool isRightMouseButton = Input.GetMouseButton(1);
+        if (isLeftMouseButton || isRightMouseButton)
+        {
+            RaycastHit hit;
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 20, 1 << Globals.GroundLayer | 1 << Globals.CharacterLayer))
+            {
+                if (isLeftMouseButton)
+                {
+                    bool enemyAtHit = hit.transform.gameObject.layer == Globals.CharacterLayer && gameObject != hit.transform.gameObject;
+                    if ((enemyAtHit && character.IsTargetInAttackRange(hit.point)) || Input.GetKey(KeyCode.LeftShift))
+                    {
+                        character.Attack(hit.point);
+                    }
+                    else
+                    {
+                        character.NextPosition = hit.point;
+                    }
+                }
+                if(isRightMouseButton)
+                {
+                    character.RotateToGuardDirection(hit.point);
+                }
+            }
         }
     }
 
     #endregion
 
+    #endregion
 }
