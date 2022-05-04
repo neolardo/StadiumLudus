@@ -202,16 +202,16 @@ MonoBehaviour:
   health: 100
   stamina: 100
   movementSpeedMaximum: 3.5
-  acceleration: 4
+  acceleration: 8
   deceleration: 4
-  rotationSpeed: 720
-  attackRotationSpeed: 900
-  guardRotationSpeed: 900
-  attackRange: 2
+  rotationSpeed: 540
+  attackRotationSpeed: 700
+  guardRotationSpeed: 700
+  attackRange: 1.5
   animationManager: {fileID: 1508549707411865146}
   battleAxeTrigger: {fileID: 2578960106465792582}
-  battleAxeMinimumDamage: 50
-  battleAxeMaximumDamage: 70
+  battleAxeMinimumDamage: 5
+  battleAxeMaximumDamage: 10
 --- !u!195 &4854068487792889174
 NavMeshAgent:
   m_ObjectHideFlags: 0

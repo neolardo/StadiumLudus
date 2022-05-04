@@ -58,16 +58,20 @@ public class CharacterController : MonoBehaviour
                 if (isLeftMouseButton)
                 {
                     bool enemyAtHit = hit.transform.gameObject.layer == Globals.CharacterLayer && gameObject != hit.transform.gameObject;
-                    if ((enemyAtHit && character.IsTargetInAttackRange(hit.point)) || Input.GetKey(KeyCode.LeftShift))
+                    if (Input.GetKey(KeyCode.LeftShift))
                     {
-                        character.Attack(hit.point);
+                        character.TryAttack(hit.point);
+                    }
+                    else if (enemyAtHit)
+                    {
+                        character.ChaseAndAttack(hit.transform);
                     }
                     else
                     {
-                        character.NextPosition = hit.point;
+                        character.MoveTo(hit.point);
                     }
                 }
-                if(isRightMouseButton)
+                if (isRightMouseButton)
                 {
                     character.RotateToGuardDirection(hit.point);
                 }

@@ -45,8 +45,9 @@ public class MaleWarriorCharacter : Character
 
     private IEnumerator ManageAttackTrigger()
     {
+        yield return new WaitUntil(() => animationManager.CanDealDamage);
         battleAxeTrigger.IsActive = true;
-        yield return new WaitWhile(() => animationManager.IsAttacking);
+        yield return new WaitWhile(() => animationManager.CanDealDamage);
         battleAxeTrigger.IsActive = false;
     }
 

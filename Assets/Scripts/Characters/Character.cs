@@ -58,7 +58,8 @@ public abstract class Character : MonoBehaviour
     protected float attackRange = 1f;
 
     protected float movementSpeed;
-    protected const float positionThreshold = 0.6f;
+    protected const float positionThreshold = 0.2f;
+    protected const float decelerationThreshold = 0.6f;
     protected const float rotationThreshold = 2f;
 
     private Vector3 _nextPosition;
@@ -66,7 +67,7 @@ public abstract class Character : MonoBehaviour
     /// <summary>
     /// The next position where the character is headed.
     /// </summary>
-    public Vector3 NextPosition
+    protected Vector3 NextPosition
     {
         get
         {
@@ -82,6 +83,7 @@ public abstract class Character : MonoBehaviour
     public CharacterAnimationManager animationManager;
     protected Rigidbody rb;
     private NavMeshAgent agent;
+    private Transform chaseTarget;
 
     #endregion
 
@@ -99,28 +101,32 @@ public abstract class Character : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (animationManager.CanMove)
-        {
-            HandleMove();
-        }
+        UpdateChase();
+        UpdateMove();
     }
 
     #region Attack
 
-    public bool IsTargetInAttackRange(Vector3 attackTarget)
+    private bool IsTargetInAttackRange(Vector3 attackTarget)
     {
         return (attackTarget - rb.position).magnitude < attackRange;
     }
 
-    public void Attack(Vector3 attackTarget)
+    public void ChaseAndAttack(Transform target)
+    {
+        chaseTarget = target;
+    }
+
+    public bool TryAttack(Vector3 attackTarget)
     {
         if (!animationManager.IsInterrupted && !animationManager.IsAttacking)
         {
             ClearNextPosition();
             animationManager.Attack();
-            movementSpeed = 0;
             OnAttack(attackTarget);
+            return true;
         }
+        return false;
     }
 
     protected abstract void OnAttack(Vector3 attackTarget);
@@ -146,7 +152,6 @@ public abstract class Character : MonoBehaviour
         {
             ClearNextPosition();
             animationManager.StartGuarding();
-            movementSpeed = 0;
         }
     }
 
@@ -205,23 +210,52 @@ public abstract class Character : MonoBehaviour
 
     #region Movement
 
-    private void HandleMove()
+    public void MoveTo(Vector3 position)
+    {
+        NextPosition = position;
+        chaseTarget = null;
+    }
+
+    private void UpdateChase()
+    {
+        if (chaseTarget != null)
+        {
+            if (IsTargetInAttackRange(chaseTarget.position))
+            {
+                if (TryAttack(chaseTarget.position))
+                {
+                    chaseTarget = null;
+                }
+            }
+            else
+            {
+                NextPosition = chaseTarget.position;
+            }
+        }
+    }
+
+    private void UpdateMove()
     {
         var currentNextPosition = agent.path.corners.Length > 0 ? agent.path.corners[0] : NextPosition;
-        if ((rb.position - NextPosition).magnitude > positionThreshold)
+        float distanceToGoal = (rb.position - NextPosition).magnitude;
+        if (distanceToGoal > positionThreshold && animationManager.CanMove)
         {
-            var targetRotation = Quaternion.LookRotation( currentNextPosition - rb.position);
+            if (distanceToGoal < decelerationThreshold)
+            {
+                movementSpeed = Mathf.Max(movementSpeed - Time.fixedDeltaTime * deceleration, 0);
+            }
+            else
+            {
+                movementSpeed = Mathf.Min(movementSpeed + Time.fixedDeltaTime * acceleration, movementSpeedMaximum);
+            }
+            var targetRotation = Quaternion.LookRotation(new Vector3(currentNextPosition.x, rb.position.y, currentNextPosition.z) - rb.position);
             rb.transform.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
-            movementSpeed = Mathf.Min(movementSpeed + Time.fixedDeltaTime * acceleration, movementSpeedMaximum);
-            var dir = rb.transform.forward;
-            rb.MovePosition(rb.transform.position + movementSpeed * Time.fixedDeltaTime * dir);
-            animationManager.Move(true);
+            rb.MovePosition(rb.transform.position + movementSpeed * Time.fixedDeltaTime * rb.transform.forward);
         }
         else
         {
             ClearNextPosition();
             movementSpeed = Mathf.Max(movementSpeed - Time.fixedDeltaTime * deceleration, 0);
-            animationManager.Move(false);
         }
         animationManager.SetMovementSpeed(movementSpeed / movementSpeedMaximum);
     }

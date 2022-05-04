@@ -11,6 +11,7 @@ public class CharacterAnimationManager : MonoBehaviour
     private Animator animator;
     public bool CanBeInterrupted => !IsAttacking && !IsInterrupted;
     public bool CanMove => !IsInterrupted && !IsAttacking && !IsGuarding;
+    public bool CanDealDamage {get; private set; }
     public bool IsInterrupted { get; private set; }
     public bool IsAttacking { get; private set; }
     public bool IsGuarding { get; private set; }
@@ -18,7 +19,6 @@ public class CharacterAnimationManager : MonoBehaviour
     #region Animator Constants
 
     private const string AnimatorMovementSpeed = "MovementSpeed";
-    private const string AnimatorIsMoving = "IsMoving";
     private const string AnimatorIsGuarding = "IsGuarding";
     private const string AnimatorAttack1 = "Attack1";
     private const string AnimatorAttack2 = "Attack2";
@@ -43,11 +43,6 @@ public class CharacterAnimationManager : MonoBehaviour
 
     #region Moving
 
-    public void Move(bool isMoving)
-    {
-        animator.SetBool(AnimatorIsMoving, isMoving);
-    }
-
     public void SetMovementSpeed(float speed)
     {
         animator.SetFloat(AnimatorMovementSpeed, speed);
@@ -63,9 +58,15 @@ public class CharacterAnimationManager : MonoBehaviour
         animator.SetTrigger(Random.Range(0, 2) == 0 ? AnimatorAttack1 : AnimatorAttack2 );
     }
 
+    public void OnAttackCanDealDamage()
+    {
+        CanDealDamage = true;
+    }
+
     public void OnAttackFinished()
     {
         IsAttacking = false;
+        CanDealDamage = false;
     }
 
     #endregion
