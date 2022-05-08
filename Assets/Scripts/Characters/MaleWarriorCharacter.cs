@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// Represents the male warrior character of the game.
+/// Manages a male warrior character.
 /// </summary>
 public class MaleWarriorCharacter : Character
 {

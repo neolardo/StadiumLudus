@@ -1,0 +1,2045 @@
+Using pre-set license
+Built from '2020.3/release' branch; Version is '2020.3.15f2 (6cf78cb77498) revision 7141260'; Using compiler version '192528614'; Build Type 'Release'
+OS: 'Windows 10 Home; OS build 19044.1645; Version 2009; 64bit' Language: 'en' Physical Memory: 16265 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 0
+
+ COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\2020.3.15f2\Editor\Unity.exe
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker0
+-projectPath
+D:/Creations/Code/Unity/ArenaGame
+-logFile
+Logs/AssetImportWorker0.log
+-srvPort
+63305
+Successfully changed project path to: D:/Creations/Code/Unity/ArenaGame
+D:/Creations/Code/Unity/ArenaGame
+Using Asset Import Pipeline V2.
+Refreshing native plugins compatible for Editor in 62.45 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2020.3.15f2 (6cf78cb77498)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2020.3.15f2/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path D:/Creations/Code/Unity/ArenaGame/Assets
+GfxDevice: creating device client; threaded=0
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce GTX 1050 Ti (ID=0x1c8c)
+    Vendor:   
+    VRAM:     4021 MB
+    Driver:   27.21.14.6192
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2020.3.15f2/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2020.3.15f2/Editor/Data/MonoBleedingEdge/lib/mono/unityjit'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/2020.3.15f2/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56840
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2020.3.15f2/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2020.3.15f2/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.006485 seconds.
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 65.05 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.777 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1778ms)
+		BeginReloadAssembly (68ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (0ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (1ms)
+		EndReloadAssembly (578ms)
+			LoadAssemblies (66ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (225ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (38ms)
+			SetupLoadedEditorAssemblies (218ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (7ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (65ms)
+				BeforeProcessingInitializeOnLoad (15ms)
+				ProcessInitializeOnLoadAttributes (100ms)
+				ProcessInitializeOnLoadMethodAttributes (30ms)
+				AfterProcessingInitializeOnLoad (0ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (0ms)
+Platform modules already initialized, skipping
+Registering precompiled user dll's ...
+Registered in 0.003794 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 59.72 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  2.009 seconds
+Domain Reload Profiling:
+	ReloadAssembly (2010ms)
+		BeginReloadAssembly (168ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (6ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (20ms)
+		EndReloadAssembly (1776ms)
+			LoadAssemblies (105ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (337ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (63ms)
+			SetupLoadedEditorAssemblies (1127ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (5ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (60ms)
+				BeforeProcessingInitializeOnLoad (160ms)
+				ProcessInitializeOnLoadAttributes (889ms)
+				ProcessInitializeOnLoadMethodAttributes (5ms)
+				AfterProcessingInitializeOnLoad (8ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (7ms)
+Platform modules already initialized, skipping
+========================================================================
+Worker process is ready to serve import requests
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.09 seconds
+Refreshing native plugins compatible for Editor in 0.99 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2898 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 138.5 MB.
+System memory in use after: 136.2 MB.
+
+Unloading 58 unused Assets to reduce memory usage. Loaded Objects now: 3323.
+Total: 4.755300 ms (FindLiveObjects: 0.666500 ms CreateObjectMapping: 0.189500 ms MarkObjects: 2.672200 ms  DeleteObjects: 1.226200 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  path: Assets/Meshes/Environment/Rocks
+  artifactKey: Guid(845d369889a6e174094758264bbd6507) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Meshes/Environment/Rocks using Guid(845d369889a6e174094758264bbd6507) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'dff752f13d51420c75686a30d059f455') in 0.014723 seconds 
+  Import took 0.019739 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 2.088220 seconds.
+  path: Assets/Meshes/Environment/Rocks/rocks.fbx
+  artifactKey: Guid(59acfbcdf7cf3c74ea3be6069b0fbfc0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Meshes/Environment/Rocks/rocks.fbx using Guid(59acfbcdf7cf3c74ea3be6069b0fbfc0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b8692bb33a6606eafaee203af9a81134') in 0.417743 seconds 
+  Import took 0.423987 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 39.560448 seconds.
+  path: Assets/Materials/Environment/Trees/TExtures
+  artifactKey: Guid(0461e2d5dd5fea64e93f7fb805d30ade) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Trees/TExtures using Guid(0461e2d5dd5fea64e93f7fb805d30ade) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b2419399c9adac632358f6287b1a92da') in 0.009653 seconds 
+  Import took 0.015283 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.001056 seconds.
+  path: Assets/Materials/Environment/Trees/TExtures
+  artifactKey: Guid(0461e2d5dd5fea64e93f7fb805d30ade) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Trees/TExtures using Guid(0461e2d5dd5fea64e93f7fb805d30ade) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b2419399c9adac632358f6287b1a92da') in 0.003220 seconds 
+  Import took 0.009051 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 3.743686 seconds.
+  path: Assets/Materials/Environment/Trees/Textures
+  artifactKey: Guid(0461e2d5dd5fea64e93f7fb805d30ade) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Trees/Textures using Guid(0461e2d5dd5fea64e93f7fb805d30ade) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '20ffc5a5c5e39117af5c5ccf59fc6436') in 0.087448 seconds 
+  Import took 0.095032 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 6.277917 seconds.
+  path: Assets/Materials/Environment/Rocks
+  artifactKey: Guid(d01b9435d698d804eaa6e10f35ef5021) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks using Guid(d01b9435d698d804eaa6e10f35ef5021) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5aaabf4a621da5ac4e53a6811b30d656') in 0.004338 seconds 
+  Import took 0.010447 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 5.343963 seconds.
+  path: Assets/Materials/Environment/Rocks/Textures
+  artifactKey: Guid(cf571703f2e842a44a2aaea952f3b339) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Textures using Guid(cf571703f2e842a44a2aaea952f3b339) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '30d2099afd13937c1dd1564f552ff60a') in 0.004123 seconds 
+  Import took 0.009826 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 19.687985 seconds.
+  path: Assets/Meshes/Environment/Rocks/rocks.fbx
+  artifactKey: Guid(59acfbcdf7cf3c74ea3be6069b0fbfc0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Meshes/Environment/Rocks/rocks.fbx using Guid(59acfbcdf7cf3c74ea3be6069b0fbfc0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ea831aa960f398f1343682db0efbda47') in 0.201149 seconds 
+  Import took 0.207753 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 17.057302 seconds.
+  path: Assets/Meshes/Environment/Rocks/rocks.fbx
+  artifactKey: Guid(59acfbcdf7cf3c74ea3be6069b0fbfc0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Meshes/Environment/Rocks/rocks.fbx using Guid(59acfbcdf7cf3c74ea3be6069b0fbfc0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6ac5318daead574d4bea375a94ea7f16') in 0.156045 seconds 
+  Import took 0.162302 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 13.985031 seconds.
+  path: Assets/Meshes/Environment/Rocks/Rock1.mesh
+  artifactKey: Guid(edaaab365fd606c4e977ce2fd1a65956) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Meshes/Environment/Rocks/Rock1.mesh using Guid(edaaab365fd606c4e977ce2fd1a65956) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '33f24374ecd39d58f3da3db2abfc234d') in 0.025635 seconds 
+  Import took 0.032139 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000237 seconds.
+  path: Assets/Meshes/Environment/Rocks/Rock2.mesh
+  artifactKey: Guid(de37a9691d37e9f4390bae31663d541c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Meshes/Environment/Rocks/Rock2.mesh using Guid(de37a9691d37e9f4390bae31663d541c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd14d9cdd67942d41b8ce785279c1263f') in 0.015372 seconds 
+  Import took 0.022075 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000365 seconds.
+  path: Assets/Meshes/Environment/Rocks/Rock4.mesh
+  artifactKey: Guid(3e103acfcdf607a4baef6b7c8c0fe624) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Meshes/Environment/Rocks/Rock4.mesh using Guid(3e103acfcdf607a4baef6b7c8c0fe624) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7cb019b0eee0b1440f8ab15916d7cf1e') in 0.034758 seconds 
+  Import took 0.041440 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000410 seconds.
+  path: Assets/Meshes/Environment/Rocks/Rock3.mesh
+  artifactKey: Guid(3e893c9aae164874d8e75866fae339ae) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Meshes/Environment/Rocks/Rock3.mesh using Guid(3e893c9aae164874d8e75866fae339ae) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '0f9c50ebe3f3464eed90835f3f32df80') in 0.014554 seconds 
+  Import took 0.020903 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000375 seconds.
+  path: Assets/Meshes/Environment/Rocks/Rock4.mesh
+  artifactKey: Guid(3e103acfcdf607a4baef6b7c8c0fe624) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Meshes/Environment/Rocks/Rock4.mesh using Guid(3e103acfcdf607a4baef6b7c8c0fe624) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7cb019b0eee0b1440f8ab15916d7cf1e') in 0.015823 seconds 
+  Import took 0.020902 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000246 seconds.
+  path: Assets/Meshes/Environment/Rocks/Rock5.mesh
+  artifactKey: Guid(3ae1547ca198e9a4884073b339dd1e48) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Meshes/Environment/Rocks/Rock5.mesh using Guid(3ae1547ca198e9a4884073b339dd1e48) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2c347a71a6cc1b903fb0a8bffaee5637') in 0.017916 seconds 
+  Import took 0.022918 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 34.504881 seconds.
+  path: Assets/Materials/Environment/Rocks/Rock1 Baked Material.mat
+  artifactKey: Guid(177bab88960c2ec42b632a490368633c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Rock1 Baked Material.mat using Guid(177bab88960c2ec42b632a490368633c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '72ad570896a380a7e0850d34b9a50ea6') in 0.062810 seconds 
+  Import took 0.069810 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000331 seconds.
+  path: Assets/Materials/Environment/Rocks/Rock3 Baked Material.mat
+  artifactKey: Guid(a8cfebdaf81b5f444aa939e2c16f48f3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Rock3 Baked Material.mat using Guid(a8cfebdaf81b5f444aa939e2c16f48f3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '96f4e64263b66327d4352522a6cd0790') in 0.013761 seconds 
+  Import took 0.020371 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000405 seconds.
+  path: Assets/Materials/Environment/Rocks/Rock5 Baked Material.mat
+  artifactKey: Guid(cc2b585052df6c44086666b4c26e71bf) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Rock5 Baked Material.mat using Guid(cc2b585052df6c44086666b4c26e71bf) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'fc8c8e26fc57fc41379c33aa742e6960') in 0.014046 seconds 
+  Import took 0.019979 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000293 seconds.
+  path: Assets/Materials/Environment/Rocks/Rock2 Baked Material.mat
+  artifactKey: Guid(338062f25529bec40b6ebbbf33cac10f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Rock2 Baked Material.mat using Guid(338062f25529bec40b6ebbbf33cac10f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '48db19cf12c127a3b98980443f1c55ae') in 0.014871 seconds 
+  Import took 0.020753 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000454 seconds.
+  path: Assets/Materials/Environment/Rocks/Rock4 Baked Material.mat
+  artifactKey: Guid(d0a631b5cfe7c864e8b07425d90c8d69) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Rock4 Baked Material.mat using Guid(d0a631b5cfe7c864e8b07425d90c8d69) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'fea541359e4c9b2be3eca7237272344f') in 0.016178 seconds 
+  Import took 0.021375 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 2.734310 seconds.
+  path: Assets/Materials/Environment/Rocks/Textures/Rock1 Albedo.png
+  artifactKey: Guid(88907e4421f29164595287d9791fba77) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Textures/Rock1 Albedo.png using Guid(88907e4421f29164595287d9791fba77) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5d915f2d16ee7a89e412048462fdacd2') in 0.052011 seconds 
+  Import took 0.057282 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000263 seconds.
+  path: Assets/Materials/Environment/Rocks/Textures/Rock5 Albedo.png
+  artifactKey: Guid(ad0282cfe1230844fa292e66185f186a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Textures/Rock5 Albedo.png using Guid(ad0282cfe1230844fa292e66185f186a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '08fba58d98b804feb2aed8d886151b2c') in 0.018316 seconds 
+  Import took 0.023724 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000352 seconds.
+  path: Assets/Materials/Environment/Rocks/Textures/Rock2 Normal.png
+  artifactKey: Guid(dff562baef35a3d4495d0de7522455f0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Textures/Rock2 Normal.png using Guid(dff562baef35a3d4495d0de7522455f0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9e0f23ab347f2dad9b37fd28ddf63445') in 0.014623 seconds 
+  Import took 0.020434 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000452 seconds.
+  path: Assets/Materials/Environment/Rocks/Textures/Rock4 Albedo.png
+  artifactKey: Guid(d015145b3f5e6f243b1d5d824732d6b5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Textures/Rock4 Albedo.png using Guid(d015145b3f5e6f243b1d5d824732d6b5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '910d9b4ce02a5955c8d9efa6c3a480f2') in 0.015098 seconds 
+  Import took 0.021739 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000305 seconds.
+  path: Assets/Materials/Environment/Rocks/Textures/Rock1 Normal.png
+  artifactKey: Guid(448201f71e0499546a03270b11b51a06) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Textures/Rock1 Normal.png using Guid(448201f71e0499546a03270b11b51a06) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8eb944c1eef5b322551db978f7e18095') in 0.015408 seconds 
+  Import took 0.020414 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000373 seconds.
+  path: Assets/Materials/Environment/Rocks/Textures/Rock2 Albedo.png
+  artifactKey: Guid(3c158f3aa4678254a9f6f68e61ec0c2e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Textures/Rock2 Albedo.png using Guid(3c158f3aa4678254a9f6f68e61ec0c2e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '82353ba0826cc24d109d97f948864411') in 0.017246 seconds 
+  Import took 0.024608 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000324 seconds.
+  path: Assets/Materials/Environment/Rocks/Textures/Rock3 Albedo.png
+  artifactKey: Guid(6cc48a325995c6040a2ec3171f4bc6ab) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Textures/Rock3 Albedo.png using Guid(6cc48a325995c6040a2ec3171f4bc6ab) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e9e4454190805435ba19ec2d0aefd536') in 0.016695 seconds 
+  Import took 0.021894 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000236 seconds.
+  path: Assets/Materials/Environment/Rocks/Textures/Rock5 Normal.png
+  artifactKey: Guid(771735433c4787c47beebb82327add24) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Textures/Rock5 Normal.png using Guid(771735433c4787c47beebb82327add24) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '46ea72d3432ff0d9f471605f3b225823') in 0.014967 seconds 
+  Import took 0.020943 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000254 seconds.
+  path: Assets/Materials/Environment/Rocks/Textures/Rock3 Normal.png
+  artifactKey: Guid(3fa416d2edb88a04c9fa888f5362bf31) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Textures/Rock3 Normal.png using Guid(3fa416d2edb88a04c9fa888f5362bf31) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'af1580ff29241dabc4c616a57a2b298c') in 0.015189 seconds 
+  Import took 0.020769 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000296 seconds.
+  path: Assets/Materials/Environment/Rocks/Textures/Rock4 Normal.png
+  artifactKey: Guid(c4fffc73a412be349bbb5429c938af40) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Textures/Rock4 Normal.png using Guid(c4fffc73a412be349bbb5429c938af40) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '96a8d676f3fc2d1cdbc07b7b7f5fbdc4') in 0.015735 seconds 
+  Import took 0.021965 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 7.602771 seconds.
+  path: Assets/Materials/Environment/Rocks/Textures/Rock1 Normal.png
+  artifactKey: Guid(448201f71e0499546a03270b11b51a06) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Textures/Rock1 Normal.png using Guid(448201f71e0499546a03270b11b51a06) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '271e88900b734e1b50ddaaa12ae60baf') in 0.024073 seconds 
+  Import took 0.030852 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 3.835427 seconds.
+  path: Assets/Materials/Environment/Rocks/Textures/Rock2 Normal.png
+  artifactKey: Guid(dff562baef35a3d4495d0de7522455f0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Textures/Rock2 Normal.png using Guid(dff562baef35a3d4495d0de7522455f0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '4d2bcd6e55af4985768d677d1edc6e0a') in 0.016073 seconds 
+  Import took 0.021888 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 2.890359 seconds.
+  path: Assets/Materials/Environment/Rocks/Textures/Rock3 Normal.png
+  artifactKey: Guid(3fa416d2edb88a04c9fa888f5362bf31) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Textures/Rock3 Normal.png using Guid(3fa416d2edb88a04c9fa888f5362bf31) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ca2e907af6f92aa554f28fb1814f1931') in 0.018861 seconds 
+  Import took 0.023631 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 2.993066 seconds.
+  path: Assets/Materials/Environment/Rocks/Textures/Rock4 Normal.png
+  artifactKey: Guid(c4fffc73a412be349bbb5429c938af40) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Textures/Rock4 Normal.png using Guid(c4fffc73a412be349bbb5429c938af40) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ed1322fd4a5e523fc4ce97496becc587') in 0.029563 seconds 
+  Import took 0.035071 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 5.229544 seconds.
+  path: Assets/Materials/Environment/Rocks/Textures/Rock5 Normal.png
+  artifactKey: Guid(771735433c4787c47beebb82327add24) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Textures/Rock5 Normal.png using Guid(771735433c4787c47beebb82327add24) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7f4858b1adf1a696dcd114b570f4dc28') in 0.025781 seconds 
+  Import took 0.031421 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 41.854609 seconds.
+  path: Assets/Materials/Environment/Rocks/Rock1 Baked Material.mat
+  artifactKey: Guid(177bab88960c2ec42b632a490368633c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Rock1 Baked Material.mat using Guid(177bab88960c2ec42b632a490368633c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1a5a37c9db01f21dcdbea404fd46ad0a') in 0.042375 seconds 
+  Import took 0.049647 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000308 seconds.
+  path: Assets/Materials/Environment/Rocks/Rock2 Baked Material.mat
+  artifactKey: Guid(338062f25529bec40b6ebbbf33cac10f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Rock2 Baked Material.mat using Guid(338062f25529bec40b6ebbbf33cac10f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'fae1c4c9262c1ac7c21e4dc6d1b48909') in 0.061747 seconds 
+  Import took 0.070599 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 14.884368 seconds.
+  path: Assets/Materials/Environment/Rocks/Rock3 Baked Material.mat
+  artifactKey: Guid(a8cfebdaf81b5f444aa939e2c16f48f3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Rock3 Baked Material.mat using Guid(a8cfebdaf81b5f444aa939e2c16f48f3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '35d65f40a1ff7332d2e34d2f032f8da1') in 0.031383 seconds 
+  Import took 0.037413 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 14.992081 seconds.
+  path: Assets/Materials/Environment/Rocks/Rock4 Baked Material.mat
+  artifactKey: Guid(d0a631b5cfe7c864e8b07425d90c8d69) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Rock4 Baked Material.mat using Guid(d0a631b5cfe7c864e8b07425d90c8d69) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8f7fd01bfe3f7f6dbe17bf8369e0fc7a') in 0.024654 seconds 
+  Import took 0.030606 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 17.326654 seconds.
+  path: Assets/Materials/Environment/Rocks/Rock5 Baked Material.mat
+  artifactKey: Guid(cc2b585052df6c44086666b4c26e71bf) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/Environment/Rocks/Rock5 Baked Material.mat using Guid(cc2b585052df6c44086666b4c26e71bf) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '57db40b4b5f3a9af5ef142a565f2521f') in 0.021259 seconds 
+  Import took 0.028295 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 319.760882 seconds.
+  path: Assets/Meshes/Environment/Trees/Textures/Tree1 Normal.png
+  artifactKey: Guid(bdbbb4b9189371c428594c6a2c404ccd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Meshes/Environment/Trees/Textures/Tree1 Normal.png using Guid(bdbbb4b9189371c428594c6a2c404ccd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '0855a4546bb40903288a8942d45bb61a') in 0.110694 seconds 
+  Import took 0.117809 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000281 seconds.
+  path: Assets/Meshes/Environment/Trees/Textures/Tree3 Normal.png
+  artifactKey: Guid(57dad09d512c3084faa80f8a82050d50) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Meshes/Environment/Trees/Textures/Tree3 Normal.png using Guid(57dad09d512c3084faa80f8a82050d50) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '81246beafe96bdf89aa0262e81e38769') in 0.032723 seconds 
+  Import took 0.038594 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000282 seconds.
+  path: Assets/Meshes/Environment/Trees/Textures/Tree5 Normal.png
+  artifactKey: Guid(d0a7e2d9db2fa1c478617fb4739dd2bc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Meshes/Environment/Trees/Textures/Tree5 Normal.png using Guid(d0a7e2d9db2fa1c478617fb4739dd2bc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ff368e730c8f47a7e8eeaa6a137b4418') in 0.025113 seconds 
+  Import took 0.031138 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000411 seconds.
+  path: Assets/Meshes/Environment/Trees/Textures/Tree2 Normal.png
+  artifactKey: Guid(f82c5f2eafff33940887a9f0708dd682) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Meshes/Environment/Trees/Textures/Tree2 Normal.png using Guid(f82c5f2eafff33940887a9f0708dd682) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1568ae7f4f7c85951e3699e49940a331') in 0.032843 seconds 
+  Import took 0.040925 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000229 seconds.
+  path: Assets/Meshes/Environment/Trees/Textures/Tree4 Normal.png
+  artifactKey: Guid(a9d72224e84fc764aad4430332d9510d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Meshes/Environment/Trees/Textures/Tree4 Normal.png using Guid(a9d72224e84fc764aad4430332d9510d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '54d728976bd31471c241718830df504b') in 0.016151 seconds 
+  Import took 0.022318 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000239 seconds.
+  path: Assets/Meshes/Environment/Trees/Textures/Tree1 Normal.png
+  artifactKey: Guid(bdbbb4b9189371c428594c6a2c404ccd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Meshes/Environment/Trees/Textures/Tree1 Normal.png using Guid(bdbbb4b9189371c428594c6a2c404ccd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '0855a4546bb40903288a8942d45bb61a') in 0.012503 seconds 
+  Import took 0.020458 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000301 seconds.
+  path: Assets/Meshes/Environment/Trees/Textures/Tree4 Normal.png
+  artifactKey: Guid(a9d72224e84fc764aad4430332d9510d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Meshes/Environment/Trees/Textures/Tree4 Normal.png using Guid(a9d72224e84fc764aad4430332d9510d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '54d728976bd31471c241718830df504b') in 0.015743 seconds 
+  Import took 0.021030 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 31.558489 seconds.
+  path: Assets/Prefabs/Environment/Rocks
+  artifactKey: Guid(16a4a1799a17d82428fb53a97c60157b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Environment/Rocks using Guid(16a4a1799a17d82428fb53a97c60157b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e5b7920b6535d63cf867dc89a17e9954') in 0.001931 seconds 
+  Import took 0.007856 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.006815 seconds.
+  path: Assets/Prefabs/Environment/Rocks
+  artifactKey: Guid(16a4a1799a17d82428fb53a97c60157b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Environment/Rocks using Guid(16a4a1799a17d82428fb53a97c60157b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e5b7920b6535d63cf867dc89a17e9954') in 0.002188 seconds 
+  Import took 0.007643 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 3.260765 seconds.
+  path: Assets/Prefabs/Environment/Rocks/Rock1.prefab
+  artifactKey: Guid(f737444224f23304caf8920fd60a4356) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Environment/Rocks/Rock1.prefab using Guid(f737444224f23304caf8920fd60a4356) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '66c293180c25a72c9a570c283feeb100') in 0.021196 seconds 
+  Import took 0.026598 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.007747 seconds.
+  path: Assets/Prefabs/Environment/Rocks/Rock1.prefab
+  artifactKey: Guid(f737444224f23304caf8920fd60a4356) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Environment/Rocks/Rock1.prefab using Guid(f737444224f23304caf8920fd60a4356) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '66c293180c25a72c9a570c283feeb100') in 0.019933 seconds 
+  Import took 0.025458 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 1.279407 seconds.
+  path: Assets/Prefabs/Environment/Rocks/Rock2.prefab
+  artifactKey: Guid(602868f1deef973489ebe914b5d7e24f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Environment/Rocks/Rock2.prefab using Guid(602868f1deef973489ebe914b5d7e24f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8f9d1d3e80335df7a6cca5fcf7acbdb5') in 0.019357 seconds 
+  Import took 0.024761 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 1.338610 seconds.
+  path: Assets/Prefabs/Environment/Rocks/Rock3.prefab
+  artifactKey: Guid(0cb5523291b35984fafb913532055e4a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Environment/Rocks/Rock3.prefab using Guid(0cb5523291b35984fafb913532055e4a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '655d077c72d9cdce444509544694293e') in 0.019749 seconds 
+  Import took 0.025242 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.002881 seconds.
+  path: Assets/Prefabs/Environment/Rocks/Rock3.prefab
+  artifactKey: Guid(0cb5523291b35984fafb913532055e4a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Environment/Rocks/Rock3.prefab using Guid(0cb5523291b35984fafb913532055e4a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '655d077c72d9cdce444509544694293e') in 0.018511 seconds 
+  Import took 0.024012 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 1.741883 seconds.
+  path: Assets/Prefabs/Environment/Rocks/Rock4.prefab
+  artifactKey: Guid(d07d70159bb323249adc8515e32c78c4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Environment/Rocks/Rock4.prefab using Guid(d07d70159bb323249adc8515e32c78c4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd705b13405ee392b5d4074b23d3ef679') in 0.023706 seconds 
+  Import took 0.031223 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000697 seconds.
+  path: Assets/Prefabs/Environment/Rocks/Rock4.prefab
+  artifactKey: Guid(d07d70159bb323249adc8515e32c78c4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Environment/Rocks/Rock4.prefab using Guid(d07d70159bb323249adc8515e32c78c4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd705b13405ee392b5d4074b23d3ef679') in 0.021595 seconds 
+  Import took 0.026745 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 1.220286 seconds.
+  path: Assets/Prefabs/Environment/Rocks/Rock5.prefab
+  artifactKey: Guid(2665dd5402eb1914997bd012782e2621) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Environment/Rocks/Rock5.prefab using Guid(2665dd5402eb1914997bd012782e2621) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b07d68372c82128f82fc4a639ded8d8d') in 0.017975 seconds 
+  Import took 0.024236 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003047 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.56 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.997 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1997ms)
+		BeginReloadAssembly (159ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (10ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (52ms)
+		EndReloadAssembly (1765ms)
+			LoadAssemblies (104ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (357ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (61ms)
+			SetupLoadedEditorAssemblies (1057ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (7ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (132ms)
+				ProcessInitializeOnLoadAttributes (901ms)
+				ProcessInitializeOnLoadMethodAttributes (5ms)
+				AfterProcessingInitializeOnLoad (10ms)
+				EditorAssembliesLoaded (1ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (20ms)
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 0.56 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2777 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 136.0 MB.
+System memory in use after: 133.7 MB.
+
+Unloading 43 unused Assets to reduce memory usage. Loaded Objects now: 3411.
+Total: 4.755800 ms (FindLiveObjects: 0.327600 ms CreateObjectMapping: 0.151100 ms MarkObjects: 2.884600 ms  DeleteObjects: 1.390200 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.007455 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.80 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  2.440 seconds
+Domain Reload Profiling:
+	ReloadAssembly (2441ms)
+		BeginReloadAssembly (167ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (8ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (59ms)
+		EndReloadAssembly (2178ms)
+			LoadAssemblies (128ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (480ms)
+			ReleaseScriptCaches (2ms)
+			RebuildScriptCaches (78ms)
+			SetupLoadedEditorAssemblies (1201ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (8ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (137ms)
+				ProcessInitializeOnLoadAttributes (1029ms)
+				ProcessInitializeOnLoadMethodAttributes (8ms)
+				AfterProcessingInitializeOnLoad (18ms)
+				EditorAssembliesLoaded (1ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (79ms)
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 0.68 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2777 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 136.1 MB.
+System memory in use after: 133.8 MB.
+
+Unloading 43 unused Assets to reduce memory usage. Loaded Objects now: 3414.
+Total: 4.805800 ms (FindLiveObjects: 0.310800 ms CreateObjectMapping: 0.176000 ms MarkObjects: 2.843000 ms  DeleteObjects: 1.475100 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003187 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.79 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.985 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1985ms)
+		BeginReloadAssembly (157ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (8ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (44ms)
+		EndReloadAssembly (1745ms)
+			LoadAssemblies (121ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (374ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (74ms)
+			SetupLoadedEditorAssemblies (996ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (7ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (127ms)
+				ProcessInitializeOnLoadAttributes (848ms)
+				ProcessInitializeOnLoadMethodAttributes (4ms)
+				AfterProcessingInitializeOnLoad (8ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (18ms)
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 0.57 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2777 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 136.2 MB.
+System memory in use after: 133.9 MB.
+
+Unloading 43 unused Assets to reduce memory usage. Loaded Objects now: 3417.
+Total: 4.922300 ms (FindLiveObjects: 0.317300 ms CreateObjectMapping: 0.149600 ms MarkObjects: 2.994400 ms  DeleteObjects: 1.459200 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.005968 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.64 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  2.305 seconds
+Domain Reload Profiling:
+	ReloadAssembly (2306ms)
+		BeginReloadAssembly (148ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (7ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (49ms)
+		EndReloadAssembly (2068ms)
+			LoadAssemblies (120ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (432ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (75ms)
+			SetupLoadedEditorAssemblies (1203ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (9ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (140ms)
+				ProcessInitializeOnLoadAttributes (1034ms)
+				ProcessInitializeOnLoadMethodAttributes (5ms)
+				AfterProcessingInitializeOnLoad (13ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (28ms)
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 0.64 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2777 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 136.2 MB.
+System memory in use after: 133.9 MB.
+
+Unloading 43 unused Assets to reduce memory usage. Loaded Objects now: 3420.
+Total: 5.112000 ms (FindLiveObjects: 0.318500 ms CreateObjectMapping: 0.277900 ms MarkObjects: 3.051300 ms  DeleteObjects: 1.463100 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.004051 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.62 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  2.134 seconds
+Domain Reload Profiling:
+	ReloadAssembly (2135ms)
+		BeginReloadAssembly (139ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (7ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (43ms)
+		EndReloadAssembly (1911ms)
+			LoadAssemblies (107ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (418ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (68ms)
+			SetupLoadedEditorAssemblies (1104ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (8ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (138ms)
+				ProcessInitializeOnLoadAttributes (936ms)
+				ProcessInitializeOnLoadMethodAttributes (11ms)
+				AfterProcessingInitializeOnLoad (9ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (24ms)
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 0.70 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2777 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 136.1 MB.
+System memory in use after: 133.9 MB.
+
+Unloading 43 unused Assets to reduce memory usage. Loaded Objects now: 3423.
+Total: 6.127800 ms (FindLiveObjects: 0.338200 ms CreateObjectMapping: 0.218200 ms MarkObjects: 3.403700 ms  DeleteObjects: 2.165800 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 3937.012919 seconds.
+  path: Assets/Scripts/Characters/Character.cs
+  artifactKey: Guid(cbd61feacb34e0d46bcf12c3224ae205) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/Characters/Character.cs using Guid(cbd61feacb34e0d46bcf12c3224ae205) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '502e51ed62a2354d9cd4f69b136d5db8') in 0.097741 seconds 
+  Import took 0.115907 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 65.824409 seconds.
+  path: Assets/Scripts/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c93c9452638c6c2c0b48f6e1348bf8f4') in 0.007220 seconds 
+  Import took 0.013230 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.004744 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.52 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.780 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1781ms)
+		BeginReloadAssembly (138ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (6ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (50ms)
+		EndReloadAssembly (1568ms)
+			LoadAssemblies (98ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (315ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (53ms)
+			SetupLoadedEditorAssemblies (944ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (5ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (114ms)
+				ProcessInitializeOnLoadAttributes (811ms)
+				ProcessInitializeOnLoadMethodAttributes (5ms)
+				AfterProcessingInitializeOnLoad (8ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (21ms)
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 0.53 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2778 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 136.3 MB.
+System memory in use after: 133.9 MB.
+
+Unloading 43 unused Assets to reduce memory usage. Loaded Objects now: 3427.
+Total: 4.636400 ms (FindLiveObjects: 0.435400 ms CreateObjectMapping: 0.158900 ms MarkObjects: 2.518300 ms  DeleteObjects: 1.522700 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.004593 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.55 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.914 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1915ms)
+		BeginReloadAssembly (134ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (8ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (45ms)
+		EndReloadAssembly (1700ms)
+			LoadAssemblies (107ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (375ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (61ms)
+			SetupLoadedEditorAssemblies (982ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (6ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (124ms)
+				ProcessInitializeOnLoadAttributes (837ms)
+				ProcessInitializeOnLoadMethodAttributes (5ms)
+				AfterProcessingInitializeOnLoad (9ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (19ms)
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 0.53 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2778 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 136.3 MB.
+System memory in use after: 133.9 MB.
+
+Unloading 43 unused Assets to reduce memory usage. Loaded Objects now: 3430.
+Total: 4.973000 ms (FindLiveObjects: 0.284400 ms CreateObjectMapping: 0.153700 ms MarkObjects: 3.082800 ms  DeleteObjects: 1.451100 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003838 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.54 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.801 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1802ms)
+		BeginReloadAssembly (135ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (6ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (45ms)
+		EndReloadAssembly (1575ms)
+			LoadAssemblies (100ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (324ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (58ms)
+			SetupLoadedEditorAssemblies (933ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (8ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (115ms)
+				ProcessInitializeOnLoadAttributes (796ms)
+				ProcessInitializeOnLoadMethodAttributes (4ms)
+				AfterProcessingInitializeOnLoad (8ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (17ms)
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 0.53 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2778 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 136.3 MB.
+System memory in use after: 133.9 MB.
+
+Unloading 43 unused Assets to reduce memory usage. Loaded Objects now: 3433.
+Total: 4.445700 ms (FindLiveObjects: 0.303600 ms CreateObjectMapping: 0.146600 ms MarkObjects: 2.596800 ms  DeleteObjects: 1.397300 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 37.574071 seconds.
+  path: Assets/Scripts/UI
+  artifactKey: Guid(203f28763bd40234b8a21be30ec2ab3b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI using Guid(203f28763bd40234b8a21be30ec2ab3b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'eb1dee4e62af5e86637dac6ea993caf6') in 0.018461 seconds 
+  Import took 0.038287 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000641 seconds.
+  path: Assets/Scripts/UI
+  artifactKey: Guid(203f28763bd40234b8a21be30ec2ab3b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI using Guid(203f28763bd40234b8a21be30ec2ab3b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'eb1dee4e62af5e86637dac6ea993caf6') in 0.002215 seconds 
+  Import took 0.007714 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003927 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.53 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.893 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1893ms)
+		BeginReloadAssembly (153ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (6ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (50ms)
+		EndReloadAssembly (1668ms)
+			LoadAssemblies (115ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (331ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (57ms)
+			SetupLoadedEditorAssemblies (1000ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (6ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (112ms)
+				ProcessInitializeOnLoadAttributes (865ms)
+				ProcessInitializeOnLoadMethodAttributes (6ms)
+				AfterProcessingInitializeOnLoad (9ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (20ms)
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 0.54 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2778 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 136.2 MB.
+System memory in use after: 133.9 MB.
+
+Unloading 43 unused Assets to reduce memory usage. Loaded Objects now: 3436.
+Total: 7.555400 ms (FindLiveObjects: 0.390700 ms CreateObjectMapping: 0.225400 ms MarkObjects: 4.646400 ms  DeleteObjects: 2.291200 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.005023 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.56 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.839 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1839ms)
+		BeginReloadAssembly (144ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (5ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (48ms)
+		EndReloadAssembly (1618ms)
+			LoadAssemblies (114ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (338ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (61ms)
+			SetupLoadedEditorAssemblies (929ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (6ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (111ms)
+				ProcessInitializeOnLoadAttributes (799ms)
+				ProcessInitializeOnLoadMethodAttributes (4ms)
+				AfterProcessingInitializeOnLoad (8ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (21ms)
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 0.63 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2778 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 136.3 MB.
+System memory in use after: 134.0 MB.
+
+Unloading 43 unused Assets to reduce memory usage. Loaded Objects now: 3439.
+Total: 4.714100 ms (FindLiveObjects: 0.270800 ms CreateObjectMapping: 0.160900 ms MarkObjects: 2.848300 ms  DeleteObjects: 1.433000 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 535.920912 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.001335 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.006479 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.027751 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000228 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.004532 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.042252 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000426 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.005481 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.045188 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000318 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.005963 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.046251 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000239 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.006959 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.028834 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000213 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.004955 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.028746 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000211 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.004365 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.027879 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000312 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.006548 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.035099 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000299 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.006932 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.037901 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000261 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.005073 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.030591 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000232 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.004745 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.027966 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000222 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.004657 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.033260 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000235 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.005415 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.026971 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000212 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.005109 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.025230 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000311 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.005019 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.026427 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000307 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.006019 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.029069 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000209 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.004385 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.030862 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000208 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.004690 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.025407 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000259 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.005005 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.027546 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000218 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.004780 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.027013 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000215 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.004403 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.034885 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000269 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.006364 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.025731 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000219 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.004394 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.026498 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000214 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.004573 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.025157 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000211 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.004310 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.032202 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000258 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.005202 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.031265 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000219 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.004354 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.026091 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000231 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:17:55.7288689Z' while content on disk has modification time of '2022-05-07T17:18:05.6693277Z'
+  Import took 0.005976 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.004976 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.70 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.820 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1820ms)
+		BeginReloadAssembly (131ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (5ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (48ms)
+		EndReloadAssembly (1609ms)
+			LoadAssemblies (105ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (322ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (71ms)
+			SetupLoadedEditorAssemblies (943ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (8ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (119ms)
+				ProcessInitializeOnLoadAttributes (802ms)
+				ProcessInitializeOnLoadMethodAttributes (4ms)
+				AfterProcessingInitializeOnLoad (8ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (18ms)
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 0.58 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2778 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 136.2 MB.
+System memory in use after: 134.0 MB.
+
+Unloading 43 unused Assets to reduce memory usage. Loaded Objects now: 3442.
+Total: 4.668200 ms (FindLiveObjects: 0.344900 ms CreateObjectMapping: 0.187800 ms MarkObjects: 2.736600 ms  DeleteObjects: 1.397700 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 7.949001 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.001214 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.005667 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.043154 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000334 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.005109 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.027328 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000219 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.004734 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.028335 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000229 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.004908 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.028562 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000333 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.004934 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.052826 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000221 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.004883 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.028238 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000227 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.004678 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.028864 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000222 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.004587 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.025931 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000248 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.005228 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.032814 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000218 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.004629 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.027502 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000236 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.004849 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.025590 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000441 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.010284 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.126237 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000230 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.004905 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.042732 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000323 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.005238 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.037326 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000332 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.007332 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.034241 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000367 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.006508 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.037849 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000224 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.004596 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.037532 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000209 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.004472 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.037499 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000229 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.004780 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.025670 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000226 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.004461 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.026506 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000210 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.004430 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.027202 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000271 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.005309 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.032911 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000232 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.004913 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.034046 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000373 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.006565 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.040091 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000424 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.007176 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.031187 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000397 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.006956 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.025136 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000211 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.004330 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.029577 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '00000000000000000000000000000000') in 0.000234 seconds  code(4) message(Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z')
+  ERROR: Build asset version error: assets/scripts/ui/characterui.cs in SourceAssetDB has modification time of '2022-05-07T17:18:05.6693277Z' while content on disk has modification time of '2022-05-07T17:18:15.0687386Z'
+  Import took 0.005247 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003313 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.74 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.901 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1902ms)
+		BeginReloadAssembly (128ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (6ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (42ms)
+		EndReloadAssembly (1696ms)
+			LoadAssemblies (98ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (332ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (66ms)
+			SetupLoadedEditorAssemblies (1006ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (8ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (121ms)
+				ProcessInitializeOnLoadAttributes (861ms)
+				ProcessInitializeOnLoadMethodAttributes (4ms)
+				AfterProcessingInitializeOnLoad (10ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (21ms)
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 0.53 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2778 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 136.3 MB.
+System memory in use after: 134.0 MB.
+
+Unloading 43 unused Assets to reduce memory usage. Loaded Objects now: 3445.
+Total: 5.121300 ms (FindLiveObjects: 0.275300 ms CreateObjectMapping: 0.156500 ms MarkObjects: 3.183000 ms  DeleteObjects: 1.505300 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 7.919572 seconds.
+  path: Assets/Scripts/UI/CharacterUI.cs
+  artifactKey: Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/UI/CharacterUI.cs using Guid(9a6d5f357278c0b4980b2c18fc2bb592) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9c064bbbf581489c25d6d60437ab3b54') in 0.005368 seconds 
+  Import took 0.049442 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 76.514140 seconds.
+  path: Assets/Materials/UI/HealthBarMaterial.mat
+  artifactKey: Guid(207b8c1f9860e1e4dabd5812719a2367) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/UI/HealthBarMaterial.mat using Guid(207b8c1f9860e1e4dabd5812719a2367) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '030fa7391a29c42e53c53adda78dd969') in 0.527899 seconds 
+  Import took 0.603331 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000473 seconds.
+  path: Assets/Materials/UI/StaminaBarMaterial.mat
+  artifactKey: Guid(d1f0e4017a71fc145b91c5098826fe50) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Materials/UI/StaminaBarMaterial.mat using Guid(d1f0e4017a71fc145b91c5098826fe50) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '936ca43bb26bdf0683094ff157125cfe') in 0.044775 seconds 
+  Import took 0.076799 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 17.728472 seconds.
+  path: Assets/Shaders/ValueBarShader.shadergraph
+  artifactKey: Guid(8bddaab98d1ef554ca8299ba0b6f4593) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Shaders/ValueBarShader.shadergraph using Guid(8bddaab98d1ef554ca8299ba0b6f4593) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '58127322fa4387fb071c6a3bc22d4c27') in 0.007777 seconds 
+  Import took 0.058606 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.004051 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.89 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  2.003 seconds
+Domain Reload Profiling:
+	ReloadAssembly (2004ms)
+		BeginReloadAssembly (150ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (8ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (57ms)
+		EndReloadAssembly (1766ms)
+			LoadAssemblies (112ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (370ms)
+			ReleaseScriptCaches (2ms)
+			RebuildScriptCaches (67ms)
+			SetupLoadedEditorAssemblies (1031ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (8ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (121ms)
+				ProcessInitializeOnLoadAttributes (888ms)
+				ProcessInitializeOnLoadMethodAttributes (5ms)
+				AfterProcessingInitializeOnLoad (8ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (22ms)
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 0.58 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2778 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 136.4 MB.
+System memory in use after: 134.1 MB.
+
+Unloading 43 unused Assets to reduce memory usage. Loaded Objects now: 3484.
+Total: 4.934000 ms (FindLiveObjects: 0.373200 ms CreateObjectMapping: 0.140600 ms MarkObjects: 2.830200 ms  DeleteObjects: 1.588700 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.006290 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.97 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  3.111 seconds
+Domain Reload Profiling:
+	ReloadAssembly (3111ms)
+		BeginReloadAssembly (162ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (9ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (56ms)
+		EndReloadAssembly (2843ms)
+			LoadAssemblies (129ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (552ms)
+			ReleaseScriptCaches (2ms)
+			RebuildScriptCaches (111ms)
+			SetupLoadedEditorAssemblies (1728ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (11ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (204ms)
+				ProcessInitializeOnLoadAttributes (1488ms)
+				ProcessInitializeOnLoadMethodAttributes (8ms)
+				AfterProcessingInitializeOnLoad (15ms)
+				EditorAssembliesLoaded (1ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (42ms)
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 0.89 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2778 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 136.5 MB.
+System memory in use after: 134.1 MB.
+
+Unloading 43 unused Assets to reduce memory usage. Loaded Objects now: 3487.
+Total: 7.887700 ms (FindLiveObjects: 0.428600 ms CreateObjectMapping: 0.341100 ms MarkObjects: 4.580700 ms  DeleteObjects: 2.534600 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.006736 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.76 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  2.785 seconds
+Domain Reload Profiling:
+	ReloadAssembly (2785ms)
+		BeginReloadAssembly (168ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (7ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (49ms)
+		EndReloadAssembly (2481ms)
+			LoadAssemblies (169ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (652ms)
+			ReleaseScriptCaches (2ms)
+			RebuildScriptCaches (115ms)
+			SetupLoadedEditorAssemblies (1294ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (9ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (157ms)
+				ProcessInitializeOnLoadAttributes (1110ms)
+				ProcessInitializeOnLoadMethodAttributes (6ms)
+				AfterProcessingInitializeOnLoad (11ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (26ms)
+Platform modules already initialized, skipping
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Shader 'Universal Render Pipeline/Particles/Lit': fallback shader 'Universal Render Pipeline/Particles/SimpleLit' not found
+Refreshing native plugins compatible for Editor in 0.77 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2778 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 136.4 MB.
+System memory in use after: 134.1 MB.
+
+Unloading 43 unused Assets to reduce memory usage. Loaded Objects now: 3490.
+Total: 5.960000 ms (FindLiveObjects: 0.373500 ms CreateObjectMapping: 0.180300 ms MarkObjects: 3.646500 ms  DeleteObjects: 1.758300 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+AssetImportWorkerClient::OnTransportError - code=2 error=End of file

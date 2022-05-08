@@ -9,6 +9,10 @@ public class CharacterAnimationManager : MonoBehaviour
     #region Properties and Fields
 
     private Animator animator;
+
+    [Tooltip("Indicates the number of available attack animations for this character.")]
+    [SerializeField]
+    private int attackAnimationCount;
     public bool CanBeInterrupted => !IsAttacking && !IsInterrupted;
     public bool CanMove => !IsInterrupted && !IsAttacking && !IsGuarding;
     public bool CanDealDamage {get; private set; }
@@ -20,8 +24,7 @@ public class CharacterAnimationManager : MonoBehaviour
 
     private const string AnimatorMovementSpeed = "MovementSpeed";
     private const string AnimatorIsGuarding = "IsGuarding";
-    private const string AnimatorAttack1 = "Attack1";
-    private const string AnimatorAttack2 = "Attack2";
+    private const string AnimatorAttack = "Attack";
     private const string AnimatorImpactFrontLeft = "ImpactFrontLeft";
     private const string AnimatorImpactFrontRight = "ImpactFrontRight";
     private const string AnimatorImpactBack = "ImpactBack";
@@ -55,7 +58,7 @@ public class CharacterAnimationManager : MonoBehaviour
     public void Attack()
     {
         IsAttacking = true;
-        animator.SetTrigger(Random.Range(0, 2) == 0 ? AnimatorAttack1 : AnimatorAttack2 );
+        animator.SetTrigger($"{AnimatorAttack}{Random.Range(1, attackAnimationCount+1)}");
     }
 
     public void OnAttackCanDealDamage()

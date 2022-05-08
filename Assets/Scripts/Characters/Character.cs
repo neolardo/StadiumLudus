@@ -12,18 +12,32 @@ public abstract class Character : MonoBehaviour
 
     #region Stats
 
-    [Tooltip("Represents the health of the charater.")]
+    [Tooltip("Represents the maximum health of the charater.")]
     [SerializeField]
-    private float health = 100f;
+    private float healthMaximum = 100f;
 
-    [Tooltip("Represents the energy of the charater which alllows it to interract, attack and block.")]
+    private float health;
+
+    [Tooltip("Represents the maximum stamina of the charater which allows it to interract, attack and block.")]
     [SerializeField]
-    private float stamina = 100f;
+    private float staminaMaximum = 100f;
+
+    private float stamina;
 
     /// <summary>
     /// Indicates whether this character is alive or not.
     /// </summary>
     public bool IsAlive => health > 0;
+
+    /// <summary>
+    /// The relative normalized health this character currently has.
+    /// </summary>
+    public float HealthRatio => health / healthMaximum;
+
+    /// <summary>
+    /// The relative normalized stamina this character currently has.
+    /// </summary>
+    public float StaminaRatio => stamina / staminaMaximum;
 
     #endregion
 
@@ -85,6 +99,8 @@ public abstract class Character : MonoBehaviour
     private NavMeshAgent agent;
     private Transform chaseTarget;
 
+    private NavMeshPath helperPath;
+
     #endregion
 
     #endregion
@@ -93,10 +109,13 @@ public abstract class Character : MonoBehaviour
 
     protected virtual void Start()
     {
+        health = healthMaximum;
+        stamina = staminaMaximum;
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         agent.updatePosition = false;
         agent.updateRotation = false;
+        helperPath = new NavMeshPath();
         ClearNextPosition();
     }
     private void FixedUpdate()
@@ -212,8 +231,11 @@ public abstract class Character : MonoBehaviour
 
     public void MoveTo(Vector3 position)
     {
-        NextPosition = position;
-        chaseTarget = null;
+        if (agent.CalculatePath(position ,helperPath))
+        {
+            NextPosition = position;
+            chaseTarget = null;
+        }
     }
 
     private void UpdateChase()

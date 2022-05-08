@@ -1,0 +1,337 @@
+fileFormatVersion: 2
+guid: a78d8e5b2fadee941998d30c00f828c3
+ModelImporter:
+  serializedVersion: 20200
+  internalIDToNameTable:
+  - first:
+      74: -8135221261470759844
+    second: Character Rig|0 Root
+  - first:
+      74: 3032365864817303776
+    second: Character Rig|Attack
+  - first:
+      74: -8863717062682962001
+    second: Character Rig|Death Back
+  - first:
+      74: -9123398973472437508
+    second: Character Rig|Death Front
+  - first:
+      74: -7051945628940243670
+    second: Character Rig|Guard Full
+  - first:
+      74: -8856625859984223977
+    second: Character Rig|Guard Impact Back
+  - first:
+      74: -292513045577414010
+    second: Character Rig|Guard Impact Front
+  - first:
+      74: 1080076431082360434
+    second: Character Rig|Guard Loop
+  - first:
+      74: -1460835973627987640
+    second: Character Rig|Guard Start
+  - first:
+      74: 2682617951981101014
+    second: Character Rig|Idle
+  - first:
+      74: -4902120935920001046
+    second: Character Rig|Impact Back
+  - first:
+      74: -4781528076191645504
+    second: Character Rig|Impact Front Left
+  - first:
+      74: 3832679002659803867
+    second: Character Rig|Impact Front Right
+  - first:
+      74: -8498465583555594674
+    second: Character Rig|Run
+  - first:
+      74: -8634556702958489958
+    second: Character Rig|Walk
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Arrow End Material
+    second: {fileID: 2100000, guid: 60f76a318e3426d4aa903b8b67138f62, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Arrow Metal Material
+    second: {fileID: 2100000, guid: 497347289066bd242a9bcaf9314d14f4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Arrow Wood Material
+    second: {fileID: 2100000, guid: 7f3b690cef13e9e48bd9ac5fcff7a263, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Belt Material
+    second: {fileID: 2100000, guid: 24a2e2e83f9fe7040b84f8d35608de26, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Boots Fabric Material
+    second: {fileID: 2100000, guid: c91136077fdbb1e4eb5ef16bf6ab9475, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Boots Leather Material
+    second: {fileID: 2100000, guid: 995a65cd935712441bb03ba4949f609b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Bow String Material
+    second: {fileID: 2100000, guid: ffea48074119a3b4290ee27f69c1cbe2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Bow Wood Material
+    second: {fileID: 2100000, guid: 982ed9b057157384b879679d9be1841a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Collar Material
+    second: {fileID: 2100000, guid: 2e8fb72b0186a9e4aaabc61b94e821d8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Female Brown Hair Material
+    second: {fileID: 2100000, guid: a2108f502716b014ca3f1b4cf87d95a8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Female Skin Baked Material
+    second: {fileID: 2100000, guid: ce051b53280742f4f8a706acbb1d2464, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pants Material
+    second: {fileID: 2100000, guid: 4d8ad5aff09eeef46843964dd560cc25, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Quiver Material
+    second: {fileID: 2100000, guid: 5db4dd34f52601e4a92162cfa799320a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Shirt Material
+    second: {fileID: 2100000, guid: 69b2c6c989c89fa498c4f1cb2a088cf6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Shoulder Belt Material
+    second: {fileID: 2100000, guid: 7753ea28c89388b4b8377097c721ae67, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Vambrace Material
+    second: {fileID: 2100000, guid: 369a42f8b56173146b0422829e330db4, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Albedo
+    second: {fileID: 2800000, guid: a3e1d906ec62a6d4fb1d9c9755ea7ede, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Normal
+    second: {fileID: 2800000, guid: 26f734925dfaee84d85d306cbb9a734a, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Arrow Albedo
+    second: {fileID: 2800000, guid: 846bae521468cbb41a190f156bbd1095, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Arrow Normal
+    second: {fileID: 2800000, guid: 37f74f788c408b444a106d938542e0ef, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Belt Albedo
+    second: {fileID: 2800000, guid: 2dd80606a077e1a438dd38047ad2d3e4, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Belt Normal
+    second: {fileID: 2800000, guid: a73b961c4657b4e439b8278e75a3235d, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Boots Albedo
+    second: {fileID: 2800000, guid: 3e2960d69f8d11842b50d882cc559b20, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Boots Normal
+    second: {fileID: 2800000, guid: d3c9002058fe27645b6eacdb1c336bb6, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Collar Albedo
+    second: {fileID: 2800000, guid: 876c9183636fb3e48b86e99bf8f76729, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Collar Normal
+    second: {fileID: 2800000, guid: ddd9fbd4f23a335498e8273f51e2cd57, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Pants Albedo
+    second: {fileID: 2800000, guid: 33b3147c38580d246b75bb6808195c46, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Pants Normal
+    second: {fileID: 2800000, guid: 46b74978e8ab2354c9a092bdfda9529c, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Quiver Albedo
+    second: {fileID: 2800000, guid: 8afe9edc74fc9a346be1d33227f9a120, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Quiver Normal
+    second: {fileID: 2800000, guid: 70842118644a510439dacc7d91b4c811, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Shirt Albedo
+    second: {fileID: 2800000, guid: 36ae935c80842d9489e1a50f0baf09f7, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Shirt Normal
+    second: {fileID: 2800000, guid: f1f1fa864685ec04194335ab28d12a4f, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Shortbow Albedo
+    second: {fileID: 2800000, guid: 6a68e30bbb181044da229606cb7c4951, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Shortbow Normal
+    second: {fileID: 2800000, guid: e19a73d28a12469428be0f6e5253744e, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Shoulder Belt Albedo
+    second: {fileID: 2800000, guid: 00088d56281a5fa4489e197a950362f9, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Shoulder Belt Normal
+    second: {fileID: 2800000, guid: 5e52e6fef4fb503459ce10ecae942a67, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Vambraces Albedo
+    second: {fileID: 2800000, guid: 2c8bd6b071ad63944887fe5d4537959c, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Ranger Vambraces Normal
+    second: {fileID: 2800000, guid: d0c7cbc43865eee4780d9d0ef14d19c2, type: 3}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: Character Rig
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
