@@ -1,44 +1,34 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Manages a female ranger character.
+/// Manages a male ranger character.
 /// </summary>
 public class MaleRangerCharacter : Character
 {
     #region Properties and Fields
 
+    public Projectile boltProjectile;
+
+    public AttackTrigger boltTrigger;
+
     public Crossbow crossbow;
 
-    public Arrow arrow;
-
-    public AttackTrigger arrowTrigger;
-
-    [Tooltip("The arrow game object which is animated.")]
+    [Tooltip("Represents the minimum damage of a fired bolt.")]
     [SerializeField]
-    private GameObject animatedArrow;
+    private float boltMinimumDamage;
 
-    [Tooltip("The arrow game object which is fired.")]
+    [Tooltip("Represents the maximum damage of a fired bolt.")]
     [SerializeField]
-    private GameObject firedArrow;
+    private float boltMaximumDamage;
 
-    [Tooltip("The spanw zone of the arrows.")]
+    [Tooltip("Represents the force of a fired bolt.")]
     [SerializeField]
-    private GameObject arrowSpawnZone;
+    private float boltForce = 3;
 
-    [Tooltip("Represents the minimum damage of a fired arrow.")]
-    [SerializeField]
-    private float arrowMinimumDamage;
+    private const string AnimatorReload = "Reload";
 
-    [Tooltip("Represents the maximum damage of a fired arrow.")]
-    [SerializeField]
-    private float arrowMaximumDamage;
-
-    [Tooltip("Represents the force of a fired arrow.")]
-    [SerializeField]
-    private float arrowForce = 3;
-
+    private bool isArrowLoaded; 
 
     #endregion
 
@@ -47,38 +37,49 @@ public class MaleRangerCharacter : Character
     protected override void Start()
     {
         base.Start();
-        arrowTrigger.MinimumDamage = arrowMinimumDamage;
-        arrowTrigger.MaximumDamage = arrowMaximumDamage;
-        if (arrowMaximumDamage < Globals.CompareDelta)
+        boltTrigger.MinimumDamage = boltMinimumDamage;
+        boltTrigger.MaximumDamage = boltMaximumDamage;
+        boltProjectile.Force = boltForce;
+        if (boltMaximumDamage < Globals.CompareDelta)
         {
-            Debug.LogWarning("Arrow maximum damage for a female ranger character is set to a non-positive value.");
+            Debug.LogWarning("Bolt maximum damage for a male ranger character is set to a non-positive value.");
         }
-        if (arrowMaximumDamage < arrowMinimumDamage)
+        if (boltMaximumDamage < boltMinimumDamage)
         {
-            Debug.LogWarning("Arrow maximum damage for a female ranger character is set to a lesser value than the minimum.");
+            Debug.LogWarning("Bolt maximum damage for a male ranger character is set to a lesser value than the minimum.");
         }
-        arrow.Force = arrowForce;
     }
 
     #region Attack
 
+    public override bool TryAttack(Vector3 attackTarget)
+    {
+        if (!animationManager.IsInterrupted && !animationManager.IsAttacking && !crossbow.IsReloading)
+        {
+            OnAttack(attackTarget);
+            return true;
+        }
+        return false;
+    }
+
     protected override void OnAttack(Vector3 attackTarget)
     {
-        StartCoroutine(ManageAttackTrigger());
+        if (isArrowLoaded)
+        {
+            base.OnAttack(attackTarget);
+            crossbow.Attack();
+            isArrowLoaded = false;
+        }
+        else
+        {
+            ClearNextPosition();
+            animationManager.CustomTrigger(AnimatorReload);
+            crossbow.Reload();
+            isArrowLoaded = true;
+        }
         StartCoroutine(RotateToAttackDirection(attackTarget));
     }
 
-    private IEnumerator ManageAttackTrigger()
-    {
-        firedArrow.SetActive(false);
-        yield return new WaitUntil(() => animationManager.CanDealDamage);
-        arrowTrigger.IsActive = true;
-        animatedArrow.SetActive(false);
-        firedArrow.SetActive(true);
-        yield return new WaitWhile(() => animationManager.CanDealDamage);
-        arrowTrigger.IsActive = false;
-        animatedArrow.SetActive(true);
-    }
 
     #endregion
 
@@ -87,7 +88,7 @@ public class MaleRangerCharacter : Character
     protected override void OnDie(HitDirection direction)
     {
         base.OnDie(direction);
-        crossbow.AnimateDeath(direction);
+        crossbow.Die(direction);
     }
 
     #endregion

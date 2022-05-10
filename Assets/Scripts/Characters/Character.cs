@@ -136,19 +136,21 @@ public abstract class Character : MonoBehaviour
         chaseTarget = target;
     }
 
-    public bool TryAttack(Vector3 attackTarget)
+    public virtual bool TryAttack(Vector3 attackTarget)
     {
         if (!animationManager.IsInterrupted && !animationManager.IsAttacking)
         {
-            ClearNextPosition();
-            animationManager.Attack();
             OnAttack(attackTarget);
             return true;
         }
         return false;
     }
 
-    protected abstract void OnAttack(Vector3 attackTarget);
+    protected virtual void OnAttack(Vector3 attackTarget)
+    {
+        ClearNextPosition();
+        animationManager.Attack();
+    }
 
     protected IEnumerator RotateToAttackDirection(Vector3 attackTarget)
     {

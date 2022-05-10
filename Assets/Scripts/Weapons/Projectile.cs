@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Manages the fireing of an arrow.
+/// Manages a projectile weapon.
+/// To fire a projectile set it's gameobject to active.
 /// </summary>
-public class Arrow : MonoBehaviour
+public class Projectile : MonoBehaviour
 {
+    #region Properties and Fields
+
     private Rigidbody rb;
     private new CapsuleCollider collider;
+
+    [Tooltip("The attack trigger of the projectile.")]
+    [SerializeField]
+    private AttackTrigger projectileTrigger;
 
     [Tooltip("The character which spawns the arrows.")]
     [SerializeField]
@@ -21,7 +28,7 @@ public class Arrow : MonoBehaviour
     /// <summary>
     /// Indicates the starting force of the arrow.
     /// </summary>
-    public float Force {get;set;}
+    public float Force { get; set; }
 
     /// <summary>
     /// Indicates the maximum distance until an arrow can travel.
@@ -31,47 +38,62 @@ public class Arrow : MonoBehaviour
 
     private bool hasInitialized = false;
 
+    #endregion
+
+    #region Methods
+
     private void OnEnable()
     {
         if (!hasInitialized)
         {
-            Initialize();
+            rb = GetComponent<Rigidbody>();
+            collider = GetComponent<CapsuleCollider>();
+            rb.isKinematic = true;
+            hasInitialized = true;
         }
-        rb.position = spawnZone.transform.position;
-        rb.rotation = spawnZone.transform.rotation;
-        rb.constraints = RigidbodyConstraints.None;
-        rb.isKinematic = false;
-        rb.AddForce(character.transform.forward * Force, ForceMode.Impulse);
-    }
-
-    private void Initialize()
-    {
-        rb = GetComponent<Rigidbody>();
-        collider = GetComponent<CapsuleCollider>();
-        rb.isKinematic = true;
-        hasInitialized = true;
+        Fire();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == character) 
+        if (other.gameObject == character)
         {
             Physics.IgnoreCollision(collider, other);
             return;
         }
+        else
+        {
+            Stop();
+        }
+    }
+    private void FixedUpdate()
+    {
+        if (rb.isKinematic == false && (rb.position - character.transform.position).magnitude > distanceMaximum)
+        {
+            Debug.Log("Arrow went too far, it's been deactivated.");
+            Stop();
+            gameObject.SetActive(false);
+        }
+    }
+    private void Fire()
+    {
+        projectileTrigger.IsActive = false; // TODO
+        rb.position = spawnZone.transform.position;
+        rb.rotation = spawnZone.transform.rotation;
+        rb.constraints = RigidbodyConstraints.None;
+        rb.isKinematic = false;
+        projectileTrigger.IsActive = true;
+        rb.AddForce(character.transform.forward * Force, ForceMode.Impulse);
+    }
+
+    private void Stop()
+    {
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         rb.constraints = RigidbodyConstraints.FreezeAll;
         rb.isKinematic = true;
     }
 
-    private void FixedUpdate()
-    {
-        if (rb.isKinematic == false && (rb.position - character.transform.position).magnitude > distanceMaximum)
-        {
-            Debug.Log("Arrow went too far, it's been deactivated.");
-            rb.isKinematic = true;
-            gameObject.SetActive(false);
-        }
-    }
+    #endregion
+
 }

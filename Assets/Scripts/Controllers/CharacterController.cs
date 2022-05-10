@@ -7,9 +7,6 @@ using UnityEngine;
 public class CharacterController : MonoBehaviour
 {
     #region Properties and Fields
-
-    [Tooltip("The character which is controlled.")]
-    [SerializeField]
     private Character character;
     private Camera mainCamera;
 
@@ -20,6 +17,7 @@ public class CharacterController : MonoBehaviour
     private void Start()
     {
         mainCamera = Camera.main;
+        character = GetComponent<Character>();
     }
 
     private void Update()

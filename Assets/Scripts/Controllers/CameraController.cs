@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -5,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class CameraController : MonoBehaviour
 {
-    public Transform character;
+    private Transform character;
     [Tooltip("Represents the camera's angle from the character.")]
     public float angleFromCharacter = 45;
     [Tooltip("Represents the camera's distance from the character.")]
@@ -20,6 +21,14 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
+        try
+        {
+            character = FindObjectOfType<CharacterController>().gameObject.transform;
+        }
+        catch (Exception)
+        {
+            Debug.LogError("No character controller found.");
+        }
         relativePosition = new Vector3(0, lookAtHeight, 0) + new Vector3(0, Mathf.Sin(angleFromCharacter / 180 * Mathf.PI), Mathf.Cos(angleFromCharacter/180 * Mathf.PI)) * distanceFromCharacter;
         transform.position = character.position + relativePosition;
         transform.LookAt(character.position + new Vector3(0, lookAtHeight, 0));

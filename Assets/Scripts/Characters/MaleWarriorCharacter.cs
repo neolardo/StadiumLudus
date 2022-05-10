@@ -39,6 +39,7 @@ public class MaleWarriorCharacter : Character
 
     protected override void OnAttack(Vector3 attackTarget)
     {
+        base.OnAttack(attackTarget);
         StartCoroutine(ManageAttackTrigger());
         StartCoroutine(RotateToAttackDirection(attackTarget));
     }

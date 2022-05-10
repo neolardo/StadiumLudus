@@ -141,6 +141,19 @@ public class CharacterAnimationManager : MonoBehaviour
 
     #endregion
 
+    #region Custom
+
+    /// <summary>
+    /// Triggers a custom animation.
+    /// </summary>
+    /// <param name="animatorTrigger">The name of the animation trigger.</param>
+    public void CustomTrigger(string animatorTrigger)
+    {
+        animator.SetTrigger(animatorTrigger);
+    }
+
+    #endregion
+
     #endregion
 
 }

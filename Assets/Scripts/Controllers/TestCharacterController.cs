@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class TestCharacterController : MonoBehaviour
 {
-    [Tooltip("The character which is tested.")]
-    [SerializeField]
     private Character character;
-
     public GameObject waypoint1;
     public GameObject waypoint2;
     public bool walkBetweenWaypoints;
@@ -20,6 +17,7 @@ public class TestCharacterController : MonoBehaviour
 
     void Start()
     {
+        character = GetComponent<Character>();
         if (waypoint1 == null)
         { 
             Debug.LogWarning("Waypoint1 for a test character controller is null.");

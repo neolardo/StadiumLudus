@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -9,7 +8,7 @@ public class FemaleRangerCharacter : Character
 {
     #region Properties and Fields
 
-    public Arrow arrow;
+    public Projectile arrowProjectile;
 
     public AttackTrigger arrowTrigger;
 
@@ -21,7 +20,7 @@ public class FemaleRangerCharacter : Character
     [SerializeField]
     private GameObject firedArrow;
 
-    [Tooltip("The spanw zone of the arrows.")]
+    [Tooltip("The spawn zone of the arrows.")]
     [SerializeField]
     private GameObject arrowSpawnZone;
 
@@ -37,7 +36,6 @@ public class FemaleRangerCharacter : Character
     [SerializeField]
     private float arrowForce = 3;
 
-
     #endregion
 
     #region Methods
@@ -47,6 +45,7 @@ public class FemaleRangerCharacter : Character
         base.Start();
         arrowTrigger.MinimumDamage = arrowMinimumDamage;
         arrowTrigger.MaximumDamage = arrowMaximumDamage;
+        arrowProjectile.Force = arrowForce;
         if (arrowMaximumDamage < Globals.CompareDelta)
         {
             Debug.LogWarning("Arrow maximum damage for a female ranger character is set to a non-positive value.");
@@ -55,26 +54,24 @@ public class FemaleRangerCharacter : Character
         {
             Debug.LogWarning("Arrow maximum damage for a female ranger character is set to a lesser value than the minimum.");
         }
-        arrow.Force = arrowForce;
     }
 
     #region Attack
 
     protected override void OnAttack(Vector3 attackTarget)
     {
-        StartCoroutine(ManageAttackTrigger());
+        base.OnAttack(attackTarget);
+        StartCoroutine(ManageAnimations());
         StartCoroutine(RotateToAttackDirection(attackTarget));
     }
 
-    private IEnumerator ManageAttackTrigger()
+    private IEnumerator ManageAnimations()
     {
         firedArrow.SetActive(false);
         yield return new WaitUntil(() => animationManager.CanDealDamage);
-        arrowTrigger.IsActive = true;
         animatedArrow.SetActive(false);
         firedArrow.SetActive(true);
         yield return new WaitWhile(() => animationManager.CanDealDamage);
-        arrowTrigger.IsActive = false;
         animatedArrow.SetActive(true);
     }
 
