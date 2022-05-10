@@ -13,6 +13,7 @@ public class TestCharacterController : MonoBehaviour
     public bool walkBetweenWaypoints;
     public bool attack;
     public bool guard;
+    public bool die;
     private int nextWaypoint = 0;
     private const float positionThreshold = 0.5f;
 
@@ -40,6 +41,11 @@ public class TestCharacterController : MonoBehaviour
 
     private void CheckInputParameters()
     {
+        if (die)
+        {
+            character.TryTakeDamage(200, HitDirection.Back);
+            die = false;
+        }
         if (attack)
         {
             character.TryAttack(character.transform.position + Random.insideUnitSphere);

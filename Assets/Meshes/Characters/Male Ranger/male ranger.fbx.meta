@@ -1,0 +1,252 @@
+fileFormatVersion: 2
+guid: 24de54005c897a641ab56ba5b4757a6c
+ModelImporter:
+  serializedVersion: 20200
+  internalIDToNameTable:
+  - first:
+      74: -8135221261470759844
+    second: Character Rig|0 Root
+  - first:
+      74: 3032365864817303776
+    second: Character Rig|Attack
+  - first:
+      74: -8863717062682962001
+    second: Character Rig|Death Back
+  - first:
+      74: -9123398973472437508
+    second: Character Rig|Death Front
+  - first:
+      74: 1757542779274806416
+    second: Character Rig|Guard End
+  - first:
+      74: -7051945628940243670
+    second: Character Rig|Guard Full
+  - first:
+      74: -8856625859984223977
+    second: Character Rig|Guard Impact Back
+  - first:
+      74: -292513045577414010
+    second: Character Rig|Guard Impact Front
+  - first:
+      74: 1080076431082360434
+    second: Character Rig|Guard Loop
+  - first:
+      74: -1460835973627987640
+    second: Character Rig|Guard Start
+  - first:
+      74: 2682617951981101014
+    second: Character Rig|Idle
+  - first:
+      74: -4902120935920001046
+    second: Character Rig|Impact Back
+  - first:
+      74: -4781528076191645504
+    second: Character Rig|Impact Front Left
+  - first:
+      74: 3832679002659803867
+    second: Character Rig|Impact Front Right
+  - first:
+      74: -101112240922478576
+    second: Character Rig|Reload
+  - first:
+      74: -8498465583555594674
+    second: Character Rig|Run
+  - first:
+      74: -8634556702958489958
+    second: Character Rig|Walk
+  - first:
+      74: -658864380779939828
+    second: Weapon Rig|Weapon Attack
+  - first:
+      74: 1563497334278011026
+    second: Weapon Rig|Weapon Loaded Death Back
+  - first:
+      74: -6990809699824531137
+    second: Weapon Rig|Weapon Loaded Death Front
+  - first:
+      74: -6023701774691662026
+    second: Weapon Rig|Weapon Loaded Idle
+  - first:
+      74: 6056931512072293447
+    second: Weapon Rig|Weapon Reload
+  - first:
+      74: -7000069628885455524
+    second: Weapon Rig|Weapon Unloaded Death Back
+  - first:
+      74: 7374588645932188246
+    second: Weapon Rig|Weapon Unloaded Death Front
+  - first:
+      74: 1460767617199019111
+    second: Weapon Rig|Weapon Unloaded Idle
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Belt Material
+    second: {fileID: 2100000, guid: 6f58a6e2846145a41b22bd299233a2ea, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Bolt End Material
+    second: {fileID: 2100000, guid: 34c340f214ae9574b8f7dcd5ca11465a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Bolt Metal Material
+    second: {fileID: 2100000, guid: 0e179c2cc0bc6c74a92f4534fbb652ca, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Bolt Wood Material
+    second: {fileID: 2100000, guid: 04e5827114192e244a2236e90ac6ecea, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Boots Fabric Material
+    second: {fileID: 2100000, guid: 2a535abe120e15541a263cc7b383eb26, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Boots Leather Material
+    second: {fileID: 2100000, guid: 274afcf38a8e7c6488f51017804b3b09, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Collar Material
+    second: {fileID: 2100000, guid: 290843087b27e3a44bb42cd56c37bfe1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Crossbow Metal Material
+    second: {fileID: 2100000, guid: 8179053674d27e34a9fc7d83ad991bf2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Crossbow String Material
+    second: {fileID: 2100000, guid: 4d51cb08fb5ef084ea34b7f3c8d1309f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Crossbow Wood Material
+    second: {fileID: 2100000, guid: 17a3df16843d4ac4a9280a63de5e38fa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Male Body Baked Material
+    second: {fileID: 2100000, guid: ef9fbf7bfc8383c4b91c927f9d19d5c7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pants Material
+    second: {fileID: 2100000, guid: 7cf3f06e12917014b9fe8ea405a47f7b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Quiver Material
+    second: {fileID: 2100000, guid: 3d8407167f0fe3f47aa21f5c2ece7086, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Shirt Material
+    second: {fileID: 2100000, guid: 9a8732dcccfeeaa4f9155b2f014003f3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Vambrace Material
+    second: {fileID: 2100000, guid: bd465f9de1964f54c8cf9070948ddaff, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: Character Rig
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -217,12 +217,17 @@ public abstract class Character : MonoBehaviour
             }
             else
             {
-                animationManager.Die(direction);
-                rb.constraints = RigidbodyConstraints.FreezeAll;
+                OnDie(direction);
             }
             return true;
         }
         return false;
+    }
+
+    protected virtual void OnDie(HitDirection direction)
+    {
+        animationManager.Die(direction);
+        rb.constraints = RigidbodyConstraints.FreezeAll;
     }
 
     #endregion

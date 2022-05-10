@@ -52,11 +52,11 @@ public class Arrow : MonoBehaviour
         hasInitialized = true;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject == character) // avoid self collision / self damage
+        if (other.gameObject == character) 
         {
-            Physics.IgnoreCollision(collider, collision.collider);
+            Physics.IgnoreCollision(collider, other);
             return;
         }
         rb.velocity = Vector3.zero;
