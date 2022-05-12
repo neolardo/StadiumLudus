@@ -56,16 +56,24 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == character)
+
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject == character)
         {
-            Physics.IgnoreCollision(collider, other);
+            Physics.IgnoreCollision(collider, collision.collider);
             return;
         }
         else
         {
             Stop();
+            rb.position = collision.contacts[0].point;
+            gameObject.transform.parent = collision.transform;
         }
     }
+
     private void FixedUpdate()
     {
         if (rb.isKinematic == false && (rb.position - character.transform.position).magnitude > distanceMaximum)
@@ -77,6 +85,7 @@ public class Projectile : MonoBehaviour
     }
     private void Fire()
     {
+        gameObject.transform.parent = null;
         projectileTrigger.IsActive = false; // TODO
         rb.position = spawnZone.transform.position;
         rb.rotation = spawnZone.transform.rotation;
