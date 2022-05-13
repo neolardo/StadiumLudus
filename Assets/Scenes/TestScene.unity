@@ -3058,6 +3058,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1196167234}
     m_Modifications:
+    - target: {fileID: 293849132955555001, guid: f3e5b8f2235e5844493fe235b59e58bb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 633661204288643234, guid: f3e5b8f2235e5844493fe235b59e58bb, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 81b3b8cd852a6534b902ab5f78213029, type: 2}
+    - target: {fileID: 1570397789715187940, guid: f3e5b8f2235e5844493fe235b59e58bb, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: a83f1a430a950a24da1435245a78664a, type: 2}
+    - target: {fileID: 1599894378099403048, guid: f3e5b8f2235e5844493fe235b59e58bb, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 11c0e964bac67bd47aaae9748b74876c, type: 2}
+    - target: {fileID: 4354483259960074148, guid: f3e5b8f2235e5844493fe235b59e58bb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4862958010728143072, guid: f3e5b8f2235e5844493fe235b59e58bb, type: 3}
       propertyPath: m_Name
       value: Fountain
@@ -3114,6 +3134,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8559359058818939836, guid: f3e5b8f2235e5844493fe235b59e58bb, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8a05afec8c9099444b20ea2a6b91f5ca, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3e5b8f2235e5844493fe235b59e58bb, type: 3}
 --- !u!1001 &1484408921837077684
