@@ -279,7 +279,7 @@ public abstract class Character : MonoBehaviour
             }
             var targetRotation = Quaternion.LookRotation(new Vector3(currentNextPosition.x, rb.position.y, currentNextPosition.z) - rb.position);
             rb.transform.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
-            rb.MovePosition(rb.transform.position + movementSpeed * Time.fixedDeltaTime * rb.transform.forward);
+            rb.MovePosition(rb.transform.position + movementSpeed * Time.fixedDeltaTime * (currentNextPosition - rb.position).normalized);
         }
         else
         {

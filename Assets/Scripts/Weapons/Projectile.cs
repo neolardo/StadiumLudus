@@ -14,21 +14,12 @@ public class Projectile : MonoBehaviour
     private new CapsuleCollider collider;
 
     [Tooltip("The attack trigger of the projectile.")]
-    [SerializeField]
-    private AttackTrigger projectileTrigger;
-
-    [Tooltip("The character which spawns the arrows.")]
-    [SerializeField]
-    private GameObject character;
-
-    [Tooltip("Represents the zone where this arrow should be spawned at.")]
-    [SerializeField]
-    private GameObject spawnZone;
+    public AttackTrigger projectileTrigger;
 
     /// <summary>
-    /// Indicates the starting force of the arrow.
+    /// The projectile pool.
     /// </summary>
-    public float Force { get; set; }
+    public ProjectilePoolManager ProjectilePool { get; set; }
 
     /// <summary>
     /// Indicates the maximum distance until an arrow can travel.
@@ -37,6 +28,12 @@ public class Projectile : MonoBehaviour
     private const float distanceMaximum = 20;
 
     private bool hasInitialized = false;
+
+    private bool doesRaycastTargetExists = false;
+
+    private Vector3 potetentialHit;
+
+    private const float triggerDelaySecondsAfterHit = 0.2f;
 
     #endregion
 
@@ -56,43 +53,66 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject == character)
+        if (other.gameObject == ProjectilePool.character)
         {
-            Physics.IgnoreCollision(collider, collision.collider);
             return;
         }
         else
         {
             Stop();
-            rb.position = collision.contacts[0].point;
-            gameObject.transform.parent = collision.transform;
+            if (doesRaycastTargetExists)
+            {
+                rb.position = potetentialHit;
+                transform.position = potetentialHit;
+            }
+            else
+            {
+                rb.position = transform.position;
+            }
+            transform.parent = other.transform;
+            StartCoroutine(DelayAttackTriggerAfterHit());
         }
+    }
+
+    private IEnumerator DelayAttackTriggerAfterHit()
+    {
+        yield return new WaitForSeconds(triggerDelaySecondsAfterHit);
+        projectileTrigger.IsActive = false;
     }
 
     private void FixedUpdate()
     {
-        if (rb.isKinematic == false && (rb.position - character.transform.position).magnitude > distanceMaximum)
+        if (rb.isKinematic == false && (rb.position - ProjectilePool.character.transform.position).magnitude > distanceMaximum)
         {
             Debug.Log("Arrow went too far, it's been deactivated.");
             Stop();
+            ProjectilePool.OnProjectileDisappeared(this);
             gameObject.SetActive(false);
         }
     }
     private void Fire()
     {
-        gameObject.transform.parent = null;
-        projectileTrigger.IsActive = false; // TODO
-        rb.position = spawnZone.transform.position;
-        rb.rotation = spawnZone.transform.rotation;
+        projectileTrigger.IsActive = false;
+        gameObject.transform.parent = ProjectilePool.gameObject.transform;
         rb.constraints = RigidbodyConstraints.None;
+        rb.position = ProjectilePool.spawnZone.transform.position;
+        rb.rotation = ProjectilePool.spawnZone.transform.rotation;
+        transform.position = ProjectilePool.spawnZone.transform.position;
+        transform.rotation = ProjectilePool.spawnZone.transform.rotation;
         rb.isKinematic = false;
+        RaycastHit hit;
+        var dir = (ProjectilePool.character.transform.forward * distanceMaximum + 0.5f * Vector3.down).normalized;
+        if (Physics.Raycast(rb.position, dir, out hit, distanceMaximum))
+        {
+            doesRaycastTargetExists = true;
+            potetentialHit = hit.point;
+        }
+        else
+        {
+            doesRaycastTargetExists = false;
+        }
         projectileTrigger.IsActive = true;
-        rb.AddForce(character.transform.forward * Force, ForceMode.Impulse);
+        rb.AddForce(ProjectilePool.character.transform.forward * ProjectilePool.Force, ForceMode.Impulse);
     }
 
     private void Stop()

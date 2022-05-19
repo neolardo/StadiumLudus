@@ -8,9 +8,8 @@ public class AttackTrigger : MonoBehaviour
 {
     #region Properties and Fields
 
-    [Tooltip("The character which uses this attack trigger. Required to calculate hit directions.")]
-    [SerializeField]
-    private GameObject character;
+    [Tooltip("The character which uses this attack trigger. Required to calculate hit directions and to prevent self harm.")]
+    public GameObject character;
 
     /// <summary>
     /// The minimum possible damage of this attack trigger.
@@ -31,7 +30,7 @@ public class AttackTrigger : MonoBehaviour
 
     /// <summary>
     /// Indicates whether this trigger is active or not.
-    /// The trigger should be activated for as long as the attack animation takes.
+    /// Usually the trigger should be activated for as long as the attack animation takes.
     /// </summary>
     public bool IsActive {
         get
@@ -80,7 +79,7 @@ public class AttackTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (IsActive && other.tag.Contains(Globals.CharacterTag) && !DamagedCharacters.Contains(other.gameObject))
+        if (IsActive && other.tag.Contains(Globals.CharacterTag) && !DamagedCharacters.Contains(other.gameObject) && other.gameObject != character)
         {
             if (other.GetComponent<Character>().TryTakeDamage(Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(other.transform.forward)))
             {

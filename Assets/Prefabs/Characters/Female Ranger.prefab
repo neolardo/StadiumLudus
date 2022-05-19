@@ -27,8 +27,8 @@ Transform:
   m_LocalPosition: {x: -0.12, y: 1.617, z: 0.308}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1937259002399550370}
-  m_RootOrder: 1
+  m_Father: {fileID: 6878281613682450620}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &1937259000883120896
 MonoBehaviour:
@@ -56,9 +56,10 @@ GameObject:
   - component: {fileID: 1937259002399550368}
   - component: {fileID: 1937259002399550369}
   - component: {fileID: 1937259002399550399}
+  - component: {fileID: 1570771985}
   m_Layer: 6
   m_Name: Female Ranger
-  m_TagString: Untagged
+  m_TagString: Character
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -75,7 +76,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2119013655850544360}
-  - {fileID: 893508741}
+  - {fileID: 6878281613682450620}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -153,14 +154,71 @@ MonoBehaviour:
   guardRotationSpeed: 700
   attackRange: 10
   animationManager: {fileID: 1937259000883120896}
-  arrowProjectile: {fileID: 0}
-  arrowTrigger: {fileID: 0}
+  arrowPool: {fileID: 6789668969888963968}
   animatedArrow: {fileID: 6317349093086673323}
-  firedArrow: {fileID: 0}
-  arrowSpawnZone: {fileID: 893508740}
   arrowMinimumDamage: 5
   arrowMaximumDamage: 10
   arrowForce: 3
+--- !u!114 &1570771985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937259002399550372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcd049b5391ef714bad0207b0b4af5f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &2550622103485625573
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6878281613682450620}
+  - component: {fileID: 6789668969888963968}
+  m_Layer: 6
+  m_Name: ProjectilePool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6878281613682450620
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2550622103485625573}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 893508741}
+  m_Father: {fileID: 1937259002399550370}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6789668969888963968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2550622103485625573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8e0b342077ad1547a360f22ae88ab90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberOfProjectiles: 5
+  projectilePrefab: {fileID: 6564233587726543120, guid: 7d1f5a07406fcb14da27e697633c8450, type: 3}
+  character: {fileID: 1937259002399550372}
+  spawnZone: {fileID: 893508741}
 --- !u!1001 &1937259000883120899
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -915,6 +973,10 @@ PrefabInstance:
     - target: {fileID: -3852067656626418118, guid: a78d8e5b2fadee941998d30c00f828c3, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -3654322227651792216, guid: a78d8e5b2fadee941998d30c00f828c3, type: 3}
+      propertyPath: m_Name
+      value: AnimatedArrow
       objectReference: {fileID: 0}
     - target: {fileID: -3654322227651792216, guid: a78d8e5b2fadee941998d30c00f828c3, type: 3}
       propertyPath: m_Layer

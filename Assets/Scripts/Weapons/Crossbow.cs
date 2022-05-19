@@ -10,6 +10,10 @@ public class Crossbow : MonoBehaviour
     #region Properties and Fields
     private Animator animator;
 
+    [Tooltip("The bolt projectile pool.")]
+    [SerializeField]
+    private ProjectilePoolManager boltPool;
+
     [Tooltip("The bolt game object which is animated.")]
     [SerializeField]
     private GameObject quiverBolt;
@@ -17,10 +21,6 @@ public class Crossbow : MonoBehaviour
     [Tooltip("The bolt game object which is attached to the crossbow.")]
     [SerializeField]
     private GameObject crossbowBolt;
-
-    [Tooltip("The bolt game object which is fired.")]
-    [SerializeField]
-    private GameObject firedBolt;
 
     public bool IsReloading { get; private set; }
 
@@ -78,19 +78,19 @@ public class Crossbow : MonoBehaviour
     #region Attack
     public void Attack()
     {
-        firedBolt.SetActive(false); // TODO: use a projectile pool instead
         animator.SetTrigger(AnimatorAttack);
     }
 
     public void OnArrowFired()
     {
         crossbowBolt.SetActive(false);
-        firedBolt.SetActive(true);
+        boltPool.Fire();
     }
 
     #endregion
 
     #region Die
+
     public void Die(HitDirection direction)
     {
         animator.SetTrigger(direction == HitDirection.Back ? AnimatorDieBack : AnimatorDieFront);

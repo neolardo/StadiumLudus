@@ -8,11 +8,11 @@ public class MaleRangerCharacter : Character
 {
     #region Properties and Fields
 
-    public Projectile boltProjectile;
-
-    public AttackTrigger boltTrigger;
-
     public Crossbow crossbow;
+
+    [Tooltip("The bolt pool manager.")]
+    [SerializeField]
+    public ProjectilePoolManager boltPool;
 
     [Tooltip("Represents the minimum damage of a fired bolt.")]
     [SerializeField]
@@ -28,18 +28,26 @@ public class MaleRangerCharacter : Character
 
     private const string AnimatorReload = "Reload";
 
-    private bool isArrowLoaded; 
+    private bool isArrowLoaded;
+
+    private bool hasInitialized;
 
     #endregion
 
     #region Methods
 
-    protected override void Start()
+    protected void OnEnable()
     {
-        base.Start();
-        boltTrigger.MinimumDamage = boltMinimumDamage;
-        boltTrigger.MaximumDamage = boltMaximumDamage;
-        boltProjectile.Force = boltForce;
+        // order is important
+        if (!hasInitialized)
+        {
+            Initialize();
+            hasInitialized = true;
+        }
+    }
+
+    private void Initialize()
+    {
         if (boltMaximumDamage < Globals.CompareDelta)
         {
             Debug.LogWarning("Bolt maximum damage for a male ranger character is set to a non-positive value.");
@@ -48,6 +56,13 @@ public class MaleRangerCharacter : Character
         {
             Debug.LogWarning("Bolt maximum damage for a male ranger character is set to a lesser value than the minimum.");
         }
+        if (boltForce <= 0)
+        {
+            Debug.LogWarning("Bolt force for a male ranger character is set to non-positive value.");
+        }
+        boltPool.MinimumDamage = boltMinimumDamage;
+        boltPool.MaximumDamage = boltMaximumDamage;
+        boltPool.Force = boltForce;
     }
 
     #region Attack

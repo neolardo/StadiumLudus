@@ -8,21 +8,13 @@ public class FemaleRangerCharacter : Character
 {
     #region Properties and Fields
 
-    public Projectile arrowProjectile;
-
-    public AttackTrigger arrowTrigger;
+    [Tooltip("The arrow pool manager.")]
+    [SerializeField]
+    private ProjectilePoolManager arrowPool;
 
     [Tooltip("The arrow game object which is animated.")]
     [SerializeField]
     private GameObject animatedArrow;
-
-    [Tooltip("The arrow game object which is fired.")]
-    [SerializeField]
-    private GameObject firedArrow;
-
-    [Tooltip("The spawn zone of the arrows.")]
-    [SerializeField]
-    private GameObject arrowSpawnZone;
 
     [Tooltip("Represents the minimum damage of a fired arrow.")]
     [SerializeField]
@@ -36,16 +28,25 @@ public class FemaleRangerCharacter : Character
     [SerializeField]
     private float arrowForce = 3;
 
+    private bool hasInitialized;
+
     #endregion
 
     #region Methods
 
-    protected override void Start()
+
+    protected void OnEnable()
     {
-        base.Start();
-        arrowTrigger.MinimumDamage = arrowMinimumDamage;
-        arrowTrigger.MaximumDamage = arrowMaximumDamage;
-        arrowProjectile.Force = arrowForce;
+        // order is important
+        if (!hasInitialized)
+        {
+            Initialize();
+            hasInitialized = true;
+        }
+    }
+
+    private void Initialize()
+    {
         if (arrowMaximumDamage < Globals.CompareDelta)
         {
             Debug.LogWarning("Arrow maximum damage for a female ranger character is set to a non-positive value.");
@@ -54,6 +55,13 @@ public class FemaleRangerCharacter : Character
         {
             Debug.LogWarning("Arrow maximum damage for a female ranger character is set to a lesser value than the minimum.");
         }
+        if (arrowForce <= 0)
+        {
+            Debug.LogWarning("Arrow force for a female ranger character is set to non-positive value.");
+        }
+        arrowPool.MinimumDamage = arrowMinimumDamage;
+        arrowPool.MaximumDamage = arrowMaximumDamage;
+        arrowPool.Force = arrowForce;
     }
 
     #region Attack
@@ -67,10 +75,9 @@ public class FemaleRangerCharacter : Character
 
     private IEnumerator ManageAnimations()
     {
-        firedArrow.SetActive(false);
         yield return new WaitUntil(() => animationManager.CanDealDamage);
         animatedArrow.SetActive(false);
-        firedArrow.SetActive(true);
+        arrowPool.Fire();
         yield return new WaitWhile(() => animationManager.CanDealDamage);
         animatedArrow.SetActive(true);
     }
