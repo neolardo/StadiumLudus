@@ -17,8 +17,8 @@ public class ProjectilePoolManager : MonoBehaviour
     [SerializeField]
     private GameObject projectilePrefab;
 
-    [Tooltip("The character which fires projectiles.")]
-    public GameObject character;
+    [Tooltip("The transform of the character which fires projectiles.")]
+    public Transform characterTransform;
 
     [Tooltip("The transform of the spawn zone with the correct starting position and rotation of the projectile.")]
     public Transform spawnZone;
@@ -58,7 +58,7 @@ public class ProjectilePoolManager : MonoBehaviour
         activeProjectiles = new List<Projectile>();
         if (numberOfProjectiles <= 0)
         {
-            Debug.LogWarning($"The number of projectiles of a {character.name} is set to a non-positive value.");
+            Debug.LogWarning($"The number of projectiles of a {characterTransform.name} is set to a non-positive value.");
         }
         CreateProjectiles();
     }
@@ -74,7 +74,7 @@ public class ProjectilePoolManager : MonoBehaviour
             proj.ProjectilePool = this;
             proj.projectileTrigger.MinimumDamage = MinimumDamage;
             proj.projectileTrigger.MaximumDamage = MaximumDamage;
-            proj.projectileTrigger.character = character;
+            proj.projectileTrigger.characterTransform = characterTransform;
             inactiveProjectiles.Add(proj);
         }
     }

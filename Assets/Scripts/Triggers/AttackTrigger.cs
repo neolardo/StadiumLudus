@@ -8,8 +8,8 @@ public class AttackTrigger : MonoBehaviour
 {
     #region Properties and Fields
 
-    [Tooltip("The character which uses this attack trigger. Required to calculate hit directions and to prevent self harm.")]
-    public GameObject character;
+    [Tooltip("The trasnform of the character which uses this attack trigger. Required to calculate hit directions and to prevent self harm.")]
+    public Transform characterTransform;
 
     /// <summary>
     /// The minimum possible damage of this attack trigger.
@@ -24,7 +24,7 @@ public class AttackTrigger : MonoBehaviour
     /// <summary>
     /// A list of gameobjects representing the previously damaged character.
     /// </summary>
-    private List<GameObject> DamagedCharacters { get; } = new List<GameObject>();
+    private List<Character> DamagedCharacters { get; } = new List<Character>();
 
     private bool _isActive;
 
@@ -37,7 +37,6 @@ public class AttackTrigger : MonoBehaviour
         {
             return _isActive;
         }
-
         set
         {
             _isActive = value;
@@ -54,7 +53,7 @@ public class AttackTrigger : MonoBehaviour
 
     private void Start()
     {
-        if (character == null)
+        if (characterTransform == null)
         {
             Debug.LogWarning("An attack trigger's character field is null.");
         }
@@ -62,28 +61,37 @@ public class AttackTrigger : MonoBehaviour
 
     private HitDirection CalculateHitDirection(Vector3 otherForward)
     {
-        float angle = Vector3.SignedAngle(character.transform.forward, otherForward, Vector3.up);
+        float angle = Vector3.SignedAngle(characterTransform.forward, otherForward, Vector3.up);
         if (Mathf.Abs(angle) < 90)
         {
             return HitDirection.Back;
         }
         else if (angle > 0)
         {
-            return HitDirection.FrontLeft;
+            return HitDirection.FrontRight;
         }
         else
         {
-            return HitDirection.FrontRight;
+            return HitDirection.FrontLeft;
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (IsActive && other.tag.Contains(Globals.CharacterTag) && !DamagedCharacters.Contains(other.gameObject) && other.gameObject != character)
+        DealDamage(other);
+    }
+
+    private void DealDamage(Collider other)
+    {
+        if (IsActive && other.tag.Contains(Globals.HitBoxTag) && !other.gameObject.transform.IsChildOf(characterTransform))
         {
-            if (other.GetComponent<Character>().TryTakeDamage(Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(other.transform.forward)))
+            var hitBox = other.GetComponent<HitBox>();
+            if (!DamagedCharacters.Contains(hitBox.character))
             {
-                DamagedCharacters.Add(other.gameObject);
+                if (hitBox.character.TryTakeDamage(Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(hitBox.character.transform.forward)))
+                {
+                    DamagedCharacters.Add(hitBox.character);
+                }
             }
         }
     }

@@ -12,6 +12,7 @@ public class Projectile : MonoBehaviour
 
     private Rigidbody rb;
     private new CapsuleCollider collider;
+    private new Transform transform;
 
     [Tooltip("The attack trigger of the projectile.")]
     public AttackTrigger projectileTrigger;
@@ -35,6 +36,8 @@ public class Projectile : MonoBehaviour
 
     private const float triggerDelaySecondsAfterHit = 0.2f;
 
+    private bool IsStopped => rb.isKinematic;
+
     #endregion
 
     #region Methods
@@ -43,6 +46,7 @@ public class Projectile : MonoBehaviour
     {
         if (!hasInitialized)
         {
+            transform = GetComponent<Transform>();
             rb = GetComponent<Rigidbody>();
             collider = GetComponent<CapsuleCollider>();
             rb.isKinematic = true;
@@ -53,11 +57,11 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == ProjectilePool.character)
+        if (other.gameObject.transform.IsChildOf(ProjectilePool.characterTransform) || other.CompareTag(Globals.CharacterTag) || other.CompareTag(Globals.IgnoreBoxTag))
         {
             return;
         }
-        else
+        else if(!IsStopped)
         {
             Stop();
             if (doesRaycastTargetExists)
@@ -82,7 +86,7 @@ public class Projectile : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (rb.isKinematic == false && (rb.position - ProjectilePool.character.transform.position).magnitude > distanceMaximum)
+        if (rb.isKinematic == false && (rb.position - ProjectilePool.characterTransform.position).magnitude > distanceMaximum)
         {
             Debug.Log("Arrow went too far, it's been deactivated.");
             Stop();
@@ -101,8 +105,9 @@ public class Projectile : MonoBehaviour
         transform.rotation = ProjectilePool.spawnZone.transform.rotation;
         rb.isKinematic = false;
         RaycastHit hit;
-        var dir = (ProjectilePool.character.transform.forward * distanceMaximum + 0.5f * Vector3.down).normalized;
-        if (Physics.Raycast(rb.position, dir, out hit, distanceMaximum))
+        int layerMask = ~ ((1 << Globals.CharacterLayer) | (1 << Globals.IgnoreRaycastLayer)); //  ignore character rb and arrows
+        var dir = (ProjectilePool.characterTransform.forward * distanceMaximum + 0.5f * Vector3.down).normalized;
+        if (Physics.Raycast(rb.position, dir, out hit, distanceMaximum, layerMask))
         {
             doesRaycastTargetExists = true;
             potetentialHit = hit.point;
@@ -112,7 +117,7 @@ public class Projectile : MonoBehaviour
             doesRaycastTargetExists = false;
         }
         projectileTrigger.IsActive = true;
-        rb.AddForce(ProjectilePool.character.transform.forward * ProjectilePool.Force, ForceMode.Impulse);
+        rb.AddForce(ProjectilePool.characterTransform.forward * ProjectilePool.Force, ForceMode.Impulse);
     }
 
     private void Stop()

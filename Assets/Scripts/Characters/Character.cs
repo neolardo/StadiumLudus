@@ -94,6 +94,7 @@ public abstract class Character : MonoBehaviour
         }
     }
 
+    public new Transform transform;
     public CharacterAnimationManager animationManager;
     protected Rigidbody rb;
     private NavMeshAgent agent;
@@ -111,6 +112,7 @@ public abstract class Character : MonoBehaviour
     {
         health = healthMaximum;
         stamina = staminaMaximum;
+        transform = GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         agent.updatePosition = false;

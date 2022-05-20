@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 1715907280}
   - component: {fileID: 1715907281}
   - component: {fileID: 1715907282}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: attackTrigger
-  m_TagString: Untagged
+  m_TagString: IgnoreBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e5427545b46bac4c88d9995a338bd2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  character: {fileID: 0}
+  characterTransform: {fileID: 0}
 --- !u!1 &538939659893703077
 GameObject:
   m_ObjectHideFlags: 0
@@ -70,9 +70,9 @@ GameObject:
   - component: {fileID: 878591633307065119}
   - component: {fileID: 4296075578956240058}
   - component: {fileID: 2052039114449625200}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: bolt
-  m_TagString: Untagged
+  m_TagString: IgnoreBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -154,9 +154,9 @@ GameObject:
   - component: {fileID: 809421028501504775}
   - component: {fileID: 809421028501504772}
   - component: {fileID: 809421028501504773}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: FiredBolt
-  m_TagString: Untagged
+  m_TagString: IgnoreBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -188,9 +188,9 @@ CapsuleCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.02
-  m_Height: 0.71240294
+  m_Height: 0.44842762
   m_Direction: 2
-  m_Center: {x: 0, y: 0, z: 0.19120145}
+  m_Center: {x: 0, y: 0, z: 0.059213787}
 --- !u!54 &809421028501504772
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -10,6 +10,8 @@ public class CharacterController : MonoBehaviour
     private Character character;
     private Camera mainCamera;
 
+    private readonly Vector3 attackPositionOffset = new Vector3(0, 1f, 0);
+
     #endregion
 
     #region Methods
@@ -51,20 +53,20 @@ public class CharacterController : MonoBehaviour
         {
             RaycastHit hit;
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, 20, 1 << Globals.GroundLayer | 1 << Globals.CharacterLayer))
+            if (Physics.Raycast(ray, out hit, 20, (1 << Globals.GroundLayer) | (1 << Globals.CharacterLayer)))
             {
                 if (isLeftMouseButton)
                 {
-                    bool enemyAtHit = hit.transform.gameObject.layer == Globals.CharacterLayer && gameObject != hit.transform.gameObject;
+                    bool enemyAtHit = hit.transform.gameObject.layer == Globals.CharacterLayer && character.gameObject != hit.transform.gameObject;
                     if (Input.GetKey(KeyCode.LeftShift))
                     {
-                        character.TryAttack(hit.point);
+                        character.TryAttack(enemyAtHit ? hit.point : hit.point + attackPositionOffset);
                     }
                     else if (enemyAtHit)
                     {
                         character.ChaseAndAttack(hit.transform);
                     }
-                    else
+                    else if(character.gameObject != hit.transform.gameObject)
                     {
                         character.MoveTo(hit.point);
                     }
