@@ -7,6 +7,7 @@ using UnityEngine;
 public class CharacterController : MonoBehaviour
 {
     #region Properties and Fields
+
     private Character character;
     private Camera mainCamera;
 
@@ -66,7 +67,14 @@ public class CharacterController : MonoBehaviour
                     {
                         character.ChaseAndAttack(hit.transform);
                     }
-                    else if(character.gameObject != hit.transform.gameObject)
+                    else if (character.gameObject == hit.transform.gameObject) // self hit
+                    {
+                        if (Physics.Raycast(ray, out hit, 20, (1 << Globals.GroundLayer)))
+                        {
+                            character.MoveTo(hit.point);
+                        }
+                    }
+                    else if (character.gameObject != hit.transform.gameObject)
                     {
                         character.MoveTo(hit.point);
                     }

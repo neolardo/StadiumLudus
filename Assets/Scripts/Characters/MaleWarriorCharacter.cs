@@ -9,12 +9,18 @@ public class MaleWarriorCharacter : Character
     #region Properties and Fields
 
     public AttackTrigger battleAxeTrigger;
+
     [Tooltip("Represents the minimum damage of the battle axe weapon.")]
     [SerializeField]
     private float battleAxeMinimumDamage;
+
     [Tooltip("Represents the maximum damage of the battle axe weapon.")]
     [SerializeField]
     private float battleAxeMaximumDamage;
+
+    [Tooltip("Represents audio source of the battle axe.")]
+    [SerializeField]
+    private AudioSource battleAxeAudioSource;
 
     #endregion
 
@@ -48,6 +54,7 @@ public class MaleWarriorCharacter : Character
     {
         yield return new WaitUntil(() => animationManager.CanDealDamage);
         battleAxeTrigger.IsActive = true;
+        AudioManager.Instance.PlayOneShotSFX(battleAxeAudioSource, SFX.Slash, 0);
         yield return new WaitWhile(() => animationManager.CanDealDamage);
         battleAxeTrigger.IsActive = false;
     }

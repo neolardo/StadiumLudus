@@ -50,22 +50,21 @@ public class AudioManager : MonoBehaviour
     private void ParseSFXs()
     {
         SFXDictionary = new Dictionary<SFX, List<AudioClip>>();
-        var sfxPaths = Directory.GetFiles(SFXFolderPath);
-        foreach (var path in sfxPaths)
+        AudioClip[] clipArray = Resources.LoadAll<AudioClip>(SFXFolderPath);
+        foreach (var clip in clipArray)
         {
-            var fileName = Path.GetFileName(path);
-            var fileNameRoot = fileName.Split(SeparatorCharacter)[0];
+            var fileNameRoot = clip.name.Split(SeparatorCharacter)[0];
             if (Enum.TryParse(fileNameRoot, out SFX sfxEnum))
             {
                 if (!SFXDictionary.ContainsKey(sfxEnum))
                 {
                     SFXDictionary.Add(sfxEnum, new List<AudioClip>());
                 }
-                SFXDictionary[sfxEnum].Add(Resources.Load<AudioClip>(Path.Combine(SFXFolderPath, fileName)));
+                SFXDictionary[sfxEnum].Add(clip);
             }
             else
             {
-                Debug.LogWarning("Could not load audio resource: " + fileName);
+                Debug.LogWarning("Could not load audio resource: " + clip.name);
             }
         }
     }
@@ -73,13 +72,12 @@ public class AudioManager : MonoBehaviour
     private void ParseBGMs()
     {
         BGMDictionary = new Dictionary<BGM, AudioClip>();
-        var bgmPaths = Directory.GetFiles(BGMFolderPath);
-        foreach (var path in bgmPaths)
+        AudioClip[] clipArray = Resources.LoadAll<AudioClip>(BGMFolderPath);
+        foreach (var clip in clipArray)
         {
-            var fileName = Path.GetFileName(path);
-            if (Enum.TryParse(fileName, out BGM bgmEnum))
+            if (Enum.TryParse(clip.name, out BGM bgmEnum))
             {
-                BGMDictionary.Add(bgmEnum, Resources.Load<AudioClip>(Path.Combine(BGMFolderPath, fileName)));
+                BGMDictionary.Add(bgmEnum, clip);
             }
         }
     }
@@ -120,7 +118,7 @@ public class AudioManager : MonoBehaviour
         source.Stop();
     }
 
-    #endregion
+    #endregion 
 
     #endregion
 }

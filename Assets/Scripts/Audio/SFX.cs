@@ -8,12 +8,12 @@ public enum SFX
     HitOnIron = 1,
     HitOnWood = 2,
     HitOnStone = 3,
+    GuardHit = 4,
 
     // step
     StepOnDirt = 10,
     StepOnStone = 11,
-    StepOnGrass = 12,
-    StepOnSand = 13,
+    StepOnSand = 12,
 
     // slash
     Slash = 20,
@@ -23,4 +23,9 @@ public enum SFX
 
     // water
     Waterfall = 40,
+
+
+    // menu
+    MenuButtonHover = 50,
+    MenuProceed = 51,
 }

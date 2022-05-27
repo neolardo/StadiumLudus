@@ -34,7 +34,7 @@ public class CameraController : MonoBehaviour
         transform.LookAt(character.position + new Vector3(0, lookAtHeight, 0));
     }
 
-    void FixedUpdate()
+    void Update()
     {
         if (Input.GetMouseButton(2))
         {
