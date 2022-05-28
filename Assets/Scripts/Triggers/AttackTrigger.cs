@@ -8,8 +8,11 @@ public class AttackTrigger : MonoBehaviour
 {
     #region Properties and Fields
 
-    [Tooltip("The trasnform of the character which uses this attack trigger. Required to calculate hit directions and to prevent self harm.")]
+    [Tooltip("The transform of the character which uses this attack trigger. Required to calculate hit directions and to prevent self harm.")]
     public Transform characterTransform;
+
+    [Tooltip("The audio source of the attack dealing object for playing impact audio.")]
+    public AudioSource audioSource;
 
     /// <summary>
     /// The minimum possible damage of this attack trigger.
@@ -78,22 +81,41 @@ public class AttackTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        DealDamage(other);
-    }
-
-    private void DealDamage(Collider other)
-    {
-        if (IsActive && other.tag.Contains(Globals.HitBoxTag) && !other.gameObject.transform.IsChildOf(characterTransform))
+        if (IsActive)
         {
-            var hitBox = other.GetComponent<HitBox>();
-            if (!DamagedCharacters.Contains(hitBox.character))
+            if (other.tag.Contains(Globals.HitBoxTag) && !other.gameObject.transform.IsChildOf(characterTransform))
             {
-                if (hitBox.character.TryTakeDamage(Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(hitBox.character.transform.forward)))
+                if (TryDealDamage(other))
                 {
-                    DamagedCharacters.Add(hitBox.character);
+                    //AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.HitOnFlesh); TODO: add flesh sound
                 }
             }
+            else
+            {
+                var sfx = other.tag switch
+                {
+                    Globals.WoodTag => SFX.HitOnWood,
+                    Globals.StoneTag => SFX.HitOnStone,
+                    Globals.MetalTag => SFX.HitOnMetal,
+                    _ => SFX.GuardHit,
+                };
+                AudioManager.Instance.PlayOneShotSFX(audioSource, sfx);
+            }
         }
+    }
+
+    private bool TryDealDamage(Collider other)
+    {
+        var hitBox = other.GetComponent<HitBox>();
+        if (!DamagedCharacters.Contains(hitBox.character))
+        {
+            if (hitBox.character.TryTakeDamage(Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(hitBox.character.transform.forward)))
+            {
+                DamagedCharacters.Add(hitBox.character);
+                return true;
+            }
+        }
+        return false;
     }
 
     #endregion

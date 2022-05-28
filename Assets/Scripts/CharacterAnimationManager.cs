@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
 /// <summary>
 /// Manages the animations of a <see cref="Character"/>.
 /// </summary>
+[RequireComponent(typeof(Animator))]
 public class CharacterAnimationManager : MonoBehaviour
 {
     #region Properties and Fields
@@ -13,12 +14,41 @@ public class CharacterAnimationManager : MonoBehaviour
     [Tooltip("Indicates the number of available attack animations for this character.")]
     [SerializeField]
     private int attackAnimationCount;
+
+    /// <summary>
+    /// Indicates whether the character can be interrupted or not.
+    /// </summary>
     public bool CanBeInterrupted => !IsAttacking && !IsInterrupted;
+
+    /// <summary>
+    /// Indicates whether the character can move or not.
+    /// </summary>
     public bool CanMove => !IsInterrupted && !IsAttacking && !IsGuarding;
+
+    /// <summary>
+    /// Indicates whether the character can deal damage currntly or not.
+    /// </summary>
     public bool CanDealDamage {get; private set; }
+
+    /// <summary>
+    /// Indicates whether the character is currently interruped or not.
+    /// </summary>
     public bool IsInterrupted { get; private set; }
+
+    /// <summary>
+    /// Indicates whether the character is currently attacking or not.
+    /// </summary>
     public bool IsAttacking { get; private set; }
+
+    /// <summary>
+    /// Indicates whether the character is currently guarding or not.
+    /// </summary>
     public bool IsGuarding { get; private set; }
+
+    /// <summary>
+    /// Represents the list of currently active custom states of the character's animations.
+    /// </summary>
+    public List<string> CustomStates { get; }
 
     #region Animator Constants
 
@@ -39,10 +69,14 @@ public class CharacterAnimationManager : MonoBehaviour
 
     #region Methods
 
+    #region Init
+
     private void Start()
     {
         animator = GetComponent<Animator>();
     }
+
+    #endregion
 
     #region Moving
 
@@ -75,6 +109,7 @@ public class CharacterAnimationManager : MonoBehaviour
     #endregion
 
     #region Guarding
+
     public void StartGuarding()
     {
         if (!IsGuarding)
@@ -119,7 +154,7 @@ public class CharacterAnimationManager : MonoBehaviour
                     animator.SetTrigger(AnimatorImpactFrontRight);
                     break;
                 default:
-                    Debug.LogWarning("Invalid HitDirection received when trying to trigger impact animation.");
+                    Debug.LogWarning($"Invalid {nameof(HitDirection)} received when trying to trigger impact animation.");
                     break;
             }
         }
@@ -147,9 +182,19 @@ public class CharacterAnimationManager : MonoBehaviour
     /// Triggers a custom animation.
     /// </summary>
     /// <param name="animatorTrigger">The name of the animation trigger.</param>
-    public void CustomTrigger(string animatorTrigger)
+    /// <param name="storeState">Indicates whether the this animation begins a new custom state which should be stored.</param>
+    public void CustomTrigger(string animatorTrigger, bool storeState = false)
     {
         animator.SetTrigger(animatorTrigger);
+    }
+
+    /// <summary>
+    /// Called whenever a custom stated was left.
+    /// </summary>
+    /// <param name="animatorTrigger">The name of the animation trigger which started the state.</param>
+    public void OnCustomStateLeft(string animatorTrigger)
+    {
+        CustomStates.Remove(animatorTrigger);
     }
 
     #endregion

@@ -39,6 +39,11 @@ public abstract class Character : MonoBehaviour
     /// </summary>
     public float StaminaRatio => stamina / staminaMaximum;
 
+    /// <summary>
+    /// Inidicates whether this character can move or not.
+    /// </summary>
+    protected virtual bool CanMove => animationManager.CanMove;
+
     #endregion
 
     #region Movement
@@ -126,8 +131,8 @@ public abstract class Character : MonoBehaviour
         agent.updatePosition = false;
         agent.updateRotation = false;
         helperPath = new NavMeshPath();
-        var characterScreenPosition = Camera.main.WorldToScreenPoint(rb.position);
-        characterPositionRatioOnScreen = new Vector2(characterScreenPosition.x / Screen.width, characterScreenPosition.y / Screen.height);
+        var characterScreenPosition = Camera.main.WorldToScreenPoint(transform.position);
+        characterPositionRatioOnScreen = new Vector2(0.5f, characterScreenPosition.y / Screen.height);
         ClearNextPosition();
     }
     private void FixedUpdate()
@@ -291,7 +296,7 @@ public abstract class Character : MonoBehaviour
     {
         var nextDestination = agent.path.corners[0];
         float distanceToDestination = (rb.position - nextDestination).magnitude;
-        if (distanceToDestination > destinationThreshold && animationManager.CanMove)
+        if (distanceToDestination > destinationThreshold && CanMove)
         {
             movementSpeed = Mathf.Min(movementSpeed + Time.fixedDeltaTime * acceleration, movementSpeedMaximum);
             var targetRotation = Quaternion.LookRotation(new Vector3(nextDestination.x, rb.position.y, nextDestination.z) - rb.position);

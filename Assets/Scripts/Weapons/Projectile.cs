@@ -117,6 +117,7 @@ public class Projectile : MonoBehaviour
             doesRaycastTargetExists = false;
         }
         projectileTrigger.IsActive = true;
+        AudioManager.Instance.PlayOneShotSFX(projectileTrigger.audioSource, SFX.Projectile);
         rb.AddForce(ProjectilePool.characterTransform.forward * ProjectilePool.Force, ForceMode.Impulse);
     }
 

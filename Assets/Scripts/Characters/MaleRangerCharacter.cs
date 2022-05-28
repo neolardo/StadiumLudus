@@ -28,6 +28,8 @@ public class MaleRangerCharacter : Character
 
     private const string AnimatorReload = "Reload";
 
+    protected override bool CanMove => base.CanMove && !crossbow.IsReloading;
+
     private bool isArrowLoaded;
 
     private bool hasInitialized;
@@ -35,6 +37,8 @@ public class MaleRangerCharacter : Character
     #endregion
 
     #region Methods
+
+    #region Init
 
     protected void OnEnable()
     {
@@ -64,6 +68,8 @@ public class MaleRangerCharacter : Character
         boltPool.MaximumDamage = boltMaximumDamage;
         boltPool.Force = boltForce;
     }
+
+    #endregion
 
     #region Attack
 

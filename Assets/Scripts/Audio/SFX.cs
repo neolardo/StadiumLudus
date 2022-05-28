@@ -5,7 +5,7 @@ public enum SFX
 {
     // hit
     HitOnFlesh = 0,
-    HitOnIron = 1,
+    HitOnMetal = 1,
     HitOnWood = 2,
     HitOnStone = 3,
     GuardHit = 4,

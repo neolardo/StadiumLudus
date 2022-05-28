@@ -11,8 +11,6 @@ public class CharacterController : MonoBehaviour
     private Character character;
     private Camera mainCamera;
 
-    private readonly Vector3 attackPositionOffset = new Vector3(0, 1f, 0);
-
     #endregion
 
     #region Methods
@@ -61,7 +59,7 @@ public class CharacterController : MonoBehaviour
                     bool enemyAtHit = hit.transform.gameObject.layer == Globals.CharacterLayer && character.gameObject != hit.transform.gameObject;
                     if (Input.GetKey(KeyCode.LeftShift))
                     {
-                        character.TryAttack(enemyAtHit ? hit.point : hit.point + attackPositionOffset);
+                        character.TryAttack(hit.point);
                     }
                     else if (enemyAtHit)
                     {
