@@ -1,0 +1,308 @@
+fileFormatVersion: 2
+guid: 03bb52135c7c77d48b784c3d7e4033e2
+ModelImporter:
+  serializedVersion: 20200
+  internalIDToNameTable:
+  - first:
+      74: 2607130963540905627
+    second: Body Rig|0 Root
+  - first:
+      74: 4907358092870877666
+    second: Body Rig|ComboAttack1
+  - first:
+      74: -4719371478742862828
+    second: Body Rig|ComboAttack1.1
+  - first:
+      74: 7785733617811979044
+    second: Body Rig|ComboAttack1.2.1
+  - first:
+      74: -1217131947105375520
+    second: Body Rig|ComboAttack1.2.2
+  - first:
+      74: 8046559447321095106
+    second: Body Rig|ComboAttack1.3.1
+  - first:
+      74: -3089067733519588055
+    second: Body Rig|ComboAttack1.3.2
+  - first:
+      74: -1396278377573893738
+    second: Body Rig|ComboAttack2
+  - first:
+      74: -8447073779931634990
+    second: Body Rig|ComboAttack2.1
+  - first:
+      74: -7037118119810354845
+    second: Body Rig|ComboAttack2.2.1
+  - first:
+      74: 4816451473483284215
+    second: Body Rig|ComboAttack2.2.2
+  - first:
+      74: -402764121325559435
+    second: Body Rig|ComboAttack2.3.1
+  - first:
+      74: -3751169120659471226
+    second: Body Rig|ComboAttack2.3.2
+  - first:
+      74: 7180013365913275687
+    second: Body Rig|Death Back
+  - first:
+      74: 4248806268426326458
+    second: Body Rig|Death Front
+  - first:
+      74: 6659279930652537609
+    second: Body Rig|Guard End
+  - first:
+      74: 7579877867278395061
+    second: Body Rig|Guard Full
+  - first:
+      74: -7264358800183548420
+    second: Body Rig|Guard Impact Back
+  - first:
+      74: 7603678671560439297
+    second: Body Rig|Guard Impact Front
+  - first:
+      74: 3525129802070748969
+    second: Body Rig|Guard Loop
+  - first:
+      74: 3497721006468263059
+    second: Body Rig|Guard Start
+  - first:
+      74: 6190665555062937109
+    second: Body Rig|Idle
+  - first:
+      74: 6155771979442830769
+    second: Body Rig|Impact Back
+  - first:
+      74: 1179710970432778349
+    second: Body Rig|Impact Front Left
+  - first:
+      74: 747677314287446034
+    second: Body Rig|Impact Front Right
+  - first:
+      74: 4861090345667026724
+    second: Body Rig|Run
+  - first:
+      74: 2311309830043255788
+    second: Body Rig|Walk
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Apron Material
+    second: {fileID: 2100000, guid: 05656a25e502ea14c8f92eec09d2f626, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Belt Material
+    second: {fileID: 2100000, guid: 688fd9914822f5a409714a4b3ab00ad0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Boots Fur Material
+    second: {fileID: 2100000, guid: 5d3f603b98768a14897ae9cedc1885ad, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Boots Leather Material
+    second: {fileID: 2100000, guid: 2aee70fe4d767fd47b3e9458936b9c01, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Bracelet Fur Material
+    second: {fileID: 2100000, guid: 389fea63c44c84448abe6a27338ea82f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Bracelet Leather Material
+    second: {fileID: 2100000, guid: 0bc07ca7afa06bb418332447c92743f2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Female Brown Hair Material
+    second: {fileID: 2100000, guid: dad3a521740c92e4aa3c0e9dbd0bde49, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Female Skin Baked Material
+    second: {fileID: 2100000, guid: 3075425e86bc78c469b3d1615c300f04, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Small Axe Metal Material
+    second: {fileID: 2100000, guid: 51117a5111ab26d4a841ee06a8722376, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Small Axe Wood Material
+    second: {fileID: 2100000, guid: 272d99abff7b46c46abb40847d833403, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Vest Material
+    second: {fileID: 2100000, guid: 366375019918a974285d60ec276d8128, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Albedo
+    second: {fileID: 2800000, guid: 28b54fdff06f37446b77d7ccf62f867d, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Normal
+    second: {fileID: 2800000, guid: 38f975da34606c541a1e0cda65568c80, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Warrior Apron Albedo
+    second: {fileID: 2800000, guid: d372c4e507512934f80376cf8d0875e6, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Warrior Apron Normal
+    second: {fileID: 2800000, guid: 6f818d5057d69d84bb6b1520e4af5271, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Warrior Belt Albedo
+    second: {fileID: 2800000, guid: 24e71a5d01bf8b44c847b7d38974b9b5, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Warrior Belt Normal
+    second: {fileID: 2800000, guid: c41bdbfd6a23c0e4a8d6b71934d04844, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Warrior Boots Albedo
+    second: {fileID: 2800000, guid: 5101d19786d9f2041ae6ae5f6023b4f4, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Warrior Boots Normal
+    second: {fileID: 2800000, guid: 73ae40c099e9c2f49baf8f178238ed6e, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Warrior Bracelet Albedo
+    second: {fileID: 2800000, guid: 8d17b55f4a7566a48ad793e7dc9ecf9f, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Warrior Bracelet Normal
+    second: {fileID: 2800000, guid: 6e685e885aab6af45ba95fbfc60ccbfd, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Warrior Small Axe Albedo
+    second: {fileID: 2800000, guid: f01682f118e3a6d41bc9a41bd6cdf0b9, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Warrior Small Axe Normal
+    second: {fileID: 2800000, guid: 4a7adf3824dfc1a498b2b3fc51e62449, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Warrior Vest Albedo
+    second: {fileID: 2800000, guid: 0d8e72eb857396843a26b3d7a5ee47b8, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Female Warrior Vest Normal
+    second: {fileID: 2800000, guid: d6ec9240d08bcca4387ac562b6cdf755, type: 3}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: Body Rig
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
