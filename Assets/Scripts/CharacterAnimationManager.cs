@@ -48,7 +48,7 @@ public class CharacterAnimationManager : MonoBehaviour
     /// <summary>
     /// Represents the list of currently active custom states of the character's animations.
     /// </summary>
-    public List<string> CustomStates { get; }
+    public List<string> CustomStates { get; private set; }
 
     #region Animator Constants
 
@@ -74,6 +74,7 @@ public class CharacterAnimationManager : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
+        CustomStates = new List<string>();
     }
 
     #endregion
@@ -98,6 +99,11 @@ public class CharacterAnimationManager : MonoBehaviour
     public void OnAttackCanDealDamage()
     {
         CanDealDamage = true;
+    }
+
+    public void OnAttackCannotDealDamage()
+    {
+        CanDealDamage = false;
     }
 
     public void OnAttackFinished()
@@ -179,13 +185,42 @@ public class CharacterAnimationManager : MonoBehaviour
     #region Custom
 
     /// <summary>
-    /// Triggers a custom animation.
+    /// Sets a custom trigger for the animator.
     /// </summary>
     /// <param name="animatorTrigger">The name of the animation trigger.</param>
     /// <param name="storeState">Indicates whether the this animation begins a new custom state which should be stored.</param>
-    public void CustomTrigger(string animatorTrigger, bool storeState = false)
+    public void SetCustomTrigger(string animatorTrigger, bool storeState = false)
     {
         animator.SetTrigger(animatorTrigger);
+        if(storeState)
+        {
+            CustomStates.Add(animatorTrigger); 
+        }
+    }
+
+
+    /// <summary>
+    /// Sets a custom boolean for the animator.
+    /// </summary>
+    /// <param name="propertyName">The name of the boolean.</param>
+    /// <param name="value">The value of the boolean.</param>
+    /// <param name="storeState">Indicates whether the this animation begins a new custom state which should be stored.</param>
+    public void SetCustomBoolean(string propertyName, bool value, bool storeState = false)
+    {
+        animator.SetBool(propertyName, value);
+        if (storeState)
+        {
+            CustomStates.Add(propertyName);
+        }
+    }
+
+    /// <summary>
+    /// Turns off a custom boolean from the animator.
+    /// </summary>
+    /// <param name="propertyName">The name of the boolean.</param>
+    public void TurnOffBoolean(string propertyName)
+    {
+        animator.SetBool(propertyName, false);
     }
 
     /// <summary>

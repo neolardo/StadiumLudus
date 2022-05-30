@@ -28,6 +28,15 @@ public class FemaleWarriorCharacter : Character
     [SerializeField]
     private AudioSource rightBattleAxeAudioSource;
 
+    #region Combo
+
+    private int currentComboCount = 0;
+    private bool canComboContinue = false;
+    private const float comboDelaySeconds = .5f;
+    private const string AnimatorContinueAttack = "ContinueAttack";
+
+    #endregion
+
     #endregion
 
     #region Methods
@@ -51,22 +60,54 @@ public class FemaleWarriorCharacter : Character
 
     #region Attack
 
+    public override bool TryAttack(Vector3 attackTarget)
+    {
+        if (!animationManager.IsInterrupted && !animationManager.IsAttacking)
+        {
+            OnAttack(attackTarget);
+            currentComboCount = 0;
+            return true;
+        }
+        else if (!animationManager.IsInterrupted && animationManager.IsAttacking && !animationManager.CustomStates.Contains(AnimatorContinueAttack) && currentComboCount < 2 && canComboContinue)
+        {
+            StartCoroutine(ComboDelay());
+            animationManager.SetCustomBoolean(AnimatorContinueAttack, true, true);
+            currentComboCount++;
+            return true;
+        }
+        return false;
+    }
+
     protected override void OnAttack(Vector3 attackTarget)
     {
         base.OnAttack(attackTarget);
         StartCoroutine(ManageAttackTrigger());
         StartCoroutine(RotateToAttackDirection(attackTarget));
+        StartCoroutine(ComboDelay());
     }
+
 
     private IEnumerator ManageAttackTrigger()
     {
-        //TODO
-        yield return new WaitUntil(() => animationManager.CanDealDamage);
-        leftBattleAxeTrigger.IsActive = true;
-        rightBattleAxeTrigger.IsActive = true;
-        yield return new WaitWhile(() => animationManager.CanDealDamage);
-        leftBattleAxeTrigger.IsActive = false;
-        rightBattleAxeTrigger.IsActive = false;
+        while (animationManager.IsAttacking)
+        {
+            yield return new WaitUntil(() => animationManager.CanDealDamage);
+            leftBattleAxeTrigger.IsActive = true;
+            rightBattleAxeTrigger.IsActive = true;
+            Debug.Log("Active");
+            yield return new WaitWhile(() => animationManager.CanDealDamage);
+            leftBattleAxeTrigger.IsActive = false;
+            rightBattleAxeTrigger.IsActive = false;
+            Debug.Log("Inactive");
+        }
+    }
+
+
+    private IEnumerator ComboDelay()
+    {
+        canComboContinue = false;
+        yield return new WaitForSeconds(comboDelaySeconds);
+        canComboContinue = true;
     }
 
     #endregion

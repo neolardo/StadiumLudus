@@ -219,7 +219,7 @@ public abstract class Character : MonoBehaviour
 
     public bool TryTakeDamage(float amount, HitDirection direction)
     {
-        if (IsAlive && animationManager.CanBeInterrupted)
+        if (IsAlive) // && CanBeInterrupted
         {
             if (animationManager.IsGuarding)
             {

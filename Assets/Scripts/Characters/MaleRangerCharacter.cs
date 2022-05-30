@@ -94,7 +94,7 @@ public class MaleRangerCharacter : Character
         else
         {
             ClearNextPosition();
-            animationManager.CustomTrigger(AnimatorReload);
+            animationManager.SetCustomTrigger(AnimatorReload);
             crossbow.Reload();
             isArrowLoaded = true;
         }
