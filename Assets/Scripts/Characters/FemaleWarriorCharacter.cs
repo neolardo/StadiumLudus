@@ -62,13 +62,16 @@ public class FemaleWarriorCharacter : Character
 
     public override bool TryAttack(Vector3 attackTarget)
     {
-        if (!animationManager.IsInterrupted && !animationManager.IsAttacking)
+        if (!animationManager.IsInterrupted && !animationManager.IsGuarding && !animationManager.IsAttacking )
         {
             OnAttack(attackTarget);
             currentComboCount = 0;
+            canComboContinue = false;
+            animationManager.TurnOffBoolean(AnimatorContinueAttack);
+            animationManager.OnCustomStateLeft(AnimatorContinueAttack);
             return true;
         }
-        else if (!animationManager.IsInterrupted && animationManager.IsAttacking && !animationManager.CustomStates.Contains(AnimatorContinueAttack) && currentComboCount < 2 && canComboContinue)
+        else if (!animationManager.IsInterrupted && !animationManager.IsGuarding && animationManager.IsAttacking && !animationManager.CustomStates.Contains(AnimatorContinueAttack) && currentComboCount < 2 && canComboContinue)
         {
             StartCoroutine(ComboDelay());
             animationManager.SetCustomBoolean(AnimatorContinueAttack, true, true);

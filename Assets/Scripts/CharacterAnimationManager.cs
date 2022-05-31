@@ -23,7 +23,12 @@ public class CharacterAnimationManager : MonoBehaviour
     /// <summary>
     /// Indicates whether the character can move or not.
     /// </summary>
-    public bool CanMove => !IsInterrupted && !IsAttacking && !IsGuarding;
+    public bool CanMove => !IsInterrupted && !IsMovementLocked;
+
+    /// <summary>
+    /// Indicates whether the movement is locked by an animation.
+    /// </summary>
+    private bool IsMovementLocked { get; set; } = false;
 
     /// <summary>
     /// Indicates whether the character can deal damage currntly or not.
@@ -53,7 +58,8 @@ public class CharacterAnimationManager : MonoBehaviour
     #region Animator Constants
 
     private const string AnimatorMovementSpeed = "MovementSpeed";
-    private const string AnimatorIsGuarding = "IsGuarding";
+    private const string AnimatorStartGuard = "StartGuard";
+    private const string AnimatorEndGuard = "EndGuard";
     private const string AnimatorAttack = "Attack";
     private const string AnimatorImpactFrontLeft = "ImpactFrontLeft";
     private const string AnimatorImpactFrontRight = "ImpactFrontRight";
@@ -62,6 +68,9 @@ public class CharacterAnimationManager : MonoBehaviour
     private const string AnimatorGuardImpactBack = "GuardImpactBack";
     private const string AnimatorDieFront = "DieFront";
     private const string AnimatorDieBack = "DieBack";
+
+    private const string AnimatorMovementLayerName = "MovementLayer";
+    private int animatorMovementLayerIndex;
 
     #endregion
 
@@ -75,6 +84,7 @@ public class CharacterAnimationManager : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         CustomStates = new List<string>();
+        animatorMovementLayerIndex = animator.GetLayerIndex(AnimatorMovementLayerName);
     }
 
     #endregion
@@ -84,6 +94,7 @@ public class CharacterAnimationManager : MonoBehaviour
     public void SetMovementSpeed(float speed)
     {
         animator.SetFloat(AnimatorMovementSpeed, speed);
+        animator.SetLayerWeight(animatorMovementLayerIndex, speed);
     }
 
     #endregion
@@ -106,6 +117,17 @@ public class CharacterAnimationManager : MonoBehaviour
         CanDealDamage = false;
     }
 
+    public void OnLockMovement()
+    {
+        IsMovementLocked = true;
+    }
+
+    public void OnUnlockMovement()
+    {
+        IsMovementLocked = false;
+    }
+
+
     public void OnAttackFinished()
     {
         IsAttacking = false;
@@ -121,13 +143,13 @@ public class CharacterAnimationManager : MonoBehaviour
         if (!IsGuarding)
         {
             IsGuarding = true;
-            animator.SetBool(AnimatorIsGuarding, true);
+            animator.SetTrigger(AnimatorStartGuard);
         }
     }
 
     public void EndGuarding()
     {
-        animator.SetBool(AnimatorIsGuarding, false);
+        animator.SetTrigger(AnimatorEndGuard);
     }
 
     public void OnGuardFinished()
@@ -210,7 +232,10 @@ public class CharacterAnimationManager : MonoBehaviour
         animator.SetBool(propertyName, value);
         if (storeState)
         {
-            CustomStates.Add(propertyName);
+            if (!CustomStates.Contains(propertyName))
+            {
+                CustomStates.Add(propertyName);
+            }
         }
     }
 

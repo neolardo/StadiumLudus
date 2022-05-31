@@ -75,7 +75,7 @@ public class MaleRangerCharacter : Character
 
     public override bool TryAttack(Vector3 attackTarget)
     {
-        if (!animationManager.IsInterrupted && !animationManager.IsAttacking && !crossbow.IsReloading)
+        if (!animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !crossbow.IsReloading)
         {
             OnAttack(attackTarget);
             return true;

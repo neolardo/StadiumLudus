@@ -45,7 +45,7 @@ public class CharacterController : MonoBehaviour
         else if (Input.GetMouseButtonUp(1))
         {
             character.EndGuarding();
-        };
+        }
         bool isLeftMouseButton = Input.GetMouseButton(0);
         bool isRightMouseButton = Input.GetMouseButton(1);
         if (isLeftMouseButton || isRightMouseButton)
@@ -77,9 +77,9 @@ public class CharacterController : MonoBehaviour
                         character.MoveTo(hit.point);
                     }
                 }
-                if (isRightMouseButton)
+                if (isRightMouseButton && !isLeftMouseButton)
                 {
-                    character.RotateToGuardDirection(hit.point);
+                    character.SetGuardTarget(hit.point);
                 }
             }
         }
