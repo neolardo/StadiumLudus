@@ -6,7 +6,7 @@ AvatarMask:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MaleWarriorLowerBodyMask
+  m_Name: MaleWarriorLocomotionMask
   m_Mask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
   m_Elements:
   - m_Path: 
@@ -48,7 +48,7 @@ AvatarMask:
   - m_Path: Rig/spine1/apron.right1/apron.right2
     m_Weight: 1
   - m_Path: Rig/spine1/spine2
-    m_Weight: 0
+    m_Weight: 1
   - m_Path: Rig/spine1/spine2/spine3
     m_Weight: 0
   - m_Path: Rig/spine1/spine2/spine3/neck

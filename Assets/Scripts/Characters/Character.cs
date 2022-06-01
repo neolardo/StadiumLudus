@@ -52,8 +52,6 @@ public abstract class Character : MonoBehaviour
     [SerializeField]
     private float movementSpeedMaximum = 3.5f;
 
-    private float GuardingMovementSpeedMaximum => movementSpeedMaximum * 0.5f;
-
     [Tooltip("Represents the acceleration of the character.")]
     [SerializeField]
     private float acceleration = 20f;
@@ -64,7 +62,11 @@ public abstract class Character : MonoBehaviour
 
     [Tooltip("Represents the maximum rotation speed for the character's movement in deg/sec.")]
     [SerializeField]
-    private float rotationSpeed = 500f;
+    private float rotationSpeedMaximum = 1000f;
+
+    [Tooltip("Represents the minimum rotation speed for the character's movement in deg/sec.")]
+    [SerializeField]
+    private float rotationSpeedMinimum = 600f;
 
     [Tooltip("Represents the radial attack range of this character.")]
     [SerializeField]
@@ -166,6 +168,7 @@ public abstract class Character : MonoBehaviour
 
         while (Quaternion.Angle(targetRotation, rb.rotation) > rotationThreshold)
         {
+            var rotationSpeed = Mathf.Lerp(rotationSpeedMinimum, rotationSpeedMaximum, Quaternion.Angle(targetRotation, rb.rotation) / 180f);
             rb.transform.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
             yield return null;
         }
@@ -277,32 +280,29 @@ public abstract class Character : MonoBehaviour
         if (distanceToDestination > destinationThreshold && CanMove)
         {
             var targetRotation = Quaternion.LookRotation(new Vector3(nextDestination.x, rb.position.y, nextDestination.z) - rb.position);
-            if (animationManager.IsGuarding && movementSpeed > GuardingMovementSpeedMaximum)
-            {
-                movementSpeed = Mathf.Max(movementSpeed - Time.fixedDeltaTime * deceleration, GuardingMovementSpeedMaximum);
-            }
-            else
-            {
-                movementSpeed = Mathf.Min(movementSpeed + Time.fixedDeltaTime * acceleration, animationManager.IsGuarding ? GuardingMovementSpeedMaximum : movementSpeedMaximum);
-            }
+            movementSpeed = Mathf.Min(movementSpeed + Time.fixedDeltaTime * acceleration, movementSpeedMaximum);
             var moveDirection = (nextDestination - rb.position).normalized;
+            var rotationSpeed = Mathf.Lerp(rotationSpeedMinimum, rotationSpeedMaximum, Quaternion.Angle(targetRotation, rb.rotation) / 180f);
             rb.transform.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
             rb.MovePosition(rb.transform.position + movementSpeed * Time.fixedDeltaTime * moveDirection);
             animationManager.SetCustomBoolean("IsMoving", true);
         }
         else
         {
-            
             if(animationManager.IsGuarding)
             {
                 var targetRotation = Quaternion.LookRotation(new Vector3(guardTarget.x, rb.position.y, guardTarget.z) - rb.position);
                 if (Quaternion.Angle(targetRotation, rb.rotation) > rotationThreshold)
                 {
+                    var rotationSpeed = Mathf.Lerp(rotationSpeedMinimum, rotationSpeedMaximum, Quaternion.Angle(targetRotation, rb.rotation) / 180f);
                     rb.transform.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
                 }
             }
             movementSpeed = Mathf.Max(movementSpeed - Time.fixedDeltaTime * deceleration, 0);
-            animationManager.SetCustomBoolean("IsMoving", false);
+            if (movementSpeed < movementSpeedMaximum / 10)
+            {
+                animationManager.SetCustomBoolean("IsMoving", false);
+            }
         }
         animationManager.SetMovementSpeed(movementSpeed / movementSpeedMaximum);
     }
