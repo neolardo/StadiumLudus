@@ -6,7 +6,6 @@ using UnityEngine;
 /// </summary>
 public class MaleWarriorCharacter : Character
 {
-
     #region Properties and Fields
 
     private MaleWarriorAnimationManager maleWarriorAnimationManager;
@@ -31,11 +30,11 @@ public class MaleWarriorCharacter : Character
 
     [Tooltip("Represents jump force of the leap attack.")]
     [SerializeField]
-    private float leapAttackJumpForce = 1f;
+    private float leapAttackJumpForce = 250f;
 
     [Tooltip("Represents maximum distance of the leap attack.")]
     [SerializeField]
-    private float leapAttackMaximumDistance = 5f;
+    private float leapAttackMaximumDistance = 3.5f;
 
     [Tooltip("Represents cooldown of the leap attack skill in seconds.")]
     [SerializeField]

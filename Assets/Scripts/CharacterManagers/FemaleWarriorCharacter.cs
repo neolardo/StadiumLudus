@@ -9,6 +9,8 @@ public class FemaleWarriorCharacter : Character
 {
     #region Properties and Fields
 
+    private FemaleWarriorAnimationManager femaleWarriorAnimationManager;
+
     public AttackTrigger leftBattleAxeTrigger;
     public AttackTrigger rightBattleAxeTrigger;
 
@@ -28,7 +30,7 @@ public class FemaleWarriorCharacter : Character
     [SerializeField]
     private AudioSource rightBattleAxeAudioSource;
 
-    #region Combo
+    #region Combo Attack
 
     private int currentComboCount = 0;
     private bool canComboContinue = false;
@@ -36,6 +38,44 @@ public class FemaleWarriorCharacter : Character
     private const string AnimatorContinueAttack = "ContinueAttack";
 
     #endregion
+
+    #region Skills
+
+    #region Leap Attack
+
+    [Tooltip("Represents jump force of the leap attack.")]
+    [SerializeField]
+    private float leapAttackJumpForce = 250;
+
+    [Tooltip("Represents maximum distance of the leap attack.")]
+    [SerializeField]
+    private float leapAttackMaximumDistance = 3.5f;
+
+    [Tooltip("Represents cooldown of the leap attack skill in seconds.")]
+    [SerializeField]
+    private float leapAttackCooldown = 5f;
+
+    private const int LeapAttackSkillNumber = 1;
+
+    private const float jumpingTime = 0.5f;
+
+    private bool IsLeapAttackAvailable { get; set; } = true;
+
+    private bool IsLeapAttackFirstFrame { get; set; }
+
+    private Vector3 jumpTarget;
+
+    private Vector3 currentJumpDelta;
+
+    #endregion
+
+    #region Ground Slam
+
+    private const int GroundSlamSkillNumber = 2;
+
+    #endregion  
+
+    #endregion  
 
     #endregion
 
@@ -56,37 +96,35 @@ public class FemaleWarriorCharacter : Character
         {
             Debug.LogWarning("Battle axe maximum damage for a female warrior character is set to a lesser value than the minimum.");
         }
+        femaleWarriorAnimationManager = animationManager as FemaleWarriorAnimationManager;
     }
 
-    #region Skills
-
-    public override void FireSkill(int skillNumber, Vector3 clickPosition)
+    protected override void FixedUpdate()
     {
-        throw new System.NotImplementedException();
+        base.FixedUpdate();
+        UpdateLeapAttackJumping();
     }
-
-    #endregion
 
     #region Attack
 
     public override bool TryAttack(Vector3 attackTarget)
     {
-        if (!animationManager.IsInterrupted && !animationManager.IsGuarding && !animationManager.IsAttacking )
+        if (!femaleWarriorAnimationManager.IsInterrupted && !femaleWarriorAnimationManager.IsGuarding && !femaleWarriorAnimationManager.IsAttacking)
         {
             OnAttack(attackTarget);
             currentComboCount = 0;
             canComboContinue = false;
-            //animationManager.TurnOffBoolean(AnimatorContinueAttack);
-            //animationManager.OnCustomStateLeft(AnimatorContinueAttack);
+            femaleWarriorAnimationManager.SetContinueComboAttack(false);
             return true;
         }
-        /*else if (!animationManager.IsInterrupted && !animationManager.IsGuarding && animationManager.IsAttacking && !animationManager.CustomStates.Contains(AnimatorContinueAttack) && currentComboCount < 2 && canComboContinue)
+        else if (!femaleWarriorAnimationManager.IsInterrupted && !femaleWarriorAnimationManager.IsGuarding && femaleWarriorAnimationManager.IsAttacking 
+            && !femaleWarriorAnimationManager.IsContinueAttackRequested && currentComboCount < 2 && canComboContinue)
         {
             StartCoroutine(ComboDelay());
-            //animationManager.SetCustomBoolean(AnimatorContinueAttack, true, true);
+            femaleWarriorAnimationManager.SetContinueComboAttack(true);
             currentComboCount++;
             return true;
-        }*/
+        }
         return false;
     }
 
@@ -105,11 +143,9 @@ public class FemaleWarriorCharacter : Character
             yield return new WaitUntil(() => animationManager.CanDealDamage);
             leftBattleAxeTrigger.IsActive = true;
             rightBattleAxeTrigger.IsActive = true;
-            Debug.Log("Active");
             yield return new WaitWhile(() => animationManager.CanDealDamage);
             leftBattleAxeTrigger.IsActive = false;
             rightBattleAxeTrigger.IsActive = false;
-            Debug.Log("Inactive");
         }
     }
 
@@ -120,6 +156,105 @@ public class FemaleWarriorCharacter : Character
         yield return new WaitForSeconds(comboDelaySeconds);
         canComboContinue = true;
     }
+
+    #endregion
+
+    #region Skills
+
+    public override void FireSkill(int skillNumber, Vector3 clickPosition)
+    {
+        switch (skillNumber)
+        {
+            case LeapAttackSkillNumber:
+                LeapAttack(clickPosition);
+                break;
+            case GroundSlamSkillNumber:
+                GroundSlam();
+                break;
+            default:
+                Debug.LogWarning("Invalid skill number for a female warrior character.");
+                break;
+        }
+    }
+
+    #region Leap Attack
+
+    private void LeapAttack(Vector3 attackTarget)
+    {
+        if (IsAlive && IsLeapAttackAvailable && !femaleWarriorAnimationManager.IsInterrupted && !femaleWarriorAnimationManager.IsAttacking && !femaleWarriorAnimationManager.IsGuarding)
+        {
+            if ((attackTarget - rb.position).magnitude > leapAttackMaximumDistance)
+            {
+                var edgePoint = rb.position + (attackTarget - rb.position).normalized * leapAttackMaximumDistance;
+                var raycastPoint = edgePoint + Vector3.up * 5;
+                Ray ray = new Ray(raycastPoint, Vector3.down);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, 20, 1 << Globals.GroundLayer))
+                {
+                    edgePoint = hit.point;
+                }
+                attackTarget = edgePoint;
+            }
+            IsLeapAttackFirstFrame = true;
+            IsLeapAttackAvailable = false;
+            jumpTarget = attackTarget;
+            SetRotationTarget(attackTarget);
+            MoveTo(jumpTarget);
+            StartCoroutine(ManageAttackTrigger());
+            StartCoroutine(ManageLeapAttackCooldown());
+            StartCoroutine(ResetDestinationAfterLeap());
+            femaleWarriorAnimationManager.LeapAttack();
+        }
+    }
+
+    private void UpdateLeapAttackJumping()
+    {
+        if (femaleWarriorAnimationManager.IsJumping)
+        {
+            if (IsLeapAttackFirstFrame)
+            {
+                rb.AddForce(Vector3.up * leapAttackJumpForce, ForceMode.Impulse);
+                currentJumpDelta = (new Vector3(jumpTarget.x, rb.position.y, jumpTarget.z) - rb.position) / (jumpingTime * 50);
+                IsLeapAttackFirstFrame = false;
+            }
+            else
+            {
+                rb.MovePosition(rb.position + currentJumpDelta);
+            }
+        }
+    }
+
+    private IEnumerator ManageLeapAttackCooldown()
+    {
+        float remainingTime = leapAttackCooldown;
+        while (remainingTime > 0)
+        {
+            remainingTime -= Time.deltaTime;
+            yield return null;
+        }
+        IsLeapAttackAvailable = true;
+    }
+
+    private IEnumerator ResetDestinationAfterLeap()
+    {
+        yield return new WaitUntil(() => femaleWarriorAnimationManager.IsJumping);
+        yield return new WaitWhile(() => femaleWarriorAnimationManager.IsJumping);
+        ClearDestination();
+    }
+
+    #endregion
+
+    #region Ground Slam
+
+    private void GroundSlam()
+    {
+        if (IsAlive && !femaleWarriorAnimationManager.IsInterrupted && !femaleWarriorAnimationManager.IsAttacking && !femaleWarriorAnimationManager.IsGuarding)
+        {
+
+        }
+    }
+
+    #endregion
 
     #endregion
 
