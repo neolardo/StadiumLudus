@@ -64,13 +64,21 @@ public class FemaleRangerCharacter : Character
         arrowPool.Force = arrowForce;
     }
 
+    #region Skills
+
+    public override void FireSkill(int skillNumber, Vector3 clickPosition)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    #endregion
+
     #region Attack
 
     protected override void OnAttack(Vector3 attackTarget)
     {
         base.OnAttack(attackTarget);
         StartCoroutine(ManageAnimations());
-        StartCoroutine(RotateToAttackDirection(attackTarget));
     }
 
     private IEnumerator ManageAnimations()

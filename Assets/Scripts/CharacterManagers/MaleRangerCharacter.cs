@@ -71,6 +71,15 @@ public class MaleRangerCharacter : Character
 
     #endregion
 
+    #region Skills
+
+    public override void FireSkill(int skillNumber, Vector3 clickPosition)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    #endregion
+
     #region Attack
 
     public override bool TryAttack(Vector3 attackTarget)
@@ -93,12 +102,11 @@ public class MaleRangerCharacter : Character
         }
         else
         {
-            ClearNextPosition();
-            animationManager.SetCustomTrigger(AnimatorReload);
+            ClearDestination();
+            //animationManager.SetCustomTrigger(AnimatorReload);
             crossbow.Reload();
             isArrowLoaded = true;
         }
-        StartCoroutine(RotateToAttackDirection(attackTarget));
     }
 
 

@@ -58,6 +58,15 @@ public class FemaleWarriorCharacter : Character
         }
     }
 
+    #region Skills
+
+    public override void FireSkill(int skillNumber, Vector3 clickPosition)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    #endregion
+
     #region Attack
 
     public override bool TryAttack(Vector3 attackTarget)
@@ -67,17 +76,17 @@ public class FemaleWarriorCharacter : Character
             OnAttack(attackTarget);
             currentComboCount = 0;
             canComboContinue = false;
-            animationManager.TurnOffBoolean(AnimatorContinueAttack);
-            animationManager.OnCustomStateLeft(AnimatorContinueAttack);
+            //animationManager.TurnOffBoolean(AnimatorContinueAttack);
+            //animationManager.OnCustomStateLeft(AnimatorContinueAttack);
             return true;
         }
-        else if (!animationManager.IsInterrupted && !animationManager.IsGuarding && animationManager.IsAttacking && !animationManager.CustomStates.Contains(AnimatorContinueAttack) && currentComboCount < 2 && canComboContinue)
+        /*else if (!animationManager.IsInterrupted && !animationManager.IsGuarding && animationManager.IsAttacking && !animationManager.CustomStates.Contains(AnimatorContinueAttack) && currentComboCount < 2 && canComboContinue)
         {
             StartCoroutine(ComboDelay());
-            animationManager.SetCustomBoolean(AnimatorContinueAttack, true, true);
+            //animationManager.SetCustomBoolean(AnimatorContinueAttack, true, true);
             currentComboCount++;
             return true;
-        }
+        }*/
         return false;
     }
 
@@ -85,7 +94,6 @@ public class FemaleWarriorCharacter : Character
     {
         base.OnAttack(attackTarget);
         StartCoroutine(ManageAttackTrigger());
-        StartCoroutine(RotateToAttackDirection(attackTarget));
         StartCoroutine(ComboDelay());
     }
 

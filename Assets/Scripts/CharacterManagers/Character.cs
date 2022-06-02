@@ -39,14 +39,14 @@ public abstract class Character : MonoBehaviour
     /// </summary>
     public float StaminaRatio => stamina / staminaMaximum;
 
+    #endregion
+
+    #region Movement
+
     /// <summary>
     /// Inidicates whether this character can move or not.
     /// </summary>
     protected virtual bool CanMove => animationManager.CanMove;
-
-    #endregion
-
-    #region Movement
 
     [Tooltip("Represents the maximum movement speed of the character.")]
     [SerializeField]
@@ -62,11 +62,11 @@ public abstract class Character : MonoBehaviour
 
     [Tooltip("Represents the maximum rotation speed for the character's movement in deg/sec.")]
     [SerializeField]
-    private float rotationSpeedMaximum = 1000f;
+    private float rotationSpeedMaximum = 1500f;
 
     [Tooltip("Represents the minimum rotation speed for the character's movement in deg/sec.")]
     [SerializeField]
-    private float rotationSpeedMinimum = 600f;
+    private float rotationSpeedMinimum = 400f;
 
     [Tooltip("Represents the radial attack range of this character.")]
     [SerializeField]
@@ -104,7 +104,7 @@ public abstract class Character : MonoBehaviour
     protected Rigidbody rb;
     private NavMeshAgent agent;
     private Transform chaseTarget;
-    private Vector3 guardTarget;
+    private Vector3 rotationTarget;
     private NavMeshPath helperPath;
 
 
@@ -126,13 +126,19 @@ public abstract class Character : MonoBehaviour
         helperPath = new NavMeshPath();
         var characterScreenPosition = Camera.main.WorldToScreenPoint(transform.position);
         characterPositionRatioOnScreen = new Vector2(0.5f, characterScreenPosition.y / Screen.height);
-        ClearNextPosition();
+        ClearDestination();
     }
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         UpdateChase();
         UpdateMove();
     }
+
+    #region Skills
+
+    public abstract void FireSkill(int skillNumber, Vector3 clickPosition);
+
+    #endregion
 
     #region Attack
 
@@ -148,7 +154,7 @@ public abstract class Character : MonoBehaviour
 
     public virtual bool TryAttack(Vector3 attackTarget)
     {
-        if (!animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding)
+        if (IsAlive && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding)
         {
             OnAttack(attackTarget);
             return true;
@@ -159,19 +165,7 @@ public abstract class Character : MonoBehaviour
     protected virtual void OnAttack(Vector3 attackTarget)
     {
         animationManager.Attack();
-    }
-
-    protected IEnumerator RotateToAttackDirection(Vector3 attackTarget)
-    {
-        attackTarget = new Vector3(attackTarget.x, rb.position.y, attackTarget.z);
-        var targetRotation = Quaternion.LookRotation(attackTarget - rb.position);
-
-        while (Quaternion.Angle(targetRotation, rb.rotation) > rotationThreshold)
-        {
-            var rotationSpeed = Mathf.Lerp(rotationSpeedMinimum, rotationSpeedMaximum, Quaternion.Angle(targetRotation, rb.rotation) / 180f);
-            rb.transform.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
-            yield return null;
-        }
+        rotationTarget = attackTarget;
     }
 
     #endregion
@@ -180,15 +174,15 @@ public abstract class Character : MonoBehaviour
 
     public void StartGuarding()
     {
-        if (!animationManager.IsInterrupted && !animationManager.IsGuarding && !animationManager.IsAttacking)
+        if (IsAlive && !animationManager.IsInterrupted && !animationManager.IsGuarding && !animationManager.IsAttacking)
         {
             animationManager.StartGuarding();
         }
     }
 
-    public void SetGuardTarget(Vector3 guardTarget) 
+    public void SetRotationTarget(Vector3 guardTarget) 
     {
-        this.guardTarget = guardTarget;
+        rotationTarget = guardTarget;
     }
 
     public void EndGuarding()
@@ -285,13 +279,12 @@ public abstract class Character : MonoBehaviour
             var rotationSpeed = Mathf.Lerp(rotationSpeedMinimum, rotationSpeedMaximum, Quaternion.Angle(targetRotation, rb.rotation) / 180f);
             rb.transform.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
             rb.MovePosition(rb.transform.position + movementSpeed * Time.fixedDeltaTime * moveDirection);
-            animationManager.SetCustomBoolean("IsMoving", true);
         }
         else
         {
-            if(animationManager.IsGuarding)
+            if(animationManager.IsGuarding || animationManager.IsAttacking)
             {
-                var targetRotation = Quaternion.LookRotation(new Vector3(guardTarget.x, rb.position.y, guardTarget.z) - rb.position);
+                var targetRotation = Quaternion.LookRotation(new Vector3(rotationTarget.x, rb.position.y, rotationTarget.z) - rb.position);
                 if (Quaternion.Angle(targetRotation, rb.rotation) > rotationThreshold)
                 {
                     var rotationSpeed = Mathf.Lerp(rotationSpeedMinimum, rotationSpeedMaximum, Quaternion.Angle(targetRotation, rb.rotation) / 180f);
@@ -299,15 +292,11 @@ public abstract class Character : MonoBehaviour
                 }
             }
             movementSpeed = Mathf.Max(movementSpeed - Time.fixedDeltaTime * deceleration, 0);
-            if (movementSpeed < movementSpeedMaximum / 10)
-            {
-                animationManager.SetCustomBoolean("IsMoving", false);
-            }
         }
         animationManager.SetMovementSpeed(movementSpeed / movementSpeedMaximum);
     }
 
-    protected void ClearNextPosition()
+    protected void ClearDestination()
     {
         Destination = rb.position;
     }

@@ -34,6 +34,7 @@ public class CharacterController : MonoBehaviour
     private void HandleInputs()
     {
         HandleMouseClick();
+        HandleKeyboardInputs();
     }
 
     private void HandleMouseClick()
@@ -79,10 +80,42 @@ public class CharacterController : MonoBehaviour
                 }
                 if (isRightMouseButton && !isLeftMouseButton)
                 {
-                    character.SetGuardTarget(hit.point);
+                    character.SetRotationTarget(hit.point);
                 }
             }
         }
+    }
+
+    private void HandleKeyboardInputs()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            RaycastHit hit;
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 20, 1 << Globals.GroundLayer))
+            {
+                character.FireSkill(1, hit.point);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.W))
+        {
+            RaycastHit hit;
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 20, 1 << Globals.GroundLayer))
+            {
+                character.FireSkill(2, hit.point);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            RaycastHit hit;
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 20, 1 << Globals.GroundLayer))
+            {
+                character.FireSkill(3, hit.point);
+            }
+        }
+
     }
 
     #endregion
