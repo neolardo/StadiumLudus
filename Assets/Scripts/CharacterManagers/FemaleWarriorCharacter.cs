@@ -57,15 +57,15 @@ public class FemaleWarriorCharacter : Character
 
     private const int LeapAttackSkillNumber = 1;
 
-    private const float jumpingTime = 0.5f;
+    private const float leapAttackJumpingTime = 0.5f;
 
     private bool IsLeapAttackAvailable { get; set; } = true;
 
     private bool IsLeapAttackFirstFrame { get; set; }
 
-    private Vector3 jumpTarget;
+    private Vector3 leapAttackTarget;
 
-    private Vector3 currentJumpDelta;
+    private Vector3 leapAttackJumpDelta;
 
     #endregion
 
@@ -200,9 +200,9 @@ public class FemaleWarriorCharacter : Character
             }
             IsLeapAttackFirstFrame = true;
             IsLeapAttackAvailable = false;
-            jumpTarget = attackTarget;
+            leapAttackTarget = attackTarget;
             SetRotationTarget(attackTarget);
-            MoveTo(jumpTarget);
+            MoveTo(leapAttackTarget);
             femaleWarriorAnimationManager.LeapAttack();
             StartCoroutine(ManageAttackTrigger());
             StartCoroutine(ManageLeapAttackCooldown());
@@ -217,12 +217,12 @@ public class FemaleWarriorCharacter : Character
             if (IsLeapAttackFirstFrame)
             {
                 rb.AddForce(Vector3.up * leapAttackJumpForce, ForceMode.Impulse);
-                currentJumpDelta = (new Vector3(jumpTarget.x, rb.position.y, jumpTarget.z) - rb.position) / (jumpingTime * 50);
+                leapAttackJumpDelta = (new Vector3(leapAttackTarget.x, rb.position.y, leapAttackTarget.z) - rb.position) / (leapAttackJumpingTime * 50);
                 IsLeapAttackFirstFrame = false;
             }
             else
             {
-                rb.MovePosition(rb.position + currentJumpDelta);
+                rb.MovePosition(rb.position + leapAttackJumpDelta);
             }
         }
     }

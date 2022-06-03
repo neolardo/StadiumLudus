@@ -10,11 +10,17 @@ ModelImporter:
       74: 3032365864817303776
     second: Character Rig|Attack
   - first:
+      74: 8969175250395680097
+    second: Character Rig|Dash
+  - first:
       74: -8863717062682962001
     second: Character Rig|Death Back
   - first:
       74: -9123398973472437508
     second: Character Rig|Death Front
+  - first:
+      74: 1757542779274806416
+    second: Character Rig|Guard End
   - first:
       74: -7051945628940243670
     second: Character Rig|Guard Full
@@ -129,116 +135,6 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Vambrace Material
     second: {fileID: 2100000, guid: 369a42f8b56173146b0422829e330db4, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Albedo
-    second: {fileID: 2800000, guid: a3e1d906ec62a6d4fb1d9c9755ea7ede, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Normal
-    second: {fileID: 2800000, guid: 26f734925dfaee84d85d306cbb9a734a, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Arrow Albedo
-    second: {fileID: 2800000, guid: 846bae521468cbb41a190f156bbd1095, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Arrow Normal
-    second: {fileID: 2800000, guid: 37f74f788c408b444a106d938542e0ef, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Belt Albedo
-    second: {fileID: 2800000, guid: 2dd80606a077e1a438dd38047ad2d3e4, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Belt Normal
-    second: {fileID: 2800000, guid: a73b961c4657b4e439b8278e75a3235d, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Boots Albedo
-    second: {fileID: 2800000, guid: 3e2960d69f8d11842b50d882cc559b20, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Boots Normal
-    second: {fileID: 2800000, guid: d3c9002058fe27645b6eacdb1c336bb6, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Collar Albedo
-    second: {fileID: 2800000, guid: 876c9183636fb3e48b86e99bf8f76729, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Collar Normal
-    second: {fileID: 2800000, guid: ddd9fbd4f23a335498e8273f51e2cd57, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Pants Albedo
-    second: {fileID: 2800000, guid: 33b3147c38580d246b75bb6808195c46, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Pants Normal
-    second: {fileID: 2800000, guid: 46b74978e8ab2354c9a092bdfda9529c, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Quiver Albedo
-    second: {fileID: 2800000, guid: 8afe9edc74fc9a346be1d33227f9a120, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Quiver Normal
-    second: {fileID: 2800000, guid: 70842118644a510439dacc7d91b4c811, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Shirt Albedo
-    second: {fileID: 2800000, guid: 36ae935c80842d9489e1a50f0baf09f7, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Shirt Normal
-    second: {fileID: 2800000, guid: f1f1fa864685ec04194335ab28d12a4f, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Shortbow Albedo
-    second: {fileID: 2800000, guid: 6a68e30bbb181044da229606cb7c4951, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Shortbow Normal
-    second: {fileID: 2800000, guid: e19a73d28a12469428be0f6e5253744e, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Shoulder Belt Albedo
-    second: {fileID: 2800000, guid: 00088d56281a5fa4489e197a950362f9, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Shoulder Belt Normal
-    second: {fileID: 2800000, guid: 5e52e6fef4fb503459ce10ecae942a67, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Vambraces Albedo
-    second: {fileID: 2800000, guid: 2c8bd6b071ad63944887fe5d4537959c, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Female Ranger Vambraces Normal
-    second: {fileID: 2800000, guid: d0c7cbc43865eee4780d9d0ef14d19c2, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

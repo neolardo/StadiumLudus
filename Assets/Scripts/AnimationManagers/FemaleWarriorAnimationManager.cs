@@ -10,11 +10,6 @@ public class FemaleWarriorAnimationManager : CharacterAnimationManager
     #region Fields and Properties
 
     /// <summary>
-    /// Indicates whether this character is currently jumping or not.
-    /// </summary>
-    public bool IsJumping { get; private set; }
-
-    /// <summary>
     /// Indicates whether continuing the combo attack is requested or not.
     /// </summary>
     public bool IsContinueAttackRequested { get; private set; }
@@ -48,15 +43,6 @@ public class FemaleWarriorAnimationManager : CharacterAnimationManager
         animator.SetTrigger(AnimatorLeapAttack);
     }
 
-    public void OnJumpingStarted()
-    {
-        IsJumping = true;
-    }
-
-    public void OnJumpingEnded()
-    {
-        IsJumping = false;
-    }
 
     #endregion
 

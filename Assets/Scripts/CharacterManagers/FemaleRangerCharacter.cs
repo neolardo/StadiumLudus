@@ -8,6 +8,8 @@ public class FemaleRangerCharacter : Character
 {
     #region Properties and Fields
 
+    private FemaleRangerAnimationManager femaleRangerAnimationManager;
+
     [Tooltip("The arrow pool manager.")]
     [SerializeField]
     private ProjectilePoolManager arrowPool;
@@ -30,10 +32,55 @@ public class FemaleRangerCharacter : Character
 
     private bool hasInitialized;
 
+    #region Skills
+
+    #region Dash
+
+    [Tooltip("Represents jump force of the dash.")]
+    [SerializeField]
+    private float dashJumpForce = 250;
+
+    [Tooltip("Represents maximum distance of the dash.")]
+    [SerializeField]
+    private float dashMaximumDistance = 3.5f;
+
+    [Tooltip("Represents cooldown of the dash skill in seconds.")]
+    [SerializeField]
+    private float dashCooldown = 5f;
+
+    private const int DashSkillNumber = 1;
+
+    private const float dashJumpingTime = 0.36f;
+
+    private bool IsDashAvailable { get; set; } = true;
+
+    private bool IsDashFirstFrame { get; set; }
+
+    private Vector3 dashTarget;
+
+    private Vector3 dashJumpDelta;
+
+    #endregion
+
+    #region Smoke
+
+    private const int SmokeSkillNumber = 2;
+
+    #endregion
+
+    #region Trap
+
+    private const int TrapSkillNumber = 3;
+
+    #endregion
+
+    #endregion
+
     #endregion
 
     #region Methods
 
+    #region Initialize
 
     protected void OnEnable()
     {
@@ -64,14 +111,18 @@ public class FemaleRangerCharacter : Character
         arrowPool.Force = arrowForce;
     }
 
-    #region Skills
-
-    public override void FireSkill(int skillNumber, Vector3 clickPosition)
+    protected override void Start()
     {
-        throw new System.NotImplementedException();
+        base.Start();
+        femaleRangerAnimationManager = animationManager as FemaleRangerAnimationManager;
     }
 
     #endregion
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+        UpdateDash();
+    }
 
     #region Attack
 
@@ -89,6 +140,103 @@ public class FemaleRangerCharacter : Character
         yield return new WaitWhile(() => animationManager.CanDealDamage);
         animatedArrow.SetActive(true);
     }
+
+    #endregion
+
+    #region Skills
+
+    public override void FireSkill(int skillNumber, Vector3 clickPosition)
+    {
+        switch (skillNumber)
+        {
+            case DashSkillNumber:
+                Dash(clickPosition);
+                break;
+            case SmokeSkillNumber:
+                Smoke();
+                break;
+            case TrapSkillNumber:
+                PlaceTrap();
+                break;
+            default:
+                Debug.LogWarning("Invalid skill number for a female ranger character.");
+                break;
+        }
+    }
+
+    #region Dash
+
+    private void Dash(Vector3 attackTarget)
+    {
+        if (IsAlive && IsDashAvailable && !femaleRangerAnimationManager.IsInterrupted && !femaleRangerAnimationManager.IsAttacking && !femaleRangerAnimationManager.IsGuarding)
+        {
+            var edgePoint = rb.position - (attackTarget - rb.position).normalized * dashMaximumDistance;
+            var raycastPoint = edgePoint + Vector3.up * 5;
+            Ray ray = new Ray(raycastPoint, Vector3.down);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 20, 1 << Globals.GroundLayer))
+            {
+                attackTarget = hit.point;
+            }
+            IsDashFirstFrame = true;
+            IsDashAvailable = false;
+            dashTarget = attackTarget;
+            SetRotationTarget(attackTarget);
+            MoveTo(dashTarget);
+            femaleRangerAnimationManager.Dash();
+            //StartCoroutine(ManageAttackTrigger());
+            StartCoroutine(ManageDashCooldown());
+            StartCoroutine(ResetDestinationAfterDash());
+        }
+    }
+
+    private void UpdateDash()
+    {
+        if (femaleRangerAnimationManager.IsJumping)
+        {
+            if (IsDashFirstFrame)
+            {
+                rb.AddForce(Vector3.up * dashJumpForce, ForceMode.Impulse);
+                dashJumpDelta = (new Vector3(dashTarget.x, rb.position.y, dashTarget.z) - rb.position) / (dashJumpingTime * 50);
+                IsDashFirstFrame = false;
+            }
+            else
+            {
+                rb.MovePosition(rb.position + dashJumpDelta);
+            }
+        }
+    }
+
+    private IEnumerator ManageDashCooldown()
+    {
+        float remainingTime = dashCooldown;
+        while (remainingTime > 0)
+        {
+            remainingTime -= Time.deltaTime;
+            yield return null;
+        }
+        IsDashAvailable = true;
+    }
+
+    private IEnumerator ResetDestinationAfterDash() // might refactor later
+    {
+        yield return new WaitUntil(() => femaleRangerAnimationManager.IsJumping);
+        yield return new WaitWhile(() => femaleRangerAnimationManager.IsJumping);
+        ClearDestination();
+    }
+
+    #endregion
+
+    #region Smoke
+
+    private void Smoke() { }
+
+    #endregion
+
+    #region Trap
+    private void PlaceTrap() { }
+
+    #endregion
 
     #endregion
 

@@ -51,6 +51,11 @@ public class CharacterAnimationManager : MonoBehaviour
     public bool IsGuarding { get; protected set; }
 
     /// <summary>
+    /// Indicates whether this character is currently jumping or not.
+    /// </summary>
+    public bool IsJumping { get; protected set; }
+
+    /// <summary>
     /// The threshold of the movement speed. If the movement speed is bigger than this value than the character should be animatated as moving.
     /// </summary>
     protected const float MovementSpeedThreshold = 0.1f;
@@ -103,6 +108,20 @@ public class CharacterAnimationManager : MonoBehaviour
     public void OnUnlockMovement()
     {
         IsMovementLocked = false;
+    }
+
+    #endregion
+
+    #region Jumping
+
+    public void OnJumpingStarted()
+    {
+        IsJumping = true;
+    }
+
+    public void OnJumpingEnded()
+    {
+        IsJumping = false;
     }
 
     #endregion

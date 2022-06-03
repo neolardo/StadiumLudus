@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Manages the animations of a <see cref="MaleWarriorCharacter"/>.
+/// Manages the animations of a <see cref="FemaleRangerCharacter"/>.
 /// </summary>
-public class MaleWarriorAnimationManager : CharacterAnimationManager
+public class FemaleRangerAnimationManager : CharacterAnimationManager
 {
     #region Fields and Properties
 
     #region Animator Constants
 
-    protected const string AnimatorLeapAttack = "LeapAttack";
+    protected const string AnimatorDash = "Dash";
 
     #endregion
 
@@ -29,12 +29,11 @@ public class MaleWarriorAnimationManager : CharacterAnimationManager
 
     #endregion
 
-    #region Leap Attack
+    #region Dash
 
-    public void LeapAttack()
+    public void Dash()
     {
-        IsAttacking = true;
-        animator.SetTrigger(AnimatorLeapAttack);
+        animator.SetTrigger(AnimatorDash);
     }
 
     #endregion
