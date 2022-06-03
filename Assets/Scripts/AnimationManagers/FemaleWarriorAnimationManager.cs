@@ -58,10 +58,20 @@ public class FemaleWarriorAnimationManager : CharacterAnimationManager
         IsJumping = false;
     }
 
+    #endregion
+
+    #region Combo Attack
+
     public void SetContinueComboAttack(bool value)
     {
         animator.SetBool(AnimatorContinueComboAttack, value);
         IsContinueAttackRequested = value;
+    }
+
+
+    public void OnComboAttackContinued()
+    {
+        SetContinueComboAttack(false);
     }
 
     #endregion

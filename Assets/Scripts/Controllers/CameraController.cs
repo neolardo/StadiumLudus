@@ -18,8 +18,17 @@ public class CameraController : MonoBehaviour
 
     private Vector3 relativePosition;
     private float lastMousePositionX;
+    private bool hasInitialized = false;
 
-    private void Start()
+    private void OnEnable()
+    {
+        if (!hasInitialized)
+        {
+            Initialize();
+        }
+    }
+
+    private void Initialize()
     {
         try
         {
@@ -32,6 +41,7 @@ public class CameraController : MonoBehaviour
         relativePosition = new Vector3(0, lookAtHeight, 0) + new Vector3(0, Mathf.Sin(angleFromCharacter / 180 * Mathf.PI), Mathf.Cos(angleFromCharacter/180 * Mathf.PI)) * distanceFromCharacter;
         transform.position = character.position + relativePosition;
         transform.LookAt(character.position + new Vector3(0, lookAtHeight, 0));
+        hasInitialized = true;
     }
 
     void Update()

@@ -77,7 +77,6 @@ public abstract class Character : MonoBehaviour
     protected float movementSpeed;
     protected const float destinationThreshold = 0.1f;
     protected const float destinationMinimum = 0.7f;
-    protected const float decelerationThreshold = 0.6f;
     protected const float rotationThreshold = 2f;
 
     private Vector3 _destination;
@@ -259,6 +258,7 @@ public abstract class Character : MonoBehaviour
             {
                 TryAttack(chaseTarget.position);
                 chaseTarget = null;
+                ClearDestination();
             }
             else
             {
@@ -285,7 +285,7 @@ public abstract class Character : MonoBehaviour
             if(animationManager.IsGuarding || animationManager.IsAttacking)
             {
                 var targetRotation = Quaternion.LookRotation(new Vector3(rotationTarget.x, rb.position.y, rotationTarget.z) - rb.position);
-                if (Quaternion.Angle(targetRotation, rb.rotation) > rotationThreshold)
+                if (Quaternion.Angle(targetRotation, rb.rotation) > rotationThreshold && (rotationTarget - rb.position).magnitude > destinationThreshold)
                 {
                     var rotationSpeed = Mathf.Lerp(rotationSpeedMinimum, rotationSpeedMaximum, Quaternion.Angle(targetRotation, rb.rotation) / 180f);
                     rb.transform.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);

@@ -148,10 +148,10 @@ public class MaleWarriorCharacter : Character
             jumpTarget = attackTarget;
             SetRotationTarget(attackTarget);
             MoveTo(jumpTarget);
+            maleWarriorAnimationManager.LeapAttack();
             StartCoroutine(ManageAttackTrigger());
             StartCoroutine(ManageLeapAttackCooldown());
             StartCoroutine(ResetDestinationAfterLeap());
-            maleWarriorAnimationManager.LeapAttack();
         }
     }
 

@@ -140,9 +140,12 @@ public class FemaleWarriorCharacter : Character
     {
         while (animationManager.IsAttacking)
         {
-            yield return new WaitUntil(() => animationManager.CanDealDamage);
-            leftBattleAxeTrigger.IsActive = true;
-            rightBattleAxeTrigger.IsActive = true;
+            yield return new WaitUntil(() => animationManager.CanDealDamage || !animationManager.IsAttacking);
+            if (animationManager.CanDealDamage)
+            {
+                leftBattleAxeTrigger.IsActive = true;
+                rightBattleAxeTrigger.IsActive = true;
+            }
             yield return new WaitWhile(() => animationManager.CanDealDamage);
             leftBattleAxeTrigger.IsActive = false;
             rightBattleAxeTrigger.IsActive = false;
@@ -200,10 +203,10 @@ public class FemaleWarriorCharacter : Character
             jumpTarget = attackTarget;
             SetRotationTarget(attackTarget);
             MoveTo(jumpTarget);
+            femaleWarriorAnimationManager.LeapAttack();
             StartCoroutine(ManageAttackTrigger());
             StartCoroutine(ManageLeapAttackCooldown());
             StartCoroutine(ResetDestinationAfterLeap());
-            femaleWarriorAnimationManager.LeapAttack();
         }
     }
 

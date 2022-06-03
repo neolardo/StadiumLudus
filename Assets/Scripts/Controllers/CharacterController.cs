@@ -11,6 +11,20 @@ public class CharacterController : MonoBehaviour
     private Character character;
     private Camera mainCamera;
 
+    private bool lastLeftMouseClickWasForAttacking;
+
+    [Tooltip("The key which should be pressed to trigger the first skill of the character.")]
+    [SerializeField]
+    private KeyCode firstSkillKeyCode = KeyCode.Q;
+
+    [Tooltip("The key which should be pressed to trigger the first skill of the character.")]
+    [SerializeField]
+    private KeyCode secondSkillKeyCode = KeyCode.W;
+
+    [Tooltip("The key which should be pressed to trigger the first skill of the character.")]
+    [SerializeField]
+    private KeyCode thirdSkillKeyCode = KeyCode.E;
+
     #endregion
 
     #region Methods
@@ -37,6 +51,10 @@ public class CharacterController : MonoBehaviour
         HandleKeyboardInputs();
     }
 
+    /// <summary>
+    /// Handles mouse events. The character should attack on left click or continue attacking if the click started an attack. 
+    /// Otherwise it should move to the left click's position and guard while the right mouse button is held down.
+    /// </summary>
     private void HandleMouseClick()
     {
         if (Input.GetMouseButtonDown(1))
@@ -47,38 +65,45 @@ public class CharacterController : MonoBehaviour
         {
             character.EndGuarding();
         }
+        if (Input.GetMouseButtonUp(0))
+        {
+            lastLeftMouseClickWasForAttacking = false;
+        }
+        bool isLeftMouseButtonDown = Input.GetMouseButtonDown(0) || lastLeftMouseClickWasForAttacking;
         bool isLeftMouseButton = Input.GetMouseButton(0);
         bool isRightMouseButton = Input.GetMouseButton(1);
-        if (isLeftMouseButton || isRightMouseButton)
+        if (isLeftMouseButtonDown || isLeftMouseButton || isRightMouseButton)
         {
             RaycastHit hit;
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, 20, (1 << Globals.GroundLayer) | (1 << Globals.CharacterLayer)))
+            var layerMask = isLeftMouseButtonDown ? (1 << Globals.GroundLayer) | (1 << Globals.CharacterLayer) : (1 << Globals.GroundLayer);
+            if (Physics.Raycast(ray, out hit, 20, layerMask, QueryTriggerInteraction.Collide))
             {
-                if (isLeftMouseButton)
+                bool enemyAtHit = hit.transform.gameObject.layer == Globals.CharacterLayer && character.gameObject != hit.transform.gameObject;
+                if ((isLeftMouseButtonDown || isLeftMouseButton) && Input.GetKey(KeyCode.LeftShift))
                 {
-                    bool enemyAtHit = hit.transform.gameObject.layer == Globals.CharacterLayer && character.gameObject != hit.transform.gameObject;
-                    if (Input.GetKey(KeyCode.LeftShift))
-                    {
-                        character.TryAttack(hit.point);
-                    }
-                    else if (enemyAtHit)
-                    {
-                        character.ChaseAndAttack(hit.transform);
-                    }
-                    else if (character.gameObject == hit.transform.gameObject) // self hit
-                    {
-                        if (Physics.Raycast(ray, out hit, 20, (1 << Globals.GroundLayer)))
-                        {
-                            character.MoveTo(hit.point);
-                        }
-                    }
-                    else if (character.gameObject != hit.transform.gameObject)
+                    character.TryAttack(hit.point);
+                    lastLeftMouseClickWasForAttacking = true;
+                }
+                else if (isLeftMouseButtonDown && enemyAtHit)
+                {
+                    character.ChaseAndAttack(hit.transform);
+                    lastLeftMouseClickWasForAttacking = true;
+                }
+                else if ((isLeftMouseButtonDown || isLeftMouseButton) && character.gameObject == hit.transform.gameObject) // self hit
+                {
+                    if (Physics.Raycast(ray, out hit, 20, (1 << Globals.GroundLayer)))
                     {
                         character.MoveTo(hit.point);
+                        lastLeftMouseClickWasForAttacking = false;
                     }
                 }
-                if (isRightMouseButton && !isLeftMouseButton)
+                else if ((isLeftMouseButtonDown || isLeftMouseButton) && character.gameObject != hit.transform.gameObject)
+                {
+                    character.MoveTo(hit.point);
+                    lastLeftMouseClickWasForAttacking = false;
+                }
+                else if (isRightMouseButton && !isLeftMouseButton && !isLeftMouseButtonDown)
                 {
                     character.SetRotationTarget(hit.point);
                 }
@@ -86,36 +111,31 @@ public class CharacterController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Handles keyboard events. The skills of the character should be triggered using the binded keys and the position of the mouse.
+    /// </summary>
     private void HandleKeyboardInputs()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(firstSkillKeyCode) || Input.GetKeyDown(secondSkillKeyCode) || Input.GetKeyDown(thirdSkillKeyCode))
         {
             RaycastHit hit;
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 20, 1 << Globals.GroundLayer))
             {
-                character.FireSkill(1, hit.point);
+                if (Input.GetKeyDown(firstSkillKeyCode))
+                {
+                    character.FireSkill(1, hit.point);
+                }
+                else if (Input.GetKeyDown(secondSkillKeyCode))
+                {
+                    character.FireSkill(2, hit.point);
+                }
+                else if (Input.GetKeyDown(thirdSkillKeyCode))
+                {
+                    character.FireSkill(3, hit.point);
+                }
             }
         }
-        else if (Input.GetKeyDown(KeyCode.W))
-        {
-            RaycastHit hit;
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, 20, 1 << Globals.GroundLayer))
-            {
-                character.FireSkill(2, hit.point);
-            }
-        }
-        else if (Input.GetKeyDown(KeyCode.E))
-        {
-            RaycastHit hit;
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, 20, 1 << Globals.GroundLayer))
-            {
-                character.FireSkill(3, hit.point);
-            }
-        }
-
     }
 
     #endregion
