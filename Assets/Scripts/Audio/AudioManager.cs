@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -18,6 +19,7 @@ public class AudioManager : MonoBehaviour
 
     public static AudioManager Instance { get; private set; }
     private Dictionary<SFX, List<AudioClip>> SFXDictionary;
+    private Dictionary<SFX, int> LastSFXIndexDictionary;
     private Dictionary<BGM, AudioClip> BGMDictionary;
 
     #endregion
@@ -50,6 +52,7 @@ public class AudioManager : MonoBehaviour
     private void ParseSFXs()
     {
         SFXDictionary = new Dictionary<SFX, List<AudioClip>>();
+        LastSFXIndexDictionary = new Dictionary<SFX, int>();
         AudioClip[] clipArray = Resources.LoadAll<AudioClip>(SFXFolderPath);
         foreach (var clip in clipArray)
         {
@@ -66,6 +69,11 @@ public class AudioManager : MonoBehaviour
             {
                 Debug.LogWarning("Could not load audio resource: " + clip.name);
             }
+        }
+        var sfxValues = Enum.GetValues(typeof(SFX)).Cast<SFX>().ToList();
+        foreach (var sfx in sfxValues)
+        {
+            LastSFXIndexDictionary.Add(sfx, -1);
         }
     }
 
@@ -86,21 +94,33 @@ public class AudioManager : MonoBehaviour
 
     #region Play
 
-    public void PlaySFX(AudioSource source, SFX sfx, float delay = 0)
+    public void PlaySFX(AudioSource source, SFX sfx, float delay = 0, bool doNotRepeat = false)
     {
-        source.clip = SFXDictionary[sfx][UnityEngine.Random.Range(0, SFXDictionary[sfx].Count)];
+        int index = UnityEngine.Random.Range(0, SFXDictionary[sfx].Count);
+        while (doNotRepeat && SFXDictionary[sfx].Count > 1 && index == LastSFXIndexDictionary[sfx])
+        {
+            index = UnityEngine.Random.Range(0, SFXDictionary[sfx].Count);
+        }
+        LastSFXIndexDictionary[sfx] = index;
+        source.clip = SFXDictionary[sfx][index];
         source.PlayDelayed(delay);
     }
 
-    public void PlayOneShotSFX(AudioSource source, SFX sfx, float delay = 0)
+    public void PlayOneShotSFX(AudioSource source, SFX sfx, float delay = 0, bool doNotRepeat = false)
     {
-        StartCoroutine(PlayOneShotSFXDelayed(source, sfx, delay));
+        StartCoroutine(PlayOneShotSFXDelayed(source, sfx, delay, doNotRepeat));
     }
 
-    private IEnumerator PlayOneShotSFXDelayed(AudioSource source, SFX sfx, float delay = 0)
+    private IEnumerator PlayOneShotSFXDelayed(AudioSource source, SFX sfx, float delay = 0, bool doNotRepeat = false)
     {
         yield return new WaitForSeconds(delay);
-        source.PlayOneShot(SFXDictionary[sfx][UnityEngine.Random.Range(0, SFXDictionary[sfx].Count)]);
+        int index = UnityEngine.Random.Range(0, SFXDictionary[sfx].Count);
+        while (doNotRepeat && SFXDictionary[sfx].Count > 1 && index == LastSFXIndexDictionary[sfx])
+        {
+            index = UnityEngine.Random.Range(0, SFXDictionary[sfx].Count);
+        }
+        LastSFXIndexDictionary[sfx] = index;
+        source.PlayOneShot(SFXDictionary[sfx][index]);
     }
 
     public void PlayBGM(AudioSource source, BGM bgm)

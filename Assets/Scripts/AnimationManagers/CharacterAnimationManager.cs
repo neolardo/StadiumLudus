@@ -15,6 +15,10 @@ public class CharacterAnimationManager : MonoBehaviour
     [SerializeField]
     protected int attackAnimationCount;
 
+    [Tooltip("The audio source of the character.")]
+    [SerializeField]
+    private AudioSource characterAudioSource;
+
     /// <summary>
     /// Indicates whether the character can be interrupted or not.
     /// </summary>
@@ -59,6 +63,7 @@ public class CharacterAnimationManager : MonoBehaviour
     /// The threshold of the movement speed. If the movement speed is bigger than this value than the character should be animatated as moving.
     /// </summary>
     protected const float MovementSpeedThreshold = 0.1f;
+
 
     #region Animator Constants
 
@@ -108,6 +113,15 @@ public class CharacterAnimationManager : MonoBehaviour
     public void OnUnlockMovement()
     {
         IsMovementLocked = false;
+    }
+
+    #endregion
+
+    #region Step
+
+    public void OnStep()
+    {
+        AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.StepOnStone, doNotRepeat:true);
     }
 
     #endregion

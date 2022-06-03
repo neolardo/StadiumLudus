@@ -52,6 +52,8 @@ public class FemaleRangerCharacter : Character
 
     private const float dashJumpingTime = 0.36f;
 
+    // charges maybe?
+
     private bool IsDashAvailable { get; set; } = true;
 
     private bool IsDashFirstFrame { get; set; }

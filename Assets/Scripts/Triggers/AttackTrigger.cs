@@ -29,6 +29,11 @@ public class AttackTrigger : MonoBehaviour
     /// </summary>
     private List<Character> DamagedCharacters { get; } = new List<Character>();
 
+    /// <summary>
+    /// Indiactes whether an object has been hit by this attack trigger.
+    /// </summary>
+    private bool AnyObjectHit { get; set; }
+
     private bool _isActive;
 
     /// <summary>
@@ -45,6 +50,7 @@ public class AttackTrigger : MonoBehaviour
             _isActive = value;
             if (!value)
             {
+                AnyObjectHit = false;
                 DamagedCharacters.Clear();
             }
         }
@@ -85,21 +91,19 @@ public class AttackTrigger : MonoBehaviour
         {
             if (other.tag.Contains(Globals.HitBoxTag) && !other.gameObject.transform.IsChildOf(characterTransform))
             {
-                if (TryDealDamage(other))
-                {
-                    //AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.HitOnFlesh); TODO: add flesh sound
-                }
+                TryDealDamage(other);
             }
-            else
+            else if(!AnyObjectHit && !other.CompareTag(Globals.CharacterTag))
             {
                 var sfx = other.tag switch
                 {
                     Globals.WoodTag => SFX.HitOnWood,
                     Globals.StoneTag => SFX.HitOnStone,
                     Globals.MetalTag => SFX.HitOnMetal,
-                    _ => SFX.GuardHit,
+                    _ => SFX.HitOnStone,
                 };
                 AudioManager.Instance.PlayOneShotSFX(audioSource, sfx);
+                AnyObjectHit = true;
             }
         }
     }

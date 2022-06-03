@@ -72,6 +72,10 @@ public abstract class Character : MonoBehaviour
     [SerializeField]
     protected float attackRange = 1f;
 
+    [Tooltip("Represents the audio source of this character.")]
+    [SerializeField]
+    protected AudioSource characterAudioSource;
+
     private Vector2 characterPositionRatioOnScreen;
 
     protected float movementSpeed;
@@ -207,9 +211,18 @@ public abstract class Character : MonoBehaviour
             if (IsAlive)
             {
                 animationManager.Impact(stamina > 0 && animationManager.IsGuarding, direction);
-                if (stamina < Globals.CompareDelta && animationManager.IsGuarding)
+                if (stamina <= Globals.CompareDelta && animationManager.IsGuarding)
                 {
                     EndGuarding();
+                    AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
+                }
+                else if (stamina > Globals.CompareDelta && animationManager.IsGuarding)
+                {
+                    AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.GuardHit);
+                }
+                else
+                {
+                    AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
                 }
             }
             else
