@@ -1,6 +1,6 @@
 using UnityEngine;
 /// <summary>
-/// An interface for any object that is interactable for the player.
+/// An abstract class for any object that is interactable for the player.
 /// </summary>
 public abstract class Interactable : MonoBehaviour
 {

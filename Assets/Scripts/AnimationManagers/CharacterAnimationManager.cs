@@ -248,7 +248,7 @@ public class CharacterAnimationManager : MonoBehaviour
         IsInteracting = true;
     }
 
-    public void OnFinishedInteracting()
+    public void OnInteractionFinished() 
     {
         IsInteracting = false;
     }

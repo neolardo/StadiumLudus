@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -7,6 +6,8 @@ using UnityEngine;
 public class MaleRangerCharacter : Character
 {
     #region Properties and Fields
+
+    private MaleRangerAnimationManager maleRangerAnimationManager;
 
     public Crossbow crossbow;
 
@@ -26,13 +27,9 @@ public class MaleRangerCharacter : Character
     [SerializeField]
     private float boltForce = 3;
 
-    private const string AnimatorReload = "Reload";
+    private bool IsArrowLoaded { get; set; }
 
-    protected override bool CanMove => base.CanMove && !crossbow.IsReloading;
-
-    private bool isArrowLoaded;
-
-    private bool hasInitialized;
+    private bool HasInitialized { get; set; }
 
     #endregion
 
@@ -43,10 +40,10 @@ public class MaleRangerCharacter : Character
     protected void OnEnable()
     {
         // order is important
-        if (!hasInitialized)
+        if (!HasInitialized)
         {
             Initialize();
-            hasInitialized = true;
+            HasInitialized = true;
         }
     }
 
@@ -67,6 +64,7 @@ public class MaleRangerCharacter : Character
         boltPool.MinimumDamage = boltMinimumDamage;
         boltPool.MaximumDamage = boltMaximumDamage;
         boltPool.Force = boltForce;
+        maleRangerAnimationManager = animationManager as MaleRangerAnimationManager;
     }
 
     #endregion
@@ -84,7 +82,7 @@ public class MaleRangerCharacter : Character
 
     public override bool TryAttack(Vector3 attackTarget)
     {
-        if (!animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !crossbow.IsReloading)
+        if (!maleRangerAnimationManager.IsInterrupted && !maleRangerAnimationManager.IsAttacking && !maleRangerAnimationManager.IsGuarding && !crossbow.IsReloading)
         {
             OnAttack(attackTarget);
             return true;
@@ -94,18 +92,18 @@ public class MaleRangerCharacter : Character
 
     protected override void OnAttack(Vector3 attackTarget)
     {
-        if (isArrowLoaded)
+        if (IsArrowLoaded)
         {
             base.OnAttack(attackTarget);
             crossbow.Attack();
-            isArrowLoaded = false;
+            IsArrowLoaded = false;
         }
         else
         {
             ClearDestination();
-            //animationManager.SetCustomTrigger(AnimatorReload);
+            maleRangerAnimationManager.Reload(); ;
             crossbow.Reload();
-            isArrowLoaded = true;
+            IsArrowLoaded = true;
         }
     }
 

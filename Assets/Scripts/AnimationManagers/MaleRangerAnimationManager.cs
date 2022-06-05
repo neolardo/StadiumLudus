@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Manages the animations of a <see cref="FemaleRangerCharacter"/>.
+/// Manages the animations of a <see cref="MaleRangerCharacter"/>.
 /// </summary>
-public class FemaleRangerAnimationManager : CharacterAnimationManager
+public class MaleRangerAnimationManager : CharacterAnimationManager
 {
     #region Fields and Properties
 
     #region Animator Constants
 
     private const string AnimatorDash = "Dash";
+    private const string AnimatorReload = "Reload";
 
     #endregion
 
@@ -25,6 +26,15 @@ public class FemaleRangerAnimationManager : CharacterAnimationManager
     protected override void Start()
     {
         base.Start();
+    }
+
+    #endregion
+
+    #region Reload
+
+    public void Reload()
+    {
+        animator.SetTrigger(AnimatorReload);
     }
 
     #endregion
