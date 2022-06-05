@@ -60,6 +60,11 @@ public class CharacterAnimationManager : MonoBehaviour
     public bool IsJumping { get; protected set; }
 
     /// <summary>
+    /// Indicates whether this character is currently interacting or not.
+    /// </summary>
+    public bool IsInteracting { get; protected set; }
+
+    /// <summary>
     /// The threshold of the movement speed. If the movement speed is bigger than this value than the character should be animatated as moving.
     /// </summary>
     protected const float MovementSpeedThreshold = 0.1f;
@@ -78,6 +83,7 @@ public class CharacterAnimationManager : MonoBehaviour
     protected const string AnimatorGuardImpactBack = "GuardImpactBack";
     protected const string AnimatorDieFront = "DieFront";
     protected const string AnimatorDieBack = "DieBack";
+    protected const string AnimatorDrink = "Drink";
     protected const string AnimatorMovementLayerName = "MovementLayer";
     protected int animatorMovementLayerIndex;
 
@@ -230,6 +236,21 @@ public class CharacterAnimationManager : MonoBehaviour
     public void Die(HitDirection direction)
     {
         animator.SetTrigger(direction == HitDirection.Back ? AnimatorDieBack : AnimatorDieFront);
+    }
+
+    #endregion
+
+    #region Interactions
+
+    public void Drink()
+    {
+        animator.SetTrigger(AnimatorDrink);
+        IsInteracting = true;
+    }
+
+    public void OnFinishedInteracting()
+    {
+        IsInteracting = false;
     }
 
     #endregion

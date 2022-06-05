@@ -18,4 +18,5 @@ public static class Globals
     public const int IgnoreRaycastLayer = 2;
     public const int CharacterLayer = 6;
     public const int GroundLayer = 7;
+    public const int InteractableLayer =8;
 }

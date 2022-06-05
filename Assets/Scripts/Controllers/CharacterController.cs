@@ -76,9 +76,10 @@ public class CharacterController : MonoBehaviour
         {
             RaycastHit hit;
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            var layerMask = isLeftMouseButtonDown ? (1 << Globals.GroundLayer) | (1 << Globals.CharacterLayer) : (1 << Globals.GroundLayer);
+            var layerMask = isLeftMouseButtonDown ? (1 << Globals.GroundLayer) | (1 << Globals.CharacterLayer) | (1 << Globals.InteractableLayer): (1 << Globals.GroundLayer);
             if (Physics.Raycast(ray, out hit, 20, layerMask, QueryTriggerInteraction.Collide))
             {
+                bool interactableAtHit = hit.transform.gameObject.layer == Globals.InteractableLayer;
                 bool enemyAtHit = hit.transform.gameObject.layer == Globals.CharacterLayer && character.gameObject != hit.transform.gameObject;
                 if ((isLeftMouseButtonDown || isLeftMouseButton) && Input.GetKey(KeyCode.LeftShift))
                 {
@@ -87,7 +88,12 @@ public class CharacterController : MonoBehaviour
                 }
                 else if (isLeftMouseButtonDown && enemyAtHit)
                 {
-                    character.ChaseAndAttack(hit.transform);
+                    character.SetChaseTarget(hit.transform);
+                    lastLeftMouseClickWasForAttacking = true;
+                }
+                else if (isLeftMouseButtonDown && interactableAtHit)
+                {
+                    character.SetInteractionTarget(hit.transform.parent.GetComponent<Interactable>());
                     lastLeftMouseClickWasForAttacking = true;
                 }
                 else if ((isLeftMouseButtonDown || isLeftMouseButton) && character.gameObject == hit.transform.gameObject) // self hit

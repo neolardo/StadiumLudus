@@ -50,7 +50,7 @@ public class FemaleRangerCharacter : Character
 
     private const int DashSkillNumber = 1;
 
-    private const float dashJumpingTime = 0.36f;
+    private const float dashJumpingTime = 0.29f;
 
     // charges maybe?
 

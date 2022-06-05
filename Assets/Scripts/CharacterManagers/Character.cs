@@ -113,6 +113,15 @@ public abstract class Character : MonoBehaviour
 
     #endregion
 
+    #region Interactions
+
+    private Interactable interactionTarget;
+    private Vector3 interactionPoint;
+    protected const float interactionRange = 0.1f;
+
+
+    #endregion
+
     #endregion
 
     #region Methods
@@ -133,6 +142,7 @@ public abstract class Character : MonoBehaviour
     }
     protected virtual void FixedUpdate()
     {
+        UpdateInteractionCheck();
         UpdateChase();
         UpdateMove();
     }
@@ -144,16 +154,6 @@ public abstract class Character : MonoBehaviour
     #endregion
 
     #region Attack
-
-    private bool IsTargetInAttackRange(Vector3 attackTarget)
-    {
-        return (attackTarget - rb.position).magnitude < attackRange;
-    }
-
-    public void ChaseAndAttack(Transform target)
-    {
-        chaseTarget = target;
-    }
 
     public virtual bool TryAttack(Vector3 attackTarget)
     {
@@ -242,6 +242,70 @@ public abstract class Character : MonoBehaviour
 
     #endregion
 
+    #region Interactions
+
+    public void SetInteractionTarget(Interactable interactable)
+    {
+        MoveTo(interactable.GetClosestInteractionPoint(rb.position));
+        interactionTarget = interactable;
+        interactionPoint = Destination;
+        chaseTarget = null;
+    }
+
+    private void UpdateInteractionCheck()
+    {
+        if (interactionTarget != null)
+        {
+            if ((interactionPoint - rb.position).magnitude < interactionRange)
+            {
+                interactionTarget.TryInteract(this);
+                interactionTarget = null;
+                ClearDestination();
+            }
+        }
+    }
+
+    #region Drink
+
+    public void DrinkFromFountain(Vector3 fountainPosition)
+    {
+        rotationTarget = fountainPosition;
+        animationManager.Drink();
+    }
+
+    #endregion
+
+    #endregion
+
+    #region Chase
+
+    public void SetChaseTarget(Transform target)
+    {
+        chaseTarget = target;
+        interactionTarget = null;
+    }
+
+
+    private void UpdateChase()
+    {
+        if (chaseTarget != null)
+        {
+            if ((chaseTarget.position - rb.position).magnitude < attackRange)
+            {
+                TryAttack(chaseTarget.position);
+                chaseTarget = null;
+                ClearDestination();
+            }
+            else
+            {
+                Destination = chaseTarget.position;
+            }
+        }
+    }
+
+
+    #endregion
+
     #region Movement
 
     public void MoveTo(Vector3 position)
@@ -260,23 +324,7 @@ public abstract class Character : MonoBehaviour
                 Destination = lastCorner;
             }
             chaseTarget = null;
-        }
-    }
-
-    private void UpdateChase()
-    {
-        if (chaseTarget != null)
-        {
-            if (IsTargetInAttackRange(chaseTarget.position))
-            {
-                TryAttack(chaseTarget.position);
-                chaseTarget = null;
-                ClearDestination();
-            }
-            else
-            {
-                Destination = chaseTarget.position;
-            }
+            interactionTarget = null;
         }
     }
 
@@ -295,7 +343,7 @@ public abstract class Character : MonoBehaviour
         }
         else
         {
-            if(animationManager.IsGuarding || animationManager.IsAttacking)
+            if(animationManager.IsGuarding || animationManager.IsAttacking || animationManager.IsInteracting)
             {
                 var targetRotation = Quaternion.LookRotation(new Vector3(rotationTarget.x, rb.position.y, rotationTarget.z) - rb.position);
                 if (Quaternion.Angle(targetRotation, rb.rotation) > rotationThreshold && (rotationTarget - rb.position).magnitude > destinationThreshold)
