@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Manages an interactable fountain.
+/// </summary>
 public class Fountain :  Interactable
 {
     #region Properties and Fields

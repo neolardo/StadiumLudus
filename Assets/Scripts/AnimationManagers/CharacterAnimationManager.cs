@@ -84,6 +84,7 @@ public class CharacterAnimationManager : MonoBehaviour
     protected const string AnimatorDieFront = "DieFront";
     protected const string AnimatorDieBack = "DieBack";
     protected const string AnimatorDrink = "Drink";
+    protected const string AnimatorKneel = "Kneel";
     protected const string AnimatorMovementLayerName = "MovementLayer";
     protected int animatorMovementLayerIndex;
 
@@ -245,6 +246,11 @@ public class CharacterAnimationManager : MonoBehaviour
     public void Drink()
     {
         animator.SetTrigger(AnimatorDrink);
+        IsInteracting = true;
+    }
+    public void Kneel()
+    {
+        animator.SetTrigger(AnimatorKneel);
         IsInteracting = true;
     }
 

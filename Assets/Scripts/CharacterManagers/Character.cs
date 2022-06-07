@@ -275,6 +275,17 @@ public abstract class Character : MonoBehaviour
 
     #endregion
 
+
+    #region Kneel
+
+    public void KneelBeforeStatue(Vector3 statuePosition)
+    {
+        rotationTarget = statuePosition;
+        animationManager.Kneel();
+    }
+
+    #endregion
+
     #endregion
 
     #region Chase

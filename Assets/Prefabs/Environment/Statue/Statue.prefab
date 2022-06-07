@@ -89,7 +89,6 @@ VFXRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 0}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -212,9 +211,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3436836726040681813}
+  - component: {fileID: 1528141149}
   m_Layer: 0
   m_Name: Statue
-  m_TagString: Stone
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -236,6 +236,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &1528141149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3436836726040681810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66739aa93620aca489a2864173b69602, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orbTransform: {fileID: 2576245723852951271}
+  orbVFX: {fileID: 301729952}
+  orbLight: {fileID: 1858119615}
+  interactionRangeDistance: 2
+  orbMovingSpeed: 2
+  orbScalingSpeed: 3
+  orbIntensityChangeSpeed: 3
+  targetHeightDelta: 1.3
+  transform: {fileID: 0}
 --- !u!1 &3436836727453402847
 GameObject:
   m_ObjectHideFlags: 0
@@ -248,7 +269,7 @@ GameObject:
   - component: {fileID: 3436836727453402835}
   - component: {fileID: 3436836727453402832}
   - component: {fileID: 3436836727453402833}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: statue
   m_TagString: Stone
   m_Icon: {fileID: 0}
@@ -344,7 +365,7 @@ GameObject:
   - component: {fileID: 3436836727497845382}
   - component: {fileID: 3436836727497845383}
   - component: {fileID: 3436836727497845380}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: plinth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
