@@ -3,6 +3,7 @@
 /// </summary>
 public enum BuffType
 {
+    None = 0,
     HealthRecovery,
     StaminaRecovery,
     MovementSpeed

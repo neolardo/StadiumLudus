@@ -10,19 +10,30 @@ public abstract class Character : MonoBehaviour
 {
     #region Properties and fields
 
-    #region Stats
+    #region Health
 
-    [Tooltip("Represents the maximum health of the charater.")]
+    /// <summary>
+    /// Represents the current health of the character.
+    /// </summary>
+    private float health;
+
+    [Header("Health")]
+    [Tooltip("Represents the maximum health of the character.")]
     [SerializeField]
     private float healthMaximum = 100f;
 
-    private float health;
-
-    [Tooltip("Represents the maximum stamina of the charater which allows it to interract, attack and block.")]
+    [Tooltip("Represents the health recovery delay in seconds.")]
     [SerializeField]
-    private float staminaMaximum = 100f;
+    private float healthRecoveryDelay= 1.6f;
 
-    private float stamina;
+    [Tooltip("Represents the initial health recovery amount per second.")]
+    [SerializeField]
+    private float healthRecoveryInitialAmount = 0;
+
+    /// <summary>
+    /// Represents the current health recovery amount per second.
+    /// </summary>
+    private float healthRecoveryAmount;
 
     /// <summary>
     /// Indicates whether this character is alive or not.
@@ -33,6 +44,33 @@ public abstract class Character : MonoBehaviour
     /// The relative normalized health this character currently has.
     /// </summary>
     public float HealthRatio => health / healthMaximum;
+
+    #endregion
+
+    #region Stamina
+
+    /// <summary>
+    /// Represents the current stamina of the character.
+    /// </summary>
+    private float stamina;
+
+    [Header("Stamina")]
+    [Tooltip("Represents the maximum stamina of the charater which allows it to interract, attack and block.")]
+    [SerializeField]
+    private float staminaMaximum = 100f;
+
+    [Tooltip("Represents the stamina recovery delay in seconds.")]
+    [SerializeField]
+    private float staminaRecoveryDelay = 1.6f;
+
+    [Tooltip("Represents the initial stamina recovery amount per second.")]
+    [SerializeField]
+    private float staminaRecoveryInitialAmount = 10f;
+
+    /// <summary>
+    /// Represents the current stamina recovery amount per second.
+    /// </summary>
+    private float staminaRecoveryAmount;
 
     /// <summary>
     /// The relative normalized stamina this character currently has.
@@ -48,9 +86,12 @@ public abstract class Character : MonoBehaviour
     /// </summary>
     protected virtual bool CanMove => animationManager.CanMove;
 
+    [Header("Movement")]
     [Tooltip("Represents the maximum movement speed of the character.")]
     [SerializeField]
-    private float movementSpeedMaximum = 3.5f;
+    private float movementSpeedInitialMaximum = 3.5f;
+
+    private float movementSpeedMaximum;
 
     [Tooltip("Represents the acceleration of the character.")]
     [SerializeField]
@@ -110,6 +151,15 @@ public abstract class Character : MonoBehaviour
     private Vector3 rotationTarget;
     private NavMeshPath helperPath;
 
+    #endregion
+
+    #region Basic Attack
+
+
+    [Header("Basic Attack")]
+    [Tooltip("Represents the stamina cost of a basic attack.")]
+    [SerializeField]
+    private float attackStaminaCost;
 
     #endregion
 
@@ -129,7 +179,10 @@ public abstract class Character : MonoBehaviour
     protected virtual void Start()
     {
         health = healthMaximum;
+        healthRecoveryAmount = healthRecoveryInitialAmount;
         stamina = staminaMaximum;
+        staminaRecoveryAmount = staminaRecoveryInitialAmount;
+        movementSpeedMaximum = movementSpeedInitialMaximum;
         transform = GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
@@ -138,7 +191,13 @@ public abstract class Character : MonoBehaviour
         helperPath = new NavMeshPath();
         var characterScreenPosition = Camera.main.WorldToScreenPoint(transform.position);
         characterPositionRatioOnScreen = new Vector2(0.5f, characterScreenPosition.y / Screen.height);
+        if (attackStaminaCost < Globals.CompareDelta)
+        {
+            Debug.LogWarning($"Basic attack stamina cost for a {gameObject.name} is set to a non-positive value.");
+        }
         ClearDestination();
+        StartCoroutine(RecoverHealth()); 
+        StartCoroutine(RecoverStamina()); 
     }
     protected virtual void FixedUpdate()
     {
@@ -157,7 +216,7 @@ public abstract class Character : MonoBehaviour
 
     public virtual bool TryAttack(Vector3 attackTarget)
     {
-        if (IsAlive && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding)
+        if (IsAlive && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && stamina > attackStaminaCost)
         {
             OnAttack(attackTarget);
             return true;
@@ -169,6 +228,7 @@ public abstract class Character : MonoBehaviour
     {
         animationManager.Attack();
         rotationTarget = attackTarget;
+        stamina -= attackStaminaCost;
     }
 
     #endregion
@@ -371,6 +431,78 @@ public abstract class Character : MonoBehaviour
     protected void ClearDestination()
     {
         Destination = rb.position;
+    }
+
+    #endregion
+
+    #region Recovery
+
+    private IEnumerator RecoverHealth()
+    {
+        float lastHealth = health;
+        while (IsAlive)
+        {
+            if (lastHealth > health + Globals.CompareDelta)
+            {
+                lastHealth = health;
+                yield return new WaitForSeconds(healthRecoveryDelay);
+            }
+            else if (health < healthMaximum)
+            {
+                health = Mathf.Min(healthMaximum, health + healthRecoveryAmount * Time.deltaTime);
+                lastHealth = health;
+            }
+            yield return null;
+        }
+    }
+
+    private IEnumerator RecoverStamina()
+    {
+        float lastStamina = stamina;
+        while (IsAlive)
+        {
+            if (lastStamina > stamina + Globals.CompareDelta)
+            {
+                lastStamina = stamina;
+                yield return new WaitForSeconds(staminaRecoveryDelay);
+            }
+            else if (stamina < staminaMaximum)
+            {
+                stamina = Mathf.Min(staminaMaximum, stamina + staminaRecoveryAmount * Time.deltaTime);
+                lastStamina = stamina;
+            }
+            yield return null;
+        }
+    }
+
+    #endregion
+
+    #region Buffs
+
+    public void AddBuff(Buff buff)
+    {
+        switch (buff.type)
+        {
+            case BuffType.HealthRecovery:
+                healthRecoveryAmount = buff.applimentMode == BuffApplimentMode.Additive ? healthRecoveryInitialAmount + buff.effectValue : healthRecoveryInitialAmount * buff.effectValue;
+                break;
+            case BuffType.StaminaRecovery:
+                staminaRecoveryAmount = buff.applimentMode == BuffApplimentMode.Additive ? staminaRecoveryInitialAmount + buff.effectValue : staminaRecoveryInitialAmount * buff.effectValue;
+                break;
+            case BuffType.MovementSpeed:
+                movementSpeedMaximum = buff.applimentMode == BuffApplimentMode.Additive ? movementSpeedInitialMaximum + buff.effectValue : movementSpeedInitialMaximum * buff.effectValue;
+                break;
+            default:
+                Debug.LogWarning($"Invalid buff type: { buff.type}");
+                break;
+        }
+    }
+
+    public void RemoveBuffs()
+    {
+        healthRecoveryAmount = healthRecoveryInitialAmount;
+        staminaRecoveryAmount = staminaRecoveryInitialAmount;
+        movementSpeedMaximum = movementSpeedInitialMaximum;
     }
 
     #endregion

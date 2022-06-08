@@ -63,7 +63,7 @@ public class Buff : MonoBehaviour
                 {
                     StartCoroutine(MoveOrbToTarget());
                     StartCoroutine(DeactivateAfterDurationElapsed());
-                    // character.UseBuff(this.type);
+                    target.AddBuff(this);
                 }
                 else
                 {
@@ -74,16 +74,18 @@ public class Buff : MonoBehaviour
     }
 
     [Tooltip("The type of the buff effect.")]
-    [SerializeField]
-    private BuffType type;
+    public BuffType type;
 
-    [Tooltip("The source statue of this buff effect.")]
+    [Tooltip("The mode that determines how to apply this buff on the character.")]
+    public BuffApplimentMode applimentMode;
+
+    [Tooltip("The numberic effect value of this buff which changes the property of the character.")]
     [SerializeField]
-    private Statue source;
+    public float effectValue;
 
     [Tooltip("The duration of this effect in seconds.")]
     [SerializeField]
-    [Range(1*60, 3*60)]
+    [Range(20, 3*60)]
     private int duration;
 
     /// <summary>
@@ -176,7 +178,7 @@ public class Buff : MonoBehaviour
         orbTransform.position = orbInitialPosition;
         orbTransform.gameObject.SetActive(true);
         characterEffectTransform.gameObject.SetActive(false);
-        //target.RemoveBuffs();
+        target.RemoveBuffs();
     }
 
     #endregion

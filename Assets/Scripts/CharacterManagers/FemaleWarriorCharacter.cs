@@ -11,6 +11,7 @@ public class FemaleWarriorCharacter : Character
 
     private FemaleWarriorAnimationManager femaleWarriorAnimationManager;
 
+    [Header("Battle Axe")]
     public AttackTrigger leftBattleAxeTrigger;
     public AttackTrigger rightBattleAxeTrigger;
 
@@ -43,6 +44,7 @@ public class FemaleWarriorCharacter : Character
 
     #region Leap Attack
 
+    [Header("Leap Attack")]
     [Tooltip("Represents jump force of the leap attack.")]
     [SerializeField]
     private float leapAttackJumpForce = 250;

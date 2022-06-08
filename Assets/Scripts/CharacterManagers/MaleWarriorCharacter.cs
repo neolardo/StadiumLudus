@@ -10,6 +10,8 @@ public class MaleWarriorCharacter : Character
 
     private MaleWarriorAnimationManager maleWarriorAnimationManager;
 
+    [Header("BattleAxe")]
+    [Tooltip("Represents the attack trigger of the battle axe weapon.")]
     public AttackTrigger battleAxeTrigger;
 
     [Tooltip("Represents the minimum damage of the battle axe weapon.")]
@@ -28,6 +30,7 @@ public class MaleWarriorCharacter : Character
 
     #region Leap Attack
 
+    [Header("Leap Attack")]
     [Tooltip("Represents jump force of the leap attack.")]
     [SerializeField]
     private float leapAttackJumpForce = 250f;

@@ -10,6 +10,7 @@ public class FemaleRangerCharacter : Character
 
     private FemaleRangerAnimationManager femaleRangerAnimationManager;
 
+    [Header("Arrow")]
     [Tooltip("The arrow pool manager.")]
     [SerializeField]
     private ProjectilePoolManager arrowPool;
@@ -36,6 +37,7 @@ public class FemaleRangerCharacter : Character
 
     #region Dash
 
+    [Header("Dash")]
     [Tooltip("Represents jump force of the dash.")]
     [SerializeField]
     private float dashJumpForce = 250;

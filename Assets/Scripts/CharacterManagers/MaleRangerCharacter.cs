@@ -8,7 +8,7 @@ public class MaleRangerCharacter : Character
     #region Properties and Fields
 
     private MaleRangerAnimationManager maleRangerAnimationManager;
-
+    [Header("Bolt")]
     public Crossbow crossbow;
 
     [Tooltip("The bolt pool manager.")]

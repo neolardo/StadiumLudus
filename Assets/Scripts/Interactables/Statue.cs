@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.VFX;
 
 /// <summary>
 /// Manages an interactable statue.
@@ -14,10 +13,24 @@ public class Statue : Interactable
     [SerializeField]
     private float interactionRangeDistance = 1f;
 
-    private bool IsNextBuffAvailable;
-
+    [Tooltip("The delay between the deactivation of the last buff and a new one being spawned.")]
     [SerializeField]
-    private Buff buff;
+    [Range(5, 2*60)]
+    private int buffSpawnDelay;
+
+    [Tooltip("The list of buffs that can be spawned by this statue.")]
+    [SerializeField]
+    private List<Buff> buffs;
+
+    /// <summary>
+    /// The current buff which is available or active.
+    /// </summary>
+    private Buff currentBuff;
+
+    /// <summary>
+    /// True if a buff is available to use.
+    /// </summary>
+    private bool IsBuffAvailable { get; set; }
 
     #endregion
 
@@ -30,8 +43,16 @@ public class Statue : Interactable
 
     private void SpawnBuff()
     {
-        IsNextBuffAvailable = true;
-        buff.gameObject.SetActive(true);
+        IsBuffAvailable = true;
+        currentBuff = buffs[Random.Range(0, buffs.Count)];
+        currentBuff.gameObject.SetActive(true);
+    }
+
+    private IEnumerator WaitUntilCurrentBuffDeactivatedAndSpawnNewOne()
+    {
+        yield return new WaitUntil(() => !currentBuff.IsActive);
+        yield return new WaitForSeconds(buffSpawnDelay);
+        SpawnBuff();
     }
 
     /// <inheritdoc/>
@@ -45,11 +66,12 @@ public class Statue : Interactable
     /// <inheritdoc/>
     public override bool TryInteract(Character character)
     {
-        if (IsNextBuffAvailable)
+        if (IsBuffAvailable)
         {
-            IsNextBuffAvailable = false;
+            IsBuffAvailable = false;
             character.KneelBeforeStatue(transform.position);
-            buff.UseOn(character);
+            currentBuff.UseOn(character);
+            StartCoroutine(WaitUntilCurrentBuffDeactivatedAndSpawnNewOne());
             return true;
         }
         return false;

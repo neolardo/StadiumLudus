@@ -1747,7 +1747,7 @@
     },
     "m_PreviewData": {
         "serializedMesh": {
-            "m_SerializedMesh": "{\"mesh\":{\"instanceID\":0}}",
+            "m_SerializedMesh": "{\"mesh\":{\"fileID\":10210,\"guid\":\"0000000000000000e000000000000000\",\"type\":0}}",
             "m_Guid": ""
         },
         "preventRotation": false
@@ -4928,17 +4928,11 @@
 }
 
 {
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.Rendering.Universal.ShaderGraph.UniversalUnlitSubTarget",
-    "m_ObjectId": "4bd612ef8b2640eebd0c594352e75968"
-}
-
-{
     "m_SGVersion": 1,
     "m_Type": "UnityEditor.Rendering.Universal.ShaderGraph.UniversalTarget",
     "m_ObjectId": "4be872e5e8ec4461a51273059f91500f",
     "m_ActiveSubTarget": {
-        "m_Id": "4bd612ef8b2640eebd0c594352e75968"
+        "m_Id": "da24b2ce058d428ea2e32739f60df941"
     },
     "m_AllowMaterialOverride": false,
     "m_SurfaceType": 1,
@@ -10870,6 +10864,12 @@
         "e32": 0.0,
         "e33": 1.0
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.Rendering.Universal.ShaderGraph.UniversalSpriteUnlitSubTarget",
+    "m_ObjectId": "da24b2ce058d428ea2e32739f60df941"
 }
 
 {
