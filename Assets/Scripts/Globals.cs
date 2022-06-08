@@ -13,6 +13,7 @@ public static class Globals
 
     // delta
     public const float CompareDelta = 0.001f;
+    public const float PositionThreshold = 0.1f;
 
     // layers
     public const int IgnoreRaycastLayer = 2;

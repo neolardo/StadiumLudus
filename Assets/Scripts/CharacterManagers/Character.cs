@@ -79,7 +79,7 @@ public abstract class Character : MonoBehaviour
     private Vector2 characterPositionRatioOnScreen;
 
     protected float movementSpeed;
-    protected const float destinationThreshold = 0.1f;
+    protected const float destinationThreshold = Globals.PositionThreshold;
     protected const float destinationMinimum = 0.7f;
     protected const float rotationThreshold = 2f;
 
