@@ -82,7 +82,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactionRangeDistance: 2
-  buffSpawnDelay: 0
+  firstBuffSpawnDelay: 5
+  buffSpawnDelay: 5
   buffs:
   - {fileID: 5031098797118324179}
   - {fileID: 8915918896081680903}

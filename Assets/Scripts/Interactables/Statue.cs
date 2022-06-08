@@ -13,6 +13,11 @@ public class Statue : Interactable
     [SerializeField]
     private float interactionRangeDistance = 1f;
 
+    [Tooltip("The delay before the first spawn buff.")]
+    [SerializeField]
+    [Range(5, 5 * 60)]
+    private int firstBuffSpawnDelay;
+
     [Tooltip("The delay between the deactivation of the last buff and a new one being spawned.")]
     [SerializeField]
     [Range(5, 2*60)]
@@ -38,6 +43,12 @@ public class Statue : Interactable
 
     private void Start()
     {
+        StartCoroutine(SpawnFirstBuff());
+    }
+
+    private IEnumerator SpawnFirstBuff()
+    {
+        yield return new WaitForSeconds(firstBuffSpawnDelay);
         SpawnBuff();
     }
 

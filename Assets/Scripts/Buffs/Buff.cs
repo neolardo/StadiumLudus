@@ -31,7 +31,18 @@ public class Buff : MonoBehaviour
 
     private const string orbVFXSpawnRateName = "SpawnRate";
     private int orbVFXSpawnRateValue;
+
+    private const string orbVFXSizeValueName = "Size";
+    private const float orbVFXSizeTargetValue = .03f;
+    private float orbVFXSizeInitialValue;
+
+
+    private const string orbVFXAttractionSpeedName = "AttractionSpeed";
+    private const float orbVFXAttractionSpeedTargetValue = 30;
+    private float orbVFXAttractionSpeedInitialValue;
+
     private float orbInitialIntesity;
+
     private Vector3 orbInitialPosition;
 
     #endregion
@@ -62,6 +73,7 @@ public class Buff : MonoBehaviour
                 if (_isActive)
                 {
                     StartCoroutine(MoveOrbToTarget());
+                    StartCoroutine(FadeOutOrbLight());
                     StartCoroutine(DeactivateAfterDurationElapsed());
                     target.AddBuff(this);
                 }
@@ -101,6 +113,11 @@ public class Buff : MonoBehaviour
 
     private bool hasInitialized;
 
+    /// <summary>
+    /// A helper boolean which indicates whether the last orb light fade was out or in.
+    /// </summary>
+    private bool wasLastFadeOut;
+
     #endregion
 
     #region Methods
@@ -112,14 +129,18 @@ public class Buff : MonoBehaviour
             Initialize();
         }
         orbVFX.SetInt(orbVFXSpawnRateName, orbVFXSpawnRateValue);
+        StartCoroutine(FadeInOrbLight());
     }
 
     private void Initialize()
     {
         orbInitialIntesity = orbLight.intensity;
+        orbLight.intensity = 0;
         orbInitialPosition = orbTransform.position;
         characterVFXSpawnRateValue = characterEffectVFX.GetInt(characterVFXSpawnRateName);
         characterEffectVFX.SetInt(characterVFXSpawnRateName, 0);
+        orbVFXSizeInitialValue = orbVFX.GetFloat(orbVFXSizeValueName);
+        orbVFXAttractionSpeedInitialValue = orbVFX.GetFloat(orbVFXAttractionSpeedName);
         orbVFXSpawnRateValue = orbVFX.GetInt(orbVFXSpawnRateName);
         hasInitialized = true;
     }
@@ -137,21 +158,41 @@ public class Buff : MonoBehaviour
     private IEnumerator MoveOrbToTarget()
     {
         orbVFX.SetInt(orbVFXSpawnRateName, 0);
+        orbVFX.SetFloat(orbVFXSizeValueName, orbVFXSizeTargetValue);
+        orbVFX.SetFloat(orbVFXAttractionSpeedName, orbVFXAttractionSpeedTargetValue);
         yield return new WaitForSeconds(delayBeforeMove);
         while (((target.transform.position + moveTargetHeight * Vector3.up) - orbTransform.position).magnitude > Globals.PositionThreshold)
         {
             var dir = ((target.transform.position + moveTargetHeight * Vector3.up) - orbTransform.position).normalized;
             orbTransform.position += dir * orbMovingSpeed * Time.deltaTime;
-            if (orbLight.intensity > 0)
-            {
-                orbLight.intensity -= orbFadingSpeed * Time.deltaTime;
-            }
             yield return null;
         }
         orbTransform.gameObject.SetActive(false);
         characterEffectTransform.gameObject.SetActive(true);
         characterEffectVFX.SetInt(characterVFXSpawnRateName, characterVFXSpawnRateValue);
         StartCoroutine(StickCharacterEffectToTarget());
+    }
+
+    private IEnumerator FadeOutOrbLight()
+    {
+        wasLastFadeOut = true;
+        while (orbLight.intensity > 0 && wasLastFadeOut)
+        {
+            orbLight.intensity -= orbFadingSpeed * Time.deltaTime;
+            yield return null;
+        }
+    }
+
+
+    private IEnumerator FadeInOrbLight()
+    {
+        wasLastFadeOut = false;
+        while (orbLight.intensity < orbInitialIntesity && !wasLastFadeOut)
+        {
+            orbLight.intensity += orbFadingSpeed * Time.deltaTime;
+            yield return null;
+        }
+        orbLight.intensity = orbInitialIntesity;
     }
 
     private IEnumerator StickCharacterEffectToTarget()
@@ -174,10 +215,11 @@ public class Buff : MonoBehaviour
     private void ResetToInitialState()
     {
         gameObject.SetActive(false);
-        orbLight.intensity = orbInitialIntesity;
         orbTransform.position = orbInitialPosition;
         orbTransform.gameObject.SetActive(true);
         characterEffectTransform.gameObject.SetActive(false);
+        orbVFX.SetFloat(orbVFXSizeValueName, orbVFXSizeInitialValue);
+        orbVFX.SetFloat(orbVFXAttractionSpeedName, orbVFXAttractionSpeedInitialValue);
         target.RemoveBuffs();
     }
 

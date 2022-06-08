@@ -236,7 +236,7 @@ GameObject:
   - component: {fileID: 719838416}
   - component: {fileID: 719838418}
   - component: {fileID: 719838417}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Healthbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -693,7 +693,7 @@ GameObject:
   - component: {fileID: 1614292792}
   - component: {fileID: 1614292794}
   - component: {fileID: 1614292793}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Staminabar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -899,7 +899,7 @@ GameObject:
   - component: {fileID: 1811445129}
   - component: {fileID: 1811445128}
   - component: {fileID: 1811445132}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -955,9 +955,9 @@ Canvas:
   m_GameObject: {fileID: 1811445127}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
+  m_RenderMode: 1
+  m_Camera: {fileID: 1705013884}
+  m_PlaneDistance: 1
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -1026,7 +1026,7 @@ GameObject:
   - component: {fileID: 1849422280}
   - component: {fileID: 1849422282}
   - component: {fileID: 1849422281}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1302,26 +1302,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: MaleRanger
       objectReference: {fileID: 0}
-    - target: {fileID: 1131998773343001476, guid: 3698636f8478f044bb5c988389fb6784, type: 3}
-      propertyPath: attackStaminaCost
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 1131998773343001476, guid: 3698636f8478f044bb5c988389fb6784, type: 3}
-      propertyPath: healthRecoveryDelay
-      value: 1.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1131998773343001476, guid: 3698636f8478f044bb5c988389fb6784, type: 3}
-      propertyPath: staminaRecoveryDelay
-      value: 1.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1131998773343001476, guid: 3698636f8478f044bb5c988389fb6784, type: 3}
-      propertyPath: healthRecoveryInitialAmount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1131998773343001476, guid: 3698636f8478f044bb5c988389fb6784, type: 3}
-      propertyPath: staminaRecoveryInitialAmount
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 1131998773343001477, guid: 3698636f8478f044bb5c988389fb6784, type: 3}
       propertyPath: m_RootOrder
       value: 7
@@ -1594,18 +1574,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: MaleWarrior
       objectReference: {fileID: 0}
-    - target: {fileID: 1811659448017157256, guid: 51b48d3849ba0ad4aaa4b0fe046d4cec, type: 3}
-      propertyPath: healthRecoveryDelay
-      value: 1.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1811659448017157256, guid: 51b48d3849ba0ad4aaa4b0fe046d4cec, type: 3}
-      propertyPath: staminaRecoveryDelay
-      value: 1.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1811659448017157256, guid: 51b48d3849ba0ad4aaa4b0fe046d4cec, type: 3}
-      propertyPath: staminaRecoveryInitialAmount
-      value: 10
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 51b48d3849ba0ad4aaa4b0fe046d4cec, type: 3}
 --- !u!114 &1508549705953906664 stripped
@@ -1673,18 +1641,6 @@ PrefabInstance:
     - target: {fileID: 1937259002399550372, guid: f8e32dc067c12804b98fec720f829988, type: 3}
       propertyPath: m_Name
       value: FemaleRanger
-      objectReference: {fileID: 0}
-    - target: {fileID: 1937259002399550399, guid: f8e32dc067c12804b98fec720f829988, type: 3}
-      propertyPath: healthRecoveryDelay
-      value: 1.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1937259002399550399, guid: f8e32dc067c12804b98fec720f829988, type: 3}
-      propertyPath: staminaRecoveryDelay
-      value: 1.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1937259002399550399, guid: f8e32dc067c12804b98fec720f829988, type: 3}
-      propertyPath: staminaRecoveryInitialAmount
-      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8e32dc067c12804b98fec720f829988, type: 3}
@@ -2327,50 +2283,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1360269922, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
-      propertyPath: attackStaminaCost
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 1360269922, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
-      propertyPath: healthRecoveryDelay
-      value: 1.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1360269922, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
-      propertyPath: staminaRecoveryDelay
-      value: 1.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1360269922, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
-      propertyPath: staminaRecoveryInitialAmount
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 668246235630174005, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.19038573
-      objectReference: {fileID: 0}
-    - target: {fileID: 668246235630174005, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.01680762
-      objectReference: {fileID: 0}
-    - target: {fileID: 668246235630174005, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.094006345
-      objectReference: {fileID: 0}
-    - target: {fileID: 2164994531221513617, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.6916958
-      objectReference: {fileID: 0}
-    - target: {fileID: 2164994531221513617, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.3056099
-      objectReference: {fileID: 0}
-    - target: {fileID: 2164994531221513617, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.5725487
-      objectReference: {fileID: 0}
-    - target: {fileID: 2164994531221513617, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.31677678
-      objectReference: {fileID: 0}
     - target: {fileID: 8882034873407279612, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
       propertyPath: m_Name
       value: FemaleWarrior
@@ -2418,14 +2330,6 @@ PrefabInstance:
     - target: {fileID: 8882034873407279615, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9052165218232177916, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.07105351
-      objectReference: {fileID: 0}
-    - target: {fileID: 9052165218232177916, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.034466248
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 66e5e7564291df045a7493cbd1773901, type: 3}

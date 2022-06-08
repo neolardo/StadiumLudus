@@ -11,7 +11,7 @@ public class CharacterController : MonoBehaviour
     private Character character;
     private Camera mainCamera;
 
-    private bool lastLeftMouseClickWasForAttacking;
+    private bool continueToTriggerLeftMouseButtonDown;
 
     [Tooltip("The key which should be pressed to trigger the first skill of the character.")]
     [SerializeField]
@@ -67,9 +67,9 @@ public class CharacterController : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(0))
         {
-            lastLeftMouseClickWasForAttacking = false;
+            continueToTriggerLeftMouseButtonDown = false;
         }
-        bool isLeftMouseButtonDown = Input.GetMouseButtonDown(0) || lastLeftMouseClickWasForAttacking;
+        bool isLeftMouseButtonDown = Input.GetMouseButtonDown(0) || continueToTriggerLeftMouseButtonDown;
         bool isLeftMouseButton = Input.GetMouseButton(0);
         bool isRightMouseButton = Input.GetMouseButton(1);
         if (isLeftMouseButtonDown || isLeftMouseButton || isRightMouseButton)
@@ -84,30 +84,30 @@ public class CharacterController : MonoBehaviour
                 if ((isLeftMouseButtonDown || isLeftMouseButton) && Input.GetKey(KeyCode.LeftShift))
                 {
                     character.TryAttack(hit.point);
-                    lastLeftMouseClickWasForAttacking = true;
+                    continueToTriggerLeftMouseButtonDown = true;
                 }
                 else if (isLeftMouseButtonDown && enemyAtHit)
                 {
                     character.SetChaseTarget(hit.transform);
-                    lastLeftMouseClickWasForAttacking = true;
+                    continueToTriggerLeftMouseButtonDown = true;
                 }
                 else if (isLeftMouseButtonDown && interactableAtHit)
                 {
                     character.SetInteractionTarget(hit.transform.parent.GetComponent<Interactable>());
-                    lastLeftMouseClickWasForAttacking = true;
+                    continueToTriggerLeftMouseButtonDown = true;
                 }
                 else if ((isLeftMouseButtonDown || isLeftMouseButton) && character.gameObject == hit.transform.gameObject) // self hit
                 {
                     if (Physics.Raycast(ray, out hit, 20, (1 << Globals.GroundLayer)))
                     {
                         character.MoveTo(hit.point);
-                        lastLeftMouseClickWasForAttacking = false;
+                        continueToTriggerLeftMouseButtonDown = false;
                     }
                 }
                 else if ((isLeftMouseButtonDown || isLeftMouseButton) && character.gameObject != hit.transform.gameObject)
                 {
                     character.MoveTo(hit.point);
-                    lastLeftMouseClickWasForAttacking = false;
+                    continueToTriggerLeftMouseButtonDown = false;
                 }
                 else if (isRightMouseButton && !isLeftMouseButton && !isLeftMouseButtonDown)
                 {
