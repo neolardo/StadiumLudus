@@ -11,6 +11,9 @@ public class CharacterController : MonoBehaviour
     private Character character;
     private Camera mainCamera;
 
+    [SerializeField]
+    private CharacterUI characterUI;
+
     private bool continueToTriggerLeftMouseButtonDown;
 
     [Tooltip("The key which should be pressed to trigger the first skill of the character.")]
@@ -33,6 +36,8 @@ public class CharacterController : MonoBehaviour
     {
         mainCamera = Camera.main;
         character = GetComponent<Character>();
+        characterUI.character = character;
+        character.characterUI = characterUI;
     }
 
     private void Update()
@@ -131,16 +136,31 @@ public class CharacterController : MonoBehaviour
                 if (Input.GetKeyDown(firstSkillKeyCode))
                 {
                     character.FireSkill(1, hit.point);
+                    characterUI.ChangeSkillButtonPress(0, true);
                 }
                 else if (Input.GetKeyDown(secondSkillKeyCode))
                 {
                     character.FireSkill(2, hit.point);
+                    characterUI.ChangeSkillButtonPress(1, true);
                 }
                 else if (Input.GetKeyDown(thirdSkillKeyCode))
                 {
                     character.FireSkill(3, hit.point);
+                    characterUI.ChangeSkillButtonPress(2, true);
                 }
             }
+        }
+        if (Input.GetKeyUp(firstSkillKeyCode))
+        {
+            characterUI.ChangeSkillButtonPress(0, false);
+        }
+        if (Input.GetKeyUp(secondSkillKeyCode))
+        {
+            characterUI.ChangeSkillButtonPress(1, false);
+        }
+        if (Input.GetKeyUp(thirdSkillKeyCode))
+        {
+            characterUI.ChangeSkillButtonPress(2, false);
         }
     }
 

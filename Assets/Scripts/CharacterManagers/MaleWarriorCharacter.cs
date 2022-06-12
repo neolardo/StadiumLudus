@@ -177,12 +177,11 @@ public class MaleWarriorCharacter : Character
 
     private IEnumerator ManageLeapAttackCooldown()
     {
-        float remainingTime = leapAttackCooldown;
-        while(remainingTime > 0)
+        if (characterUI != null)
         {
-            remainingTime -= Time.deltaTime;
-            yield return null;
+            characterUI.StartSkillCooldown(0, leapAttackCooldown);
         }
+        yield return new WaitForSeconds(leapAttackCooldown);
         IsLeapAttackAvailable = true;
     }
 

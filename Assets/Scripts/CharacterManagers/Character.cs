@@ -172,6 +172,17 @@ public abstract class Character : MonoBehaviour
 
     #endregion
 
+    #region UI
+
+    /// <summary>
+    /// The <see cref="CharacterUI"/> of this character which is only visible to the player who controlls this character, thus this reference is set by the corresponding <see cref="CharacterController"/>.
+    /// </summary>
+    [HideInInspector]
+    public CharacterUI characterUI;
+
+
+    #endregion
+
     #endregion
 
     #region Methods

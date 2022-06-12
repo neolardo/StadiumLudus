@@ -213,12 +213,11 @@ public class FemaleRangerCharacter : Character
 
     private IEnumerator ManageDashCooldown()
     {
-        float remainingTime = dashCooldown;
-        while (remainingTime > 0)
+        if (characterUI != null)
         {
-            remainingTime -= Time.deltaTime;
-            yield return null;
+            characterUI.StartSkillCooldown(0, dashCooldown);
         }
+        yield return new WaitForSeconds(dashCooldown);
         IsDashAvailable = true;
     }
 
