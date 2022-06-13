@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
 /// Manages the in-game UI of a character.
@@ -15,12 +14,7 @@ public class CharacterUI : MonoBehaviour
     public Character character;
     public Material healthBarMaterial;
     public Material staminaBarMaterial;
-    public List<RawImage> skillBackgroundRawImages;
-    public List<Image> skillCooldownImages;
-    public List<RawImage> skillIconRawImages;
-    public List<Texture2D> warriorSkillTextures;
-    public List<Texture2D> rangerSkillTextures;
-
+    public List<SkillSlotUI> skillSlots;
 
     private const string valueShaderPropertyReference = "Vector1_0ae9bdea3f184704b6c11dd6513db5a4";
 
@@ -32,18 +26,19 @@ public class CharacterUI : MonoBehaviour
 
     private void InitializeSkillIcons()
     {
-        List<Texture2D> textures = null;
         if (character is MaleWarriorCharacter || character is FemaleWarriorCharacter)
         {
-            textures = warriorSkillTextures;
+            for (int i = 0; i < skillSlots.Count; i++)
+            {
+                skillSlots[i].InitializeAsWarrior(character.IsSkillChargeable(i+1), character.InitialChargeCountOfSkill(i+1));
+            }
         }
         else
         {
-            textures = rangerSkillTextures;
-        }
-        for (int i = 0; i < skillIconRawImages.Count; i++)
-        {
-            skillIconRawImages[i].texture = textures[i];
+            for (int i = 0; i < skillSlots.Count; i++)
+            {
+                skillSlots[i].InitializeAsRanger(character.IsSkillChargeable(i+1), character.InitialChargeCountOfSkill(i+1));
+            }
         }
     }
 
@@ -58,26 +53,29 @@ public class CharacterUI : MonoBehaviour
         staminaBarMaterial.SetFloat(valueShaderPropertyReference, character.StaminaRatio);
     }
 
-    public void ChangeSkillButtonPress(int skillZeroBasedIndex, bool isPressed)
+    #region Skills
+
+    public void ChangeSkillButtonPress(int skillNumber, bool isPressed)
     {
-        var color = skillBackgroundRawImages[skillZeroBasedIndex].color;
-        skillBackgroundRawImages[skillZeroBasedIndex].color = new Color(color.r, color.g, color.b, isPressed ? 1 : 0);
+        skillSlots[skillNumber-1].ChangeSkillButtonPress(isPressed);
     }
 
-    public void StartSkillCooldown(int skillZeroBasedIndex, float cooldownSeconds)
+    public void StartSkillCooldown(int skillNumber, float cooldownSeconds)
     {
-        StartCoroutine(AnimateRadialFillCooldown(skillZeroBasedIndex, cooldownSeconds));
+        skillSlots[skillNumber-1].StartSkillCooldown(cooldownSeconds);
     }
 
-    private IEnumerator AnimateRadialFillCooldown(int skillZeroBasedIndex, float cooldownSeconds)
+
+    public void AddSkillCharge(int skillNumber)
     {
-        float elapsedTime = 0;
-        while (elapsedTime < cooldownSeconds)
-        {
-            skillCooldownImages[skillZeroBasedIndex].fillAmount = Mathf.Lerp(1, 0, elapsedTime / cooldownSeconds);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-        skillCooldownImages[skillZeroBasedIndex].fillAmount = 0;
+        skillSlots[skillNumber - 1].AddCharge();
     }
+
+    public void RemoveSkillCharge(int skillNumber)
+    {
+        skillSlots[skillNumber - 1].RemoveCharge();
+    }
+
+    #endregion
+
 }

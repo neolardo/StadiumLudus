@@ -60,6 +60,11 @@ public class CharacterAnimationManager : MonoBehaviour
     public bool IsJumping { get; protected set; }
 
     /// <summary>
+    /// Indicates whether this character is currently using of it's skills.
+    /// </summary>
+    public bool IsUsingSkill { get; protected set; }
+
+    /// <summary>
     /// Indicates whether this character is currently interacting or not.
     /// </summary>
     public bool IsInteracting { get; protected set; }
@@ -68,7 +73,6 @@ public class CharacterAnimationManager : MonoBehaviour
     /// The threshold of the movement speed. If the movement speed is bigger than this value than the character should be animatated as moving.
     /// </summary>
     protected const float MovementSpeedThreshold = 0.1f;
-
 
     #region Animator Constants
 
@@ -195,7 +199,15 @@ public class CharacterAnimationManager : MonoBehaviour
     }
 
     #endregion
-    
+
+    #region Skill
+    public void OnSkillFinished()
+    {
+        IsUsingSkill = false;
+    }
+
+    #endregion
+
     #region Impact
 
     public void Impact(bool guard, HitDirection direction)

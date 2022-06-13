@@ -54,11 +54,11 @@ public class FemaleRangerCharacter : Character
 
     private const float dashJumpingTime = 0.29f;
 
-    // charges maybe?
-
     private bool IsDashAvailable { get; set; } = true;
 
     private bool IsDashFirstFrame { get; set; }
+
+    private bool CanDash => IsAlive && IsDashAvailable && !femaleRangerAnimationManager.IsInterrupted && !femaleRangerAnimationManager.IsAttacking && !femaleRangerAnimationManager.IsGuarding && !femaleRangerAnimationManager.IsUsingSkill;
 
     private Vector3 dashTarget;
 
@@ -70,11 +70,39 @@ public class FemaleRangerCharacter : Character
 
     private const int SmokeSkillNumber = 2;
 
+    [Header("Smoke")]
+    [Tooltip("Represents cooldown of the smoke skill in seconds.")]
+    [SerializeField]
+    private float smokeCooldown = 5f;
+
+    private bool IsSmokeAvailable { get; set; } = true;
+
+    private bool CanSmoke => IsAlive && IsSmokeAvailable && !femaleRangerAnimationManager.IsInterrupted && !femaleRangerAnimationManager.IsAttacking && !femaleRangerAnimationManager.IsGuarding && !femaleRangerAnimationManager.IsUsingSkill;
+
     #endregion
 
     #region Trap
 
     private const int TrapSkillNumber = 3;
+
+    [Header("Trap")]
+    [Tooltip("Represents cooldown of the trap skill in seconds.")]
+    [SerializeField]
+    private float trapCooldown = 5f;
+
+    private bool IsTrapAvailable => trapChargeCount > 0;
+
+    [Tooltip("The initial number of charges for the trap skill.")]
+    [SerializeField]
+    private int trapInitialChargeCount = 1;
+
+    [Tooltip("The maximum number of charges for the trap skill.")]
+    [SerializeField]
+    private int trapMaximumChargeCount = 3;
+
+    private int trapChargeCount;
+
+    private bool CanPlaceTrap => IsAlive && IsTrapAvailable && !femaleRangerAnimationManager.IsInterrupted && !femaleRangerAnimationManager.IsAttacking && !femaleRangerAnimationManager.IsGuarding && !femaleRangerAnimationManager.IsUsingSkill;
 
     #endregion
 
@@ -113,15 +141,18 @@ public class FemaleRangerCharacter : Character
         arrowPool.MinimumDamage = arrowMinimumDamage;
         arrowPool.MaximumDamage = arrowMaximumDamage;
         arrowPool.Force = arrowForce;
+        trapChargeCount = trapInitialChargeCount;
     }
 
     protected override void Start()
     {
         base.Start();
         femaleRangerAnimationManager = animationManager as FemaleRangerAnimationManager;
+        StartCoroutine(ManageTrapCooldownAndRecharge());
     }
 
     #endregion
+
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
@@ -168,11 +199,21 @@ public class FemaleRangerCharacter : Character
         }
     }
 
+    public override int InitialChargeCountOfSkill(int skillNumber)
+    {
+        return skillNumber == TrapSkillNumber ? trapInitialChargeCount : 0;
+    }
+
+    public override bool IsSkillChargeable(int skillNumber)
+    {
+        return skillNumber == TrapSkillNumber;
+    }
+
     #region Dash
 
     private void Dash(Vector3 attackTarget)
     {
-        if (IsAlive && IsDashAvailable && !femaleRangerAnimationManager.IsInterrupted && !femaleRangerAnimationManager.IsAttacking && !femaleRangerAnimationManager.IsGuarding)
+        if (CanDash)
         {
             var edgePoint = rb.position - (attackTarget - rb.position).normalized * dashMaximumDistance;
             var raycastPoint = edgePoint + Vector3.up * 5;
@@ -215,7 +256,7 @@ public class FemaleRangerCharacter : Character
     {
         if (characterUI != null)
         {
-            characterUI.StartSkillCooldown(0, dashCooldown);
+            characterUI.StartSkillCooldown(DashSkillNumber, dashCooldown);
         }
         yield return new WaitForSeconds(dashCooldown);
         IsDashAvailable = true;
@@ -232,12 +273,61 @@ public class FemaleRangerCharacter : Character
 
     #region Smoke
 
-    private void Smoke() { }
+    private void Smoke() 
+    {
+        if (CanSmoke)
+        {
+            IsSmokeAvailable = false;
+            femaleRangerAnimationManager.Smoke();
+            StartCoroutine(ManageSmokeCooldown());
+        }
+    }
+
+    private IEnumerator ManageSmokeCooldown()
+    {
+        if (characterUI != null)
+        {
+            characterUI.StartSkillCooldown(SmokeSkillNumber, smokeCooldown);
+        }
+        yield return new WaitForSeconds(smokeCooldown);
+        IsSmokeAvailable = true;
+    }
+
 
     #endregion
 
     #region Trap
-    private void PlaceTrap() { }
+    private void PlaceTrap() 
+    {
+        if (CanPlaceTrap)
+        {
+            trapChargeCount -= 1;
+            femaleRangerAnimationManager.PlaceTrap();
+            if (characterUI != null)
+            {
+                characterUI.RemoveSkillCharge(TrapSkillNumber);
+            }
+        }
+    }
+
+
+    private IEnumerator ManageTrapCooldownAndRecharge()
+    {
+        while (IsAlive)
+        {
+            yield return new WaitUntil(() => trapChargeCount < trapMaximumChargeCount || !IsAlive);
+            if (trapChargeCount < trapMaximumChargeCount)
+            {
+                if (characterUI != null)
+                {
+                    characterUI.StartSkillCooldown(TrapSkillNumber, trapCooldown);
+                }
+                yield return new WaitForSeconds(trapCooldown);
+                trapChargeCount += 1;
+                characterUI.AddSkillCharge(TrapSkillNumber);
+            }
+        }
+    }
 
     #endregion
 

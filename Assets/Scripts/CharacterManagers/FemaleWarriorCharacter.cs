@@ -182,6 +182,16 @@ public class FemaleWarriorCharacter : Character
         }
     }
 
+    public override int InitialChargeCountOfSkill(int skillNumber)
+    {
+        return 0;
+    }
+
+    public override bool IsSkillChargeable(int skillNumber)
+    {
+        return false;
+    }
+
     #region Leap Attack
 
     private void LeapAttack(Vector3 attackTarget)
@@ -233,7 +243,7 @@ public class FemaleWarriorCharacter : Character
     {
         if (characterUI != null)
         {
-            characterUI.StartSkillCooldown(0, leapAttackCooldown);
+            characterUI.StartSkillCooldown(LeapAttackSkillNumber, leapAttackCooldown);
         }
         yield return new WaitForSeconds(leapAttackCooldown);
         IsLeapAttackAvailable = true;

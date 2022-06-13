@@ -76,6 +76,16 @@ public class MaleRangerCharacter : Character
         throw new System.NotImplementedException();
     }
 
+    public override int InitialChargeCountOfSkill(int skillNumber)
+    {
+        return 0;
+    }
+
+    public override bool IsSkillChargeable(int skillNumber)
+    {
+        return false;
+    }
+
     #endregion
 
     #region Attack

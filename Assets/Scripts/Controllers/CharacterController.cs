@@ -136,31 +136,31 @@ public class CharacterController : MonoBehaviour
                 if (Input.GetKeyDown(firstSkillKeyCode))
                 {
                     character.FireSkill(1, hit.point);
-                    characterUI.ChangeSkillButtonPress(0, true);
+                    characterUI.ChangeSkillButtonPress(1, true);
                 }
                 else if (Input.GetKeyDown(secondSkillKeyCode))
                 {
                     character.FireSkill(2, hit.point);
-                    characterUI.ChangeSkillButtonPress(1, true);
+                    characterUI.ChangeSkillButtonPress(2, true);
                 }
                 else if (Input.GetKeyDown(thirdSkillKeyCode))
                 {
                     character.FireSkill(3, hit.point);
-                    characterUI.ChangeSkillButtonPress(2, true);
+                    characterUI.ChangeSkillButtonPress(3, true);
                 }
             }
         }
         if (Input.GetKeyUp(firstSkillKeyCode))
         {
-            characterUI.ChangeSkillButtonPress(0, false);
+            characterUI.ChangeSkillButtonPress(1, false);
         }
         if (Input.GetKeyUp(secondSkillKeyCode))
         {
-            characterUI.ChangeSkillButtonPress(1, false);
+            characterUI.ChangeSkillButtonPress(2, false);
         }
         if (Input.GetKeyUp(thirdSkillKeyCode))
         {
-            characterUI.ChangeSkillButtonPress(2, false);
+            characterUI.ChangeSkillButtonPress(3, false);
         }
     }
 

@@ -123,6 +123,7 @@ public abstract class Character : MonoBehaviour
     protected const float destinationThreshold = Globals.PositionThreshold;
     protected const float destinationMinimum = 0.7f;
     protected const float rotationThreshold = 2f;
+    protected const float agentSpeedMultiplier = 4f/3.5f;
 
     private Vector3 _destination;
 
@@ -199,6 +200,7 @@ public abstract class Character : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.updatePosition = false;
         agent.updateRotation = false;
+        agent.speed = movementSpeedInitialMaximum * agentSpeedMultiplier;
         helperPath = new NavMeshPath();
         var characterScreenPosition = Camera.main.WorldToScreenPoint(transform.position);
         characterPositionRatioOnScreen = new Vector2(0.5f, characterScreenPosition.y / Screen.height);
@@ -220,6 +222,8 @@ public abstract class Character : MonoBehaviour
     #region Skills
 
     public abstract void FireSkill(int skillNumber, Vector3 clickPosition);
+    public abstract bool IsSkillChargeable(int skillNumber);
+    public abstract int InitialChargeCountOfSkill(int skillNumber);
 
     #endregion
 
@@ -502,6 +506,7 @@ public abstract class Character : MonoBehaviour
                 break;
             case BuffType.MovementSpeed:
                 movementSpeedMaximum = buff.applimentMode == BuffApplimentMode.Additive ? movementSpeedInitialMaximum + buff.effectValue : movementSpeedInitialMaximum * buff.effectValue;
+                agent.speed = movementSpeedMaximum * agentSpeedMultiplier;
                 break;
             default:
                 Debug.LogWarning($"Invalid buff type: { buff.type}");
@@ -514,6 +519,7 @@ public abstract class Character : MonoBehaviour
         healthRecoveryAmount = healthRecoveryInitialAmount;
         staminaRecoveryAmount = staminaRecoveryInitialAmount;
         movementSpeedMaximum = movementSpeedInitialMaximum;
+        agent.speed = movementSpeedMaximum * agentSpeedMultiplier;
     }
 
     #endregion
