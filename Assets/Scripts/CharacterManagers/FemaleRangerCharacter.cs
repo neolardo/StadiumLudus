@@ -71,10 +71,23 @@ public class FemaleRangerCharacter : Character
     private const int SmokeSkillNumber = 2;
 
     [Header("Smoke")]
-    [Tooltip("Represents cooldown of the smoke skill in seconds.")]
+    [Tooltip("The smoke particle system.")]
+    [SerializeField]
+    private ParticleSystem smokeParticleSystem;
+
+    [Tooltip("The transform of the smoke.")]
+    [SerializeField]
+    private Transform smokeTransform;
+
+    [Tooltip("Represents the duration of the smoke skill in seconds.")]
+    [SerializeField]
+    private float smokeDuration = 30f;
+
+    [Tooltip("Represents the cooldown of the smoke skill in seconds.")]
     [SerializeField]
     private float smokeCooldown = 5f;
 
+    private Vector3 smokePositionDelta = Vector3.up * 1.5f;
     private bool IsSmokeAvailable { get; set; } = true;
 
     private bool CanSmoke => IsAlive && IsSmokeAvailable && !femaleRangerAnimationManager.IsInterrupted && !femaleRangerAnimationManager.IsAttacking && !femaleRangerAnimationManager.IsGuarding && !femaleRangerAnimationManager.IsUsingSkill;
@@ -82,8 +95,6 @@ public class FemaleRangerCharacter : Character
     #endregion
 
     #region Trap
-
-
 
     [Header("Trap")]
     [Tooltip("The trap pool manager.")]
@@ -105,7 +116,6 @@ public class FemaleRangerCharacter : Character
     [Tooltip("Represents cooldown of the trap skill in seconds.")]
     [SerializeField]
     private float trapCooldown = 5f;
-
     private bool IsTrapAvailable => trapChargeCount > 0;
 
     [Tooltip("The initial number of charges for the trap skill.")]
@@ -157,6 +167,14 @@ public class FemaleRangerCharacter : Character
         {
             Debug.LogWarning("Arrow force for a female ranger character is set to non-positive value.");
         }
+        if (smokeDuration < Globals.CompareDelta)
+        {
+            Debug.LogWarning("Cmoke duration for a female ranger character is set to a non-positive value.");
+        }
+        if (smokeDuration > smokeCooldown)
+        {
+            Debug.LogWarning("Smoke cooldown for a female ranger character is set to a lesser value than the duration.");
+        }
         if (trapMinimumDamage < Globals.CompareDelta)
         {
             Debug.LogWarning("Trap maximum damage for a female ranger character is set to a non-positive value.");
@@ -172,6 +190,10 @@ public class FemaleRangerCharacter : Character
         arrowPool.MinimumDamage = arrowMinimumDamage;
         arrowPool.MaximumDamage = arrowMaximumDamage;
         arrowPool.Force = arrowForce;
+        var mainPS = smokeParticleSystem.main;
+        mainPS.duration = smokeDuration;
+        mainPS.startLifetime = smokeDuration;
+        smokeTransform.SetParent(null);
         trapChargeCount = trapInitialChargeCount;
         trapPool.MinimumDamage = trapMinimumDamage;
         trapPool.MaximumDamage = trapMaximumDamage;
@@ -313,6 +335,8 @@ public class FemaleRangerCharacter : Character
         {
             IsSmokeAvailable = false;
             femaleRangerAnimationManager.Smoke();
+            smokeTransform.position = rb.position + smokePositionDelta;
+            smokeParticleSystem.Play();
             StartCoroutine(ManageSmokeCooldown());
         }
     }
