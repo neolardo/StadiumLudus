@@ -83,9 +83,25 @@ public class FemaleRangerCharacter : Character
 
     #region Trap
 
-    private const int TrapSkillNumber = 3;
+
 
     [Header("Trap")]
+    [Tooltip("The trap pool manager.")]
+    [SerializeField]
+    private TrapPoolManager trapPool;
+
+    [Tooltip("The minimum damage dealt by a trap.")]
+    [SerializeField]
+    private float trapMinimumDamage;
+
+    [Tooltip("The maximum damage dealt by a trap.")]
+    [SerializeField]
+    private float trapMaximumDamage;
+
+    [Tooltip("The amount of seconds the trap remains active after placed on the ground.")]
+    [SerializeField]
+    private float trapDuration = 30f;
+
     [Tooltip("Represents cooldown of the trap skill in seconds.")]
     [SerializeField]
     private float trapCooldown = 5f;
@@ -102,6 +118,9 @@ public class FemaleRangerCharacter : Character
 
     private int trapChargeCount;
 
+    private const int TrapSkillNumber = 3;
+
+    private const float trapPlacementDelay = 0.7f;
     private bool CanPlaceTrap => IsAlive && IsTrapAvailable && !femaleRangerAnimationManager.IsInterrupted && !femaleRangerAnimationManager.IsAttacking && !femaleRangerAnimationManager.IsGuarding && !femaleRangerAnimationManager.IsUsingSkill;
 
     #endregion
@@ -138,10 +157,25 @@ public class FemaleRangerCharacter : Character
         {
             Debug.LogWarning("Arrow force for a female ranger character is set to non-positive value.");
         }
+        if (trapMinimumDamage < Globals.CompareDelta)
+        {
+            Debug.LogWarning("Trap maximum damage for a female ranger character is set to a non-positive value.");
+        }
+        if (trapMaximumDamage < trapMinimumDamage)
+        {
+            Debug.LogWarning("Trap maximum damage for a female ranger character is set to a lesser value than the minimum.");
+        }
+        if (trapDuration < Globals.CompareDelta)
+        {
+            Debug.LogWarning("Trap duration for a female ranger character is set to a non-positive value.");
+        }
         arrowPool.MinimumDamage = arrowMinimumDamage;
         arrowPool.MaximumDamage = arrowMaximumDamage;
         arrowPool.Force = arrowForce;
         trapChargeCount = trapInitialChargeCount;
+        trapPool.MinimumDamage = trapMinimumDamage;
+        trapPool.MaximumDamage = trapMaximumDamage;
+        trapPool.Duration = trapDuration;
     }
 
     protected override void Start()
@@ -297,19 +331,20 @@ public class FemaleRangerCharacter : Character
     #endregion
 
     #region Trap
+
     private void PlaceTrap() 
     {
         if (CanPlaceTrap)
         {
             trapChargeCount -= 1;
             femaleRangerAnimationManager.PlaceTrap();
+            trapPool.PlaceTrap(trapPlacementDelay);
             if (characterUI != null)
             {
                 characterUI.RemoveSkillCharge(TrapSkillNumber);
             }
         }
     }
-
 
     private IEnumerator ManageTrapCooldownAndRecharge()
     {

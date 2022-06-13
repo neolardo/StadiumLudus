@@ -34,6 +34,11 @@ public class AttackTrigger : MonoBehaviour
     /// </summary>
     private bool AnyObjectHit { get; set; }
 
+    /// <summary>
+    /// Indiactes whether a character has been hit by this attack trigger.
+    /// </summary>
+    public bool AnyCharacterHit => DamagedCharacters.Count > 0;
+
     private bool _isActive;
 
     /// <summary>
