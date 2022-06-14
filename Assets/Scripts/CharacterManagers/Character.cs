@@ -442,7 +442,7 @@ public abstract class Character : MonoBehaviour
         }
         else
         {
-            if(animationManager.IsGuarding || animationManager.IsAttacking || animationManager.IsInteracting)
+            if(animationManager.IsGuarding || animationManager.IsAttacking || animationManager.IsInteracting) // !IsUsingSkill?
             {
                 var targetRotation = Quaternion.LookRotation(new Vector3(rotationTarget.x, rb.position.y, rotationTarget.z) - rb.position);
                 if (Quaternion.Angle(targetRotation, rb.rotation) > rotationThreshold && (rotationTarget - rb.position).magnitude > destinationThreshold)

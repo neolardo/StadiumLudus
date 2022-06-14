@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -68,12 +67,35 @@ public class FemaleWarriorCharacter : Character
     private Vector3 leapAttackTarget;
 
     private Vector3 leapAttackJumpDelta;
+    private bool CanLeapAttack => IsAlive && IsLeapAttackAvailable && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill;
+
 
     #endregion
 
+    #region Whirlwind
+
+    [Header("Whirlwind")]
+    [Tooltip("Represents the rotation speed of the whirlwind in degrees/second.")]
+    [SerializeField]
+    private float whirlwindRotationSpeed = 920f;
+
+    [Tooltip("Represents the amount of stamina is drained while using the whirlwind per seconds.")]
+    [SerializeField]
+    private float whirlwindStaminaCost = 35f;
+
+    private const float whirlwindStartAnimationDelay = 0.5f;
+    private const float whirlwindEndAnimationDelay = 0.3f;
+
+    private const int WhirlwindSkillNumber = 2;
+
+    private bool CanWhirlwind => IsAlive && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill;
+
+    #endregion
+
+
     #region Ground Slam
 
-    private const int GroundSlamSkillNumber = 2;
+    private const int GroundSlamSkillNumber = 3;
 
     #endregion  
 
@@ -173,6 +195,9 @@ public class FemaleWarriorCharacter : Character
             case LeapAttackSkillNumber:
                 LeapAttack(clickPosition);
                 break;
+            case WhirlwindSkillNumber:
+                StartWhirlwind();
+                break;
             case GroundSlamSkillNumber:
                 GroundSlam();
                 break;
@@ -182,11 +207,19 @@ public class FemaleWarriorCharacter : Character
         }
     }
 
+    public override void EndSkill(int skillNumber)
+    {
+        if (skillNumber == WhirlwindSkillNumber)
+        {
+            EndWhirlwind();
+        }
+    }
+
     #region Leap Attack
 
     private void LeapAttack(Vector3 attackTarget)
     {
-        if (IsAlive && IsLeapAttackAvailable && !femaleWarriorAnimationManager.IsInterrupted && !femaleWarriorAnimationManager.IsAttacking && !femaleWarriorAnimationManager.IsGuarding)
+        if (CanLeapAttack)
         {
             if ((attackTarget - rb.position).magnitude > leapAttackMaximumDistance)
             {
@@ -247,6 +280,61 @@ public class FemaleWarriorCharacter : Character
     }
 
     #endregion
+
+    #region Whirlwind
+
+    private void StartWhirlwind()
+    {
+        if (CanWhirlwind)
+        {
+            femaleWarriorAnimationManager.StartWhirlwind();
+            StartCoroutine(ManageWhirlwindStaminaDrain());
+            StartCoroutine(ManageWhirlwindRotation());
+        }
+    }
+
+    private void EndWhirlwind()
+    {
+        if (IsAlive && femaleWarriorAnimationManager.IsWhirlwindOnGoing)
+        {
+            femaleWarriorAnimationManager.EndWhirlwind();
+        }
+    }
+
+    private IEnumerator ManageWhirlwindRotation()
+    {
+        yield return new WaitForSeconds(whirlwindStartAnimationDelay);
+        while (femaleWarriorAnimationManager.IsWhirlwindOnGoing)
+        {
+            rb.MoveRotation(rb.rotation * Quaternion.AngleAxis(whirlwindRotationSpeed * Time.deltaTime, Vector3.up));
+            yield return null;
+        }
+        float elapsedTime = 0;
+        while (elapsedTime < whirlwindEndAnimationDelay)
+        {
+            rb.MoveRotation(rb.rotation * Quaternion.AngleAxis(Mathf.Lerp(whirlwindRotationSpeed, 0, elapsedTime / whirlwindEndAnimationDelay) * Time.deltaTime, Vector3.up));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    private IEnumerator ManageWhirlwindStaminaDrain()
+    {
+        var staminaDelta = Time.deltaTime * whirlwindStaminaCost;
+        while (stamina > staminaDelta && femaleWarriorAnimationManager.IsWhirlwindOnGoing)
+        {
+            stamina -= staminaDelta;
+            yield return null;
+            staminaDelta = Time.deltaTime * whirlwindStaminaCost;
+        }
+        if (femaleWarriorAnimationManager.IsWhirlwindOnGoing)
+        {
+            EndWhirlwind();
+        }
+    }
+
+    #endregion
+
 
     #region Ground Slam
 

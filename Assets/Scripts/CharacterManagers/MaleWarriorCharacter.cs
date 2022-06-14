@@ -60,7 +60,6 @@ public class MaleWarriorCharacter : Character
 
     #region Whirlwind
 
-
     [Header("Whirlwind")]
     [Tooltip("Represents the rotation speed of the whirlwind in degrees/second.")]
     [SerializeField]
@@ -68,7 +67,7 @@ public class MaleWarriorCharacter : Character
 
     [Tooltip("Represents the amount of stamina is drained while using the whirlwind per seconds.")]
     [SerializeField]
-    private float whirlwindStaminaCost = 50f;
+    private float whirlwindStaminaCost = 35f;
 
     private const float whirlwindStartAnimationDelay = 0.5f;
     private const float whirlwindEndAnimationDelay = 0.3f;
@@ -278,6 +277,7 @@ public class MaleWarriorCharacter : Character
             EndWhirlwind();
         }
     }
+
     #endregion
 
     #region Ground Slam

@@ -47,7 +47,6 @@ public class MaleWarriorAnimationManager : CharacterAnimationManager
 
     #endregion
 
-
     #region Whirlwind
 
     public void StartWhirlwind()
@@ -64,9 +63,7 @@ public class MaleWarriorAnimationManager : CharacterAnimationManager
         IsWhirlwindOnGoing = false;
     }
 
-
     #endregion
-
 
     #region Ground Slam
 
