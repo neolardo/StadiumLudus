@@ -11,7 +11,15 @@ public class MaleWarriorAnimationManager : CharacterAnimationManager
 
     #region Animator Constants
 
+    /// <summary>
+    /// Indicates whether the whirlwind animation is ongoing or not.
+    /// </summary>
+    public bool IsWhirlwindOnGoing { get; private set; }
+
     protected const string AnimatorLeapAttack = "LeapAttack";
+    protected const string AnimatorStartWhirlwind = "StartWhirlwind";
+    protected const string AnimatorEndWhirlwind = "EndWhirlwind";
+    protected const string AnimatorGroundSlam = "GroundSlam";
 
     #endregion
 
@@ -33,7 +41,37 @@ public class MaleWarriorAnimationManager : CharacterAnimationManager
 
     public void LeapAttack()
     {
-        IsAttacking = true;
+        IsUsingSkill = true;
+        animator.SetTrigger(AnimatorLeapAttack);
+    }
+
+    #endregion
+
+
+    #region Whirlwind
+
+    public void StartWhirlwind()
+    {
+        IsUsingSkill = true;
+        IsWhirlwindOnGoing = true;
+        animator.SetTrigger(AnimatorStartWhirlwind);
+    }
+
+
+    public void EndWhirlwind()
+    {
+        animator.SetTrigger(AnimatorEndWhirlwind);
+        IsWhirlwindOnGoing = false;
+    }
+
+
+    #endregion
+
+
+    #region Ground Slam
+
+    public void GroundSlam()
+    {
         animator.SetTrigger(AnimatorLeapAttack);
     }
 
