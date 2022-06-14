@@ -21,10 +21,6 @@ public class Buff : MonoBehaviour
     [SerializeField]
     private Light orbLight;
 
-    [Tooltip("The speed of the orb moving towards the target character once activated.")]
-    [SerializeField]
-    private float orbMovingSpeed = 3;
-
     [Tooltip("The speed of the orb light fading out.")]
     [SerializeField]
     private float orbFadingSpeed = 1;
@@ -106,7 +102,8 @@ public class Buff : MonoBehaviour
     private Character target;
 
     private const float delayBeforeMove = 0.75f;
-    private const float moveTargetHeight = 1.3f;
+    private const float moveDuration = 1.5f;
+    private Vector3 moveTargetDelta = 1.3f * Vector3.up;
     private const float characterVFXSpawnRateDelay = 3;
     private const string characterVFXSpawnRateName = "SpawnRate";
     private int characterVFXSpawnRateValue;
@@ -161,10 +158,11 @@ public class Buff : MonoBehaviour
         orbVFX.SetFloat(orbVFXSizeValueName, orbVFXSizeTargetValue);
         orbVFX.SetFloat(orbVFXAttractionSpeedName, orbVFXAttractionSpeedTargetValue);
         yield return new WaitForSeconds(delayBeforeMove);
-        while (((target.transform.position + moveTargetHeight * Vector3.up) - orbTransform.position).magnitude > Globals.PositionThreshold)
+        float elapsedSeconds = 0;
+        while (elapsedSeconds < moveDuration)
         {
-            var dir = ((target.transform.position + moveTargetHeight * Vector3.up) - orbTransform.position).normalized;
-            orbTransform.position += dir * orbMovingSpeed * Time.deltaTime;
+            orbTransform.position = Vector3.Lerp(orbInitialPosition, (target.transform.position + moveTargetDelta), elapsedSeconds / moveDuration);
+            elapsedSeconds += Time.deltaTime;
             yield return null;
         }
         orbTransform.gameObject.SetActive(false);

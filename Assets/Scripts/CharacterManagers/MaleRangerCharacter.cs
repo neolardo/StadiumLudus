@@ -71,7 +71,7 @@ public class MaleRangerCharacter : Character
 
     #region Skills
 
-    public override void FireSkill(int skillNumber, Vector3 clickPosition)
+    public override void StartSkill(int skillNumber, Vector3 clickPosition)
     {
         throw new System.NotImplementedException();
     }

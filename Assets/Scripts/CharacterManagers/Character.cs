@@ -15,7 +15,7 @@ public abstract class Character : MonoBehaviour
     /// <summary>
     /// Represents the current health of the character.
     /// </summary>
-    private float health;
+    protected float health;
 
     [Header("Health")]
     [Tooltip("Represents the maximum health of the character.")]
@@ -52,7 +52,7 @@ public abstract class Character : MonoBehaviour
     /// <summary>
     /// Represents the current stamina of the character.
     /// </summary>
-    private float stamina;
+    protected float stamina;
 
     [Header("Stamina")]
     [Tooltip("Represents the maximum stamina of the charater which allows it to interract, attack and block.")]
@@ -221,9 +221,10 @@ public abstract class Character : MonoBehaviour
 
     #region Skills
 
-    public abstract void FireSkill(int skillNumber, Vector3 clickPosition);
-    public abstract bool IsSkillChargeable(int skillNumber);
-    public abstract int InitialChargeCountOfSkill(int skillNumber);
+    public abstract void StartSkill(int skillNumber, Vector3 clickPosition);
+    public virtual void EndSkill(int skillNumber) { }
+    public virtual bool IsSkillChargeable(int skillNumber) => false;
+    public virtual int InitialChargeCountOfSkill(int skillNumber) => 0;
 
     #endregion
 
@@ -321,9 +322,18 @@ public abstract class Character : MonoBehaviour
 
     public void SetInteractionTarget(Interactable interactable)
     {
-        MoveTo(interactable.GetClosestInteractionPoint(rb.position));
-        interactionTarget = interactable;
-        interactionPoint = Destination;
+        var point = interactable.GetClosestInteractionPoint(rb.position);
+        if ((point - rb.position).magnitude < interactionRange)
+        {
+            interactionTarget = interactable;
+            Interract();
+        }
+        else 
+        {
+            MoveTo(point); 
+            interactionTarget = interactable;
+            interactionPoint = Destination;
+        }
         chaseTarget = null;
     }
 
@@ -333,11 +343,16 @@ public abstract class Character : MonoBehaviour
         {
             if ((interactionPoint - rb.position).magnitude < interactionRange)
             {
-                interactionTarget.TryInteract(this);
-                interactionTarget = null;
-                ClearDestination();
+                Interract();
             }
         }
+    }
+
+    private void Interract()
+    {
+        interactionTarget.TryInteract(this);
+        interactionTarget = null;
+        ClearDestination();
     }
 
     #region Drink
@@ -349,7 +364,6 @@ public abstract class Character : MonoBehaviour
     }
 
     #endregion
-
 
     #region Kneel
 
@@ -370,7 +384,6 @@ public abstract class Character : MonoBehaviour
         chaseTarget = target;
         interactionTarget = null;
     }
-
 
     private void UpdateChase()
     {

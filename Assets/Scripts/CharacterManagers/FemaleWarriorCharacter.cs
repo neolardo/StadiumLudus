@@ -166,7 +166,7 @@ public class FemaleWarriorCharacter : Character
 
     #region Skills
 
-    public override void FireSkill(int skillNumber, Vector3 clickPosition)
+    public override void StartSkill(int skillNumber, Vector3 clickPosition)
     {
         switch (skillNumber)
         {
@@ -180,16 +180,6 @@ public class FemaleWarriorCharacter : Character
                 Debug.LogWarning("Invalid skill number for a female warrior character.");
                 break;
         }
-    }
-
-    public override int InitialChargeCountOfSkill(int skillNumber)
-    {
-        return 0;
-    }
-
-    public override bool IsSkillChargeable(int skillNumber)
-    {
-        return false;
     }
 
     #region Leap Attack

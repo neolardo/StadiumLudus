@@ -236,7 +236,7 @@ public class FemaleRangerCharacter : Character
 
     #region Skills
 
-    public override void FireSkill(int skillNumber, Vector3 clickPosition)
+    public override void StartSkill(int skillNumber, Vector3 clickPosition)
     {
         switch (skillNumber)
         {
@@ -383,7 +383,10 @@ public class FemaleRangerCharacter : Character
                 }
                 yield return new WaitForSeconds(trapCooldown);
                 trapChargeCount += 1;
-                characterUI.AddSkillCharge(TrapSkillNumber);
+                if (characterUI != null)
+                {
+                    characterUI.AddSkillCharge(TrapSkillNumber);
+                }
             }
         }
     }
