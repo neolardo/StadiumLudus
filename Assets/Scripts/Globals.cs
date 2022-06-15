@@ -20,4 +20,11 @@ public static class Globals
     public const int CharacterLayer = 6;
     public const int GroundLayer = 7;
     public const int InteractableLayer =8;
+
+    // audio mixer 
+    public const string AudioMixerSFXVolume = "SFXVolume";
+    public const string AudioMixerMusicVolume = "MusicVolume";
+    public const float AudioMixerMaximumDecibel = 0;
+    public const float AudioMixerMinimumDecibel = -80;
+
 }

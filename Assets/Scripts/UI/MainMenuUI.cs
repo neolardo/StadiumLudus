@@ -1,16 +1,20 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class MainMenuUI : MonoBehaviour
 {
     #region Fields and Properties
 
+    public AudioSource menuAudioSource;
+    public AudioMixer mainAudioMixer;
     public RectTransform mainMenuPageRectTransform;
     public RectTransform settingsPageRectTransform;
     public RectTransform roomsPageRectTransform;
     private MainMenuPage currentPage;
 
-    public float slideTime = 0.5f;
+    public float slideDuration = 0.35f;
     private bool IsNavigating { get; set; }
 
 
@@ -34,7 +38,6 @@ public class MainMenuUI : MonoBehaviour
         StartCoroutine(NavigateTo(MainMenuPage.Rooms));
     }
 
-
     public void NavigateToSettingsPage()
     {
         StartCoroutine(NavigateTo(MainMenuPage.Settings));
@@ -43,6 +46,20 @@ public class MainMenuUI : MonoBehaviour
     public void Exit()
     {
         Application.Quit();
+    }
+
+    public void OnMenuButtonHover()
+    {
+        AudioManager.Instance.PlayOneShotSFX(menuAudioSource, SFX.MenuButtonHover);
+    }
+
+    public void OnMusicVolumeSliderChanged(float value)
+    {
+        mainAudioMixer.SetFloat(Globals.AudioMixerMusicVolume, Mathf.Lerp(Globals.AudioMixerMinimumDecibel, Globals.AudioMixerMaximumDecibel, value));
+    }
+    public void OnSFXVolumeSliderChanged(float value)
+    {
+        mainAudioMixer.SetFloat(Globals.AudioMixerSFXVolume, Mathf.Lerp(Globals.AudioMixerMinimumDecibel, Globals.AudioMixerMaximumDecibel, value));
     }
 
     private RectTransform RectTransformOf( MainMenuPage page)
@@ -72,6 +89,7 @@ public class MainMenuUI : MonoBehaviour
     private IEnumerator NavigateTo(MainMenuPage targetPage)
     {
         yield return new WaitUntil(() => !IsNavigating);
+        AudioManager.Instance.PlayOneShotSFX(menuAudioSource, SFX.MenuProceed);
         if(targetPage != currentPage)
         {
             IsNavigating = true;
@@ -79,13 +97,13 @@ public class MainMenuUI : MonoBehaviour
             var targetPageRect = RectTransformOf(targetPage);
             if (targetPage == MainMenuPage.MainMenu)
             {
-                float elapsedTime = slideTime;
+                float elapsedTime = slideDuration;
                 float anchorMaxY = currentPageRect.anchorMax.y;
                 float anchorMinY = currentPageRect.anchorMin.y;
                 while (elapsedTime > 0)
                 {
-                    currentPageRect.anchorMax = new Vector2(Mathf.Lerp(1f, 2f, Mathf.Sqrt((slideTime - elapsedTime) / slideTime)), anchorMaxY);
-                    currentPageRect.anchorMin = new Vector2(Mathf.Lerp(0f, 1f, Mathf.Sqrt((slideTime - elapsedTime) / slideTime)), anchorMinY);
+                    currentPageRect.anchorMax = new Vector2(Mathf.Lerp(1f, 2f, Mathf.Sqrt((slideDuration - elapsedTime) / slideDuration)), anchorMaxY);
+                    currentPageRect.anchorMin = new Vector2(Mathf.Lerp(0f, 1f, Mathf.Sqrt((slideDuration - elapsedTime) / slideDuration)), anchorMinY);
                     elapsedTime -= Time.deltaTime;
                     yield return null;
                 }
@@ -95,13 +113,13 @@ public class MainMenuUI : MonoBehaviour
             }
             else
             {
-                float elapsedTime = slideTime;
+                float elapsedTime = slideDuration;
                 float anchorMaxY = targetPageRect.anchorMax.y;
                 float anchorMinY = targetPageRect.anchorMin.y;
                 while (elapsedTime > 0)
                 {
-                    targetPageRect.anchorMax = new Vector2(Mathf.Lerp(2f, 1f, Mathf.Sqrt((slideTime - elapsedTime) / slideTime)), anchorMaxY);
-                    targetPageRect.anchorMin = new Vector2(Mathf.Lerp(1f, 0f, Mathf.Sqrt((slideTime - elapsedTime) / slideTime)), anchorMinY);
+                    targetPageRect.anchorMax = new Vector2(Mathf.Lerp(2f, 1f, Mathf.Sqrt((slideDuration - elapsedTime) / slideDuration)), anchorMaxY);
+                    targetPageRect.anchorMin = new Vector2(Mathf.Lerp(1f, 0f, Mathf.Sqrt((slideDuration - elapsedTime) / slideDuration)), anchorMinY);
                     elapsedTime -= Time.deltaTime;
                     yield return null;
                 }
