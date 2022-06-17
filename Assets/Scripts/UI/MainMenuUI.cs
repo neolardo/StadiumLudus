@@ -1,8 +1,10 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.UI;
 
+/// <summary>
+/// Manages the UI of the main menu.
+/// </summary>
 public class MainMenuUI : MonoBehaviour
 {
     #region Fields and Properties
@@ -14,7 +16,7 @@ public class MainMenuUI : MonoBehaviour
     public RectTransform roomsPageRectTransform;
     private MainMenuPage currentPage;
 
-    public float slideDuration = 0.35f;
+    public const float slideDuration = 0.35f;
     private bool IsNavigating { get; set; }
 
 
@@ -51,15 +53,6 @@ public class MainMenuUI : MonoBehaviour
     public void OnMenuButtonHover()
     {
         AudioManager.Instance.PlayOneShotSFX(menuAudioSource, SFX.MenuButtonHover);
-    }
-
-    public void OnMusicVolumeSliderChanged(float value)
-    {
-        mainAudioMixer.SetFloat(Globals.AudioMixerMusicVolume, Mathf.Lerp(Globals.AudioMixerMinimumDecibel, Globals.AudioMixerMaximumDecibel, value));
-    }
-    public void OnSFXVolumeSliderChanged(float value)
-    {
-        mainAudioMixer.SetFloat(Globals.AudioMixerSFXVolume, Mathf.Lerp(Globals.AudioMixerMinimumDecibel, Globals.AudioMixerMaximumDecibel, value));
     }
 
     private RectTransform RectTransformOf( MainMenuPage page)

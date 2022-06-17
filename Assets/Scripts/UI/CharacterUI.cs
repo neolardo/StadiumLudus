@@ -12,12 +12,15 @@ public class CharacterUI : MonoBehaviour
     /// </summary>
     [HideInInspector]
     public Character character;
+    public PauseMenuUI pauseMenu;
     public Material healthBarMaterial;
     public Material staminaBarMaterial;
     public List<SkillSlotUI> skillSlots;
+    public bool isUIVisible { get; private set; } = true;
 
     private const string valueShaderPropertyReference = "Vector1_0ae9bdea3f184704b6c11dd6513db5a4";
 
+    #region Methods
 
     private void Start()
     {
@@ -30,14 +33,14 @@ public class CharacterUI : MonoBehaviour
         {
             for (int i = 0; i < skillSlots.Count; i++)
             {
-                skillSlots[i].InitializeAsWarrior(character.IsSkillChargeable(i+1), character.InitialChargeCountOfSkill(i+1));
+                skillSlots[i].InitializeAsWarrior(character.IsSkillChargeable(i + 1), character.InitialChargeCountOfSkill(i + 1));
             }
         }
         else
         {
             for (int i = 0; i < skillSlots.Count; i++)
             {
-                skillSlots[i].InitializeAsRanger(character.IsSkillChargeable(i+1), character.InitialChargeCountOfSkill(i+1));
+                skillSlots[i].InitializeAsRanger(character.IsSkillChargeable(i + 1), character.InitialChargeCountOfSkill(i + 1));
             }
         }
     }
@@ -57,14 +60,13 @@ public class CharacterUI : MonoBehaviour
 
     public void ChangeSkillButtonPress(int skillNumber, bool isPressed)
     {
-        skillSlots[skillNumber-1].ChangeSkillButtonPress(isPressed);
+        skillSlots[skillNumber - 1].ChangeSkillButtonPress(isPressed);
     }
 
     public void StartSkillCooldown(int skillNumber, float cooldownSeconds)
     {
-        skillSlots[skillNumber-1].StartSkillCooldown(cooldownSeconds);
+        skillSlots[skillNumber - 1].StartSkillCooldown(cooldownSeconds);
     }
-
 
     public void AddSkillCharge(int skillNumber)
     {
@@ -75,6 +77,19 @@ public class CharacterUI : MonoBehaviour
     {
         skillSlots[skillNumber - 1].RemoveCharge();
     }
+
+    #endregion
+
+    #region Pause Menu
+
+    public void ShowHidePauseMenu()
+    {
+        isUIVisible = !isUIVisible;
+        gameObject.SetActive(isUIVisible);
+        pauseMenu.gameObject.SetActive(!isUIVisible);
+    }
+
+    #endregion
 
     #endregion
 

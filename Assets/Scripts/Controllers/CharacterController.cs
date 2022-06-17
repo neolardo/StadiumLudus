@@ -14,6 +14,7 @@ public class CharacterController : MonoBehaviour
     [SerializeField]
     private CharacterUI characterUI;
 
+    private bool AreInputsEnabled => characterUI.isUIVisible;
     private bool ignoreUntilRelease = false;
 
     [Tooltip("The key which should be pressed to trigger the first skill of the character.")]
@@ -62,60 +63,63 @@ public class CharacterController : MonoBehaviour
     /// </summary>
     private void HandleMouseClick()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (AreInputsEnabled)
         {
-            character.StartGuarding();
-        }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            character.EndGuarding();
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
-            ignoreUntilRelease = false;
-        }
-        bool isLeftMouseButtonDown = Input.GetMouseButtonDown(0);
-        bool isLeftMouseButton = Input.GetMouseButton(0);
-        bool isRightMouseButton = Input.GetMouseButton(1);
-        if (isLeftMouseButtonDown || isLeftMouseButton || isRightMouseButton)
-        {
-            RaycastHit hit;
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            var layerMask = isLeftMouseButtonDown ? (1 << Globals.GroundLayer) | (1 << Globals.CharacterLayer) | (1 << Globals.InteractableLayer): (1 << Globals.GroundLayer);
-            if (Physics.Raycast(ray, out hit, 20, layerMask, QueryTriggerInteraction.Collide))
+            if (Input.GetMouseButtonDown(1))
             {
-                bool interactableAtHit = hit.transform.gameObject.layer == Globals.InteractableLayer;
-                bool enemyAtHit = hit.transform.gameObject.layer == Globals.CharacterLayer && character.gameObject != hit.transform.gameObject;
-                if (!ignoreUntilRelease)
+                character.StartGuarding();
+            }
+            else if (Input.GetMouseButtonUp(1))
+            {
+                character.EndGuarding();
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                ignoreUntilRelease = false;
+            }
+            bool isLeftMouseButtonDown = Input.GetMouseButtonDown(0);
+            bool isLeftMouseButton = Input.GetMouseButton(0);
+            bool isRightMouseButton = Input.GetMouseButton(1);
+            if (isLeftMouseButtonDown || isLeftMouseButton || isRightMouseButton)
+            {
+                RaycastHit hit;
+                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+                var layerMask = isLeftMouseButtonDown ? (1 << Globals.GroundLayer) | (1 << Globals.CharacterLayer) | (1 << Globals.InteractableLayer) : (1 << Globals.GroundLayer);
+                if (Physics.Raycast(ray, out hit, 20, layerMask, QueryTriggerInteraction.Collide))
                 {
-                    if ((isLeftMouseButtonDown || isLeftMouseButton) && Input.GetKey(KeyCode.LeftShift))
+                    bool interactableAtHit = hit.transform.gameObject.layer == Globals.InteractableLayer;
+                    bool enemyAtHit = hit.transform.gameObject.layer == Globals.CharacterLayer && character.gameObject != hit.transform.gameObject;
+                    if (!ignoreUntilRelease)
                     {
-                        character.TryAttack(hit.point);
-                    }
-                    else if (isLeftMouseButtonDown && enemyAtHit)
-                    {
-                        character.SetChaseTarget(hit.transform);
-                        ignoreUntilRelease = true;
-                    }
-                    else if (isLeftMouseButtonDown && interactableAtHit)
-                    {
-                        character.SetInteractionTarget(hit.transform.parent.GetComponent<Interactable>());
-                        ignoreUntilRelease = true;
-                    }
-                    else if ((isLeftMouseButtonDown || isLeftMouseButton) && character.gameObject == hit.transform.gameObject) // self hit
-                    {
-                        if (Physics.Raycast(ray, out hit, 20, (1 << Globals.GroundLayer)))
+                        if ((isLeftMouseButtonDown || isLeftMouseButton) && Input.GetKey(KeyCode.LeftShift))
+                        {
+                            character.TryAttack(hit.point);
+                        }
+                        else if (isLeftMouseButtonDown && enemyAtHit)
+                        {
+                            character.SetChaseTarget(hit.transform);
+                            ignoreUntilRelease = true;
+                        }
+                        else if (isLeftMouseButtonDown && interactableAtHit)
+                        {
+                            character.SetInteractionTarget(hit.transform.parent.GetComponent<Interactable>());
+                            ignoreUntilRelease = true;
+                        }
+                        else if ((isLeftMouseButtonDown || isLeftMouseButton) && character.gameObject == hit.transform.gameObject) // self hit
+                        {
+                            if (Physics.Raycast(ray, out hit, 20, (1 << Globals.GroundLayer)))
+                            {
+                                character.MoveTo(hit.point);
+                            }
+                        }
+                        else if ((isLeftMouseButtonDown || isLeftMouseButton) && character.gameObject != hit.transform.gameObject)
                         {
                             character.MoveTo(hit.point);
                         }
-                    }
-                    else if ((isLeftMouseButtonDown || isLeftMouseButton) && character.gameObject != hit.transform.gameObject)
-                    {
-                        character.MoveTo(hit.point);
-                    }
-                    else if (isRightMouseButton && !isLeftMouseButton && !isLeftMouseButtonDown)
-                    {
-                        character.SetRotationTarget(hit.point);
+                        else if (isRightMouseButton && !isLeftMouseButton && !isLeftMouseButtonDown)
+                        {
+                            character.SetRotationTarget(hit.point);
+                        }
                     }
                 }
             }
@@ -127,7 +131,8 @@ public class CharacterController : MonoBehaviour
     /// </summary>
     private void HandleKeyboardInputs()
     {
-        if (Input.GetKeyDown(firstSkillKeyCode) || Input.GetKeyDown(secondSkillKeyCode) || Input.GetKeyDown(thirdSkillKeyCode))
+        //skills
+        if (AreInputsEnabled && (Input.GetKeyDown(firstSkillKeyCode) || Input.GetKeyDown(secondSkillKeyCode) || Input.GetKeyDown(thirdSkillKeyCode)))
         {
             RaycastHit hit;
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -164,6 +169,11 @@ public class CharacterController : MonoBehaviour
         {
             character.EndSkill(3);
             characterUI.ChangeSkillButtonPress(3, false);
+        }
+        // pause menu
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            characterUI.ShowHidePauseMenu();
         }
     }
 
