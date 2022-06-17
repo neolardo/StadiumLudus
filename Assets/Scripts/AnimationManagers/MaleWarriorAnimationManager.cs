@@ -69,7 +69,8 @@ public class MaleWarriorAnimationManager : CharacterAnimationManager
 
     public void GroundSlam()
     {
-        animator.SetTrigger(AnimatorLeapAttack);
+        IsUsingSkill = true;
+        animator.SetTrigger(AnimatorGroundSlam);
     }
 
     #endregion

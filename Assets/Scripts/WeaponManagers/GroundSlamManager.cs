@@ -24,7 +24,6 @@ public class GroundSlamManager: MonoBehaviour
     [SerializeField] private float maximumRange;
     [SerializeField] private int maximumSideCrackCount;
     [SerializeField] private float maximumSideCrackRange; 
-    [SerializeField] private float currentRange;
     private List<Crack> cracks;
     private List<Crack> sideCracks;
     private Vector3 startSmokePositionDelta = 0.1f * Vector3.up;
@@ -107,7 +106,6 @@ public class GroundSlamManager: MonoBehaviour
 
     private IEnumerator AnimateRock()
     {
-        Debug.Log("FIRE ROCK");
         yield return new WaitUntil(() => CrackDestinationReached);
         rockTransform.gameObject.SetActive(true);
         rockAnimator.SetTrigger(RockAnimatorAppear);

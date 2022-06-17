@@ -82,6 +82,26 @@ public class MaleWarriorCharacter : Character
 
     private const int GroundSlamSkillNumber = 3;
 
+    [Header("Ground Slam")]
+    [SerializeField]
+    private GroundSlamManager groundSlamManager;
+
+    [Tooltip("Represents the stamina cost of the ground slam skill.")]
+    [SerializeField]
+    private float groundSlamStaminaCost = 20f;
+
+    [Tooltip("Represents maximum distance of the ground slam.")]
+    [SerializeField]
+    private float groundSlamMaximumDistance = 3.5f;
+
+    [Tooltip("Represents cooldown of the ground slam skill in seconds.")]
+    [SerializeField]
+    private float groundSlamCooldown = 5f;
+    private bool IsGroundSlamAvailable { get; set; } = true;
+    private bool CanGroundSlam => IsAlive && IsGroundSlamAvailable && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill;
+
+    private const float GroundSlamStartDelay = 1f;
+
     #endregion  
 
     #endregion
@@ -144,7 +164,7 @@ public class MaleWarriorCharacter : Character
                 StartWhirlwind();
                 break;
             case GroundSlamSkillNumber:
-                GroundSlam();
+                GroundSlam(clickPosition);
                 break;
             default:
                 Debug.LogWarning("Invalid skill number for a male warrior character.");
@@ -282,12 +302,41 @@ public class MaleWarriorCharacter : Character
 
     #region Ground Slam
 
-    private void GroundSlam()
+    private void GroundSlam(Vector3 attackTarget)
     {
-        if (IsAlive && !maleWarriorAnimationManager.IsInterrupted && !maleWarriorAnimationManager.IsAttacking && !maleWarriorAnimationManager.IsGuarding)
+        if (CanGroundSlam)
         {
-
+            if ((attackTarget - rb.position).magnitude > groundSlamMaximumDistance)
+            {
+                var edgePoint = rb.position + (attackTarget - rb.position).normalized * groundSlamMaximumDistance;
+                var raycastPoint = edgePoint + Vector3.up * 5;
+                Ray ray = new Ray(raycastPoint, Vector3.down);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, 20, 1 << Globals.GroundLayer))
+                {
+                    edgePoint = hit.point;
+                }
+                attackTarget = edgePoint;
+            }
+            IsGroundSlamAvailable = false;
+            SetRotationTarget(attackTarget);
+            forceRotation = true;
+            maleWarriorAnimationManager.GroundSlam();
+            //StartCoroutine(ManageAttackTrigger());
+            StartCoroutine(ManageGroundSlamCooldown());
+            groundSlamManager.Fire(attackTarget, GroundSlamStartDelay);
         }
+    }
+
+    private IEnumerator ManageGroundSlamCooldown()
+    {
+        if (characterUI != null)
+        {
+            characterUI.StartSkillCooldown(GroundSlamSkillNumber, groundSlamCooldown);
+        }
+        yield return new WaitForSeconds(groundSlamCooldown);
+        forceRotation = false;
+        IsGroundSlamAvailable = true;
     }
 
     #endregion

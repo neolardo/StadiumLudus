@@ -46,7 +46,6 @@ GameObject:
   - component: {fileID: 1360269922}
   - component: {fileID: 1086230321}
   - component: {fileID: 8882034874765443999}
-  - component: {fileID: 680819047}
   m_Layer: 6
   m_Name: FemaleWarrior
   m_TagString: Character
@@ -166,7 +165,7 @@ MonoBehaviour:
   whirlwindStaminaCost: 20
   groundSlamManager: {fileID: 8882034874923164904}
   groundSlamStaminaCost: 20
-  groundSlamMaximumDistance: 5
+  groundSlamMaximumDistance: 10
   groundSlamCooldown: 5
 --- !u!136 &1086230321
 CapsuleCollider:
@@ -278,22 +277,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &680819047
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8882034873407279612}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcd049b5391ef714bad0207b0b4af5f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterUI: {fileID: 0}
-  firstSkillKeyCode: 113
-  secondSkillKeyCode: 119
-  thirdSkillKeyCode: 101
 --- !u!1001 &2126130499730143571
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -307,7 +290,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7404722373769092538, guid: 7ace1fd8e9b3f464fb7e7f6a5719e5d0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.5226517
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7404722373769092538, guid: 7ace1fd8e9b3f464fb7e7f6a5719e5d0, type: 3}
       propertyPath: m_LocalPosition.y
@@ -315,7 +298,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7404722373769092538, guid: 7ace1fd8e9b3f464fb7e7f6a5719e5d0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.6000357
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7404722373769092538, guid: 7ace1fd8e9b3f464fb7e7f6a5719e5d0, type: 3}
       propertyPath: m_LocalRotation.w

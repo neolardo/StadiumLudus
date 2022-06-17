@@ -90,7 +90,6 @@ public class FemaleWarriorCharacter : Character
 
     #endregion
 
-
     #region Ground Slam
 
     private const int GroundSlamSkillNumber = 3;
@@ -391,7 +390,6 @@ public class FemaleWarriorCharacter : Character
         forceRotation = false;
         IsGroundSlamAvailable = true;
     }
-
 
     #endregion
 
