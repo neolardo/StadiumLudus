@@ -171,10 +171,9 @@ public abstract class Character : MonoBehaviour
     private Vector3 interactionPoint;
     protected const float interactionRange = 0.1f;
 
-
     #endregion
 
-    #region UI
+    #region UI and Managers
 
     /// <summary>
     /// The <see cref="CharacterUI"/> of this character which is only visible to the player who controlls this character, thus this reference is set by the corresponding <see cref="CharacterController"/>.
@@ -182,6 +181,8 @@ public abstract class Character : MonoBehaviour
     [HideInInspector]
     public CharacterUI characterUI;
 
+    [SerializeField]
+    private GameRoundManager gameRoundManager;
 
     #endregion
 
@@ -311,10 +312,28 @@ public abstract class Character : MonoBehaviour
         return false;
     }
 
+    #endregion
+
+    #region Die and Win
+
     protected virtual void OnDie(HitDirection direction)
     {
         animationManager.Die(direction);
         rb.constraints = RigidbodyConstraints.FreezeAll;
+        if (characterUI != null)
+        {
+            characterUI.ShowEndScreen(false);
+        }
+        gameRoundManager.OnCharacterDied(this);
+    }
+
+    public void OnWin()
+    {
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+        if (characterUI != null)
+        {
+            characterUI.ShowEndScreen(true);
+        }
     }
 
     #endregion

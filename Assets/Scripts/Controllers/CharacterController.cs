@@ -14,6 +14,9 @@ public class CharacterController : MonoBehaviour
     [SerializeField]
     private CharacterUI characterUI;
 
+    [SerializeField]
+    private GameRoundManager gameRoundManager;
+
     private bool AreInputsEnabled => characterUI.isUIVisible;
     private bool ignoreUntilRelease = false;
 
@@ -171,7 +174,7 @@ public class CharacterController : MonoBehaviour
             characterUI.ChangeSkillButtonPress(3, false);
         }
         // pause menu
-        if (Input.GetKeyUp(KeyCode.Escape))
+        if (character.IsAlive && !gameRoundManager.RoundEnded && Input.GetKeyDown(KeyCode.Escape))
         {
             characterUI.ShowHidePauseMenu();
         }

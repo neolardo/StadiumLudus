@@ -47,7 +47,6 @@ GameObject:
   - component: {fileID: 1273382034}
   - component: {fileID: 1508549705953906666}
   - component: {fileID: 1508549705953906667}
-  - component: {fileID: 1508549705953906672}
   m_Layer: 6
   m_Name: Male Warrior
   m_TagString: Character
@@ -130,11 +129,12 @@ MonoBehaviour:
   characterAudioSource: {fileID: 1508549705953906666}
   transform: {fileID: 0}
   animationManager: {fileID: 1726378196}
-  attackStaminaCost: 16
+  attackStaminaCost: 5
   characterUI: {fileID: 0}
+  gameRoundManager: {fileID: 0}
   battleAxeTrigger: {fileID: 2578960106465792582}
-  battleAxeMinimumDamage: 5
-  battleAxeMaximumDamage: 10
+  battleAxeMinimumDamage: 100
+  battleAxeMaximumDamage: 200
   battleAxeAudioSource: {fileID: 4539353408328000679}
   leapAttackJumpForce: 250
   leapAttackMaximumDistance: 3.5
@@ -285,22 +285,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1508549705930642385}
   m_Enabled: 1
---- !u!114 &1508549705953906672
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1508549705930642385}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcd049b5391ef714bad0207b0b4af5f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterUI: {fileID: 0}
-  firstSkillKeyCode: 113
-  secondSkillKeyCode: 119
-  thirdSkillKeyCode: 101
 --- !u!1001 &1508549705933058100
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -12,11 +12,14 @@ public class CharacterUI : MonoBehaviour
     /// </summary>
     [HideInInspector]
     public Character character;
-    public PauseMenuUI pauseMenu;
+    public PauseMenuUI pauseMenuUI;
+    public EndGameUI endGameUI;
     public Material healthBarMaterial;
     public Material staminaBarMaterial;
     public List<SkillSlotUI> skillSlots;
     public bool isUIVisible { get; private set; } = true;
+
+    private const float endScreenDelay = 0.5f;
 
     private const string valueShaderPropertyReference = "Vector1_0ae9bdea3f184704b6c11dd6513db5a4";
 
@@ -86,7 +89,25 @@ public class CharacterUI : MonoBehaviour
     {
         isUIVisible = !isUIVisible;
         gameObject.SetActive(isUIVisible);
-        pauseMenu.gameObject.SetActive(!isUIVisible);
+        pauseMenuUI.gameObject.SetActive(!isUIVisible);
+    }
+
+    #endregion
+
+    #region End Screen
+
+    public void ShowEndScreen(bool win)
+    {
+        StartCoroutine(ShowEndScreenAfterDelay(win, endScreenDelay));
+    }
+
+    private IEnumerator ShowEndScreenAfterDelay(bool win, float delaySeconds)
+    {
+        yield return new WaitForSeconds(delaySeconds);
+        isUIVisible = !isUIVisible;
+        gameObject.SetActive(isUIVisible);
+        endGameUI.SetMainText(win);
+        endGameUI.gameObject.SetActive(!isUIVisible);
     }
 
     #endregion
