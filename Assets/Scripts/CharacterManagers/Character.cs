@@ -151,6 +151,7 @@ public abstract class Character : MonoBehaviour
     private Transform chaseTarget;
     private Vector3 rotationTarget;
     private NavMeshPath helperPath;
+    protected bool forceRotation = false;
 
     #endregion
 
@@ -442,7 +443,7 @@ public abstract class Character : MonoBehaviour
         }
         else
         {
-            if(animationManager.IsGuarding || animationManager.IsAttacking || animationManager.IsInteracting) // !IsUsingSkill?
+            if(animationManager.IsGuarding || animationManager.IsAttacking || animationManager.IsInteracting || forceRotation)
             {
                 var targetRotation = Quaternion.LookRotation(new Vector3(rotationTarget.x, rb.position.y, rotationTarget.z) - rb.position);
                 if (Quaternion.Angle(targetRotation, rb.rotation) > rotationThreshold && (rotationTarget - rb.position).magnitude > destinationThreshold)

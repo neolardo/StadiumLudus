@@ -3,13 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Manages the cracking animation of a warrior character.
+/// Manages the ground slam animation of a warrior character.
 /// </summary>
-public class CrackManager : MonoBehaviour
+public class GroundSlamManager: MonoBehaviour
 {
     #region Fields and Properties
 
+    [SerializeField] private Transform crackContainer;
     [SerializeField] private Transform startTransform;
+    [SerializeField] private Transform rockTransform;
+    [SerializeField] private Animator rockAnimator;
+    [SerializeField] private ParticleSystem startCrack;
+    [SerializeField] private ParticleSystem startSmoke;
+    [SerializeField] private ParticleSystem endSmoke;
     [SerializeField] private Crack crackPrefab;
     [SerializeField] private float spreadSpeed;
     [SerializeField] private float closeSpeed;
@@ -21,7 +27,16 @@ public class CrackManager : MonoBehaviour
     [SerializeField] private float currentRange;
     private List<Crack> cracks;
     private List<Crack> sideCracks;
+    private Vector3 startSmokePositionDelta = 0.1f * Vector3.up;
+    private Vector3 startCrackPositionDelta = 0.2f * Vector3.up;
+    private Vector3 endSmokePositionDelta = 0.3f * Vector3.up;
+    private Vector3 endRockPositionDelta = -0.1f * Vector3.up;
+    private const string RockAnimatorAppear = "Appear";
+    private const string RockAnimatorDisappear = "Disappear";
+    private const float RockDisableDelay = 1f;
+
     private bool ShouldCloseCracks { get; set; } = false;
+    private bool CrackDestinationReached { get; set; } = false;
     private float UnitPerBlendShape { get; set; }
 
 
@@ -33,6 +48,7 @@ public class CrackManager : MonoBehaviour
 
     private void Start()
     {
+        transform.parent = null;
         UnitPerBlendShape = crackPrefab.length / (crackPrefab.blendShapeCount - 1);
         maximumSideCrackRange = Mathf.Min(maximumSideCrackRange, crackPrefab.length); // maximum one cracks per sidecrack
         InitializeCracks();
@@ -45,13 +61,13 @@ public class CrackManager : MonoBehaviour
         int maximumCracks = Mathf.CeilToInt(maximumRange / crackPrefab.length);
         for (int i = 0; i < maximumCracks; i++)
         {
-            var crack = Instantiate(crackPrefab, transform);
+            var crack = Instantiate(crackPrefab, crackContainer);
             crack.gameObject.SetActive(false);
             cracks.Add(crack);
         }
         for (int i = 0; i < maximumSideCrackCount; i++)
         {
-            var crack = Instantiate(crackPrefab, transform);
+            var crack = Instantiate(crackPrefab, crackContainer);
             crack.gameObject.SetActive(false);
             sideCracks.Add(crack);
         }
@@ -59,23 +75,25 @@ public class CrackManager : MonoBehaviour
 
     #endregion
 
-
-    private void Update()
+    public void Fire(Vector3 target, float delaySeconds = 0f)
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            OpenCrack(currentRange, startTransform);
-        }
+        StartCoroutine(FireAfterDelay(target, delaySeconds));
     }
 
-    public void OpenCrack(float range, Transform start, bool isSideCrack = false, int sideCrackIndex = 0)
+    private IEnumerator FireAfterDelay(Vector3 target, float delaySeconds)
     {
-        range = Mathf.Min(range, maximumRange);
-        StartCoroutine(AnimateOpenCrack(range, start, isSideCrack, sideCrackIndex));
-        if (!isSideCrack)
-        {
-            StartCoroutine(SignalWhenCracksShouldClose());
-        }
+        yield return new WaitForSeconds(delaySeconds);
+        StartCoroutine(SignalWhenCracksShouldClose());
+        startCrack.transform.position = startTransform.position + startCrackPositionDelta;
+        startSmoke.transform.position = startTransform.position + startSmokePositionDelta;
+        startCrack.Play();
+        startSmoke.Play();
+        endSmoke.transform.position = target + endSmokePositionDelta;
+        rockTransform.position = target + endRockPositionDelta;
+        var direction = (target - startTransform.position).normalized;
+        float range = (target - startTransform.position).magnitude;
+        OpenCrack(startTransform.position, direction, range);
+        StartCoroutine(AnimateRock());
     }
 
     private IEnumerator SignalWhenCracksShouldClose()
@@ -85,16 +103,36 @@ public class CrackManager : MonoBehaviour
         ShouldCloseCracks = true;
     }
 
-    private List<int> GenerateRandomCornerIndexes(float range)
+    #region Rock
+
+    private IEnumerator AnimateRock()
     {
-        int count = Mathf.RoundToInt(maximumSideCrackCount * (range / maximumRange));
-        int maxIndex = Mathf.FloorToInt(range / UnitPerBlendShape);
-        return Globals.GenerateRandomIndexes(0, maxIndex, count);
+        Debug.Log("FIRE ROCK");
+        yield return new WaitUntil(() => CrackDestinationReached);
+        rockTransform.gameObject.SetActive(true);
+        rockAnimator.SetTrigger(RockAnimatorAppear);
+        endSmoke.Play();
+        yield return new WaitUntil(() => ShouldCloseCracks);
+        rockAnimator.SetTrigger(RockAnimatorDisappear);
+        yield return new WaitForSeconds(RockDisableDelay);
+        rockTransform.gameObject.SetActive(false);
+        CrackDestinationReached = false;
     }
 
-    private IEnumerator AnimateOpenCrack(float range, Transform start, bool isSideCrack, int sideCrackIndex)
+    #endregion
+
+    #region Crack
+
+    #region Open
+
+    private void OpenCrack(Vector3 start, Vector3 direction, float range, bool isSideCrack = false, int sideCrackIndex = 0)
     {
-        Vector3 startPosition = start.position;
+        range = Mathf.Min(range, maximumRange);
+        StartCoroutine(AnimateOpenCrack(start, direction, range, isSideCrack, sideCrackIndex));
+    }
+
+    private IEnumerator AnimateOpenCrack(Vector3 start, Vector3 direction, float range, bool isSideCrack, int sideCrackIndex)
+    {
         int crackCount = Mathf.CeilToInt(range / crackPrefab.length);
         var localCracks = cracks;
         if (isSideCrack)
@@ -102,12 +140,13 @@ public class CrackManager : MonoBehaviour
             localCracks = new List<Crack>();
             localCracks.Add(sideCracks[sideCrackIndex]);
         }
+        var startPosition = start;
         for (int i = 0; i < crackCount; i++)
         {
             var crack = localCracks[i];
             crack.transform.position = startPosition;
-            crack.transform.forward = start.forward;
-            startPosition += start.forward * crackPrefab.length;
+            crack.transform.forward = direction;
+            startPosition += direction * crackPrefab.length;
             for (int j = 0; j < crack.blendShapeCount; j++)
             {
                 crack.SetBlendShape(j, 0);
@@ -122,6 +161,10 @@ public class CrackManager : MonoBehaviour
             {
                 if (i * crackPrefab.length + UnitPerBlendShape * j >= range)
                 {
+                    if (!isSideCrack)
+                    {
+                        CrackDestinationReached = true;
+                    }
                     localCracks[i].SetBlendShape(j, 0);
                 }
                 else if (!(i == 0 && j == 0 && !isSideCrack))
@@ -129,7 +172,7 @@ public class CrackManager : MonoBehaviour
                     if (!isSideCrack && cornerIndexes.Contains(i * unitPerCrack + j))
                     {
                         int ind = cornerIndexes.IndexOf(i * unitPerCrack + j);
-                        OpenCrack(Random.Range(UnitPerBlendShape, maximumSideCrackRange), localCracks[i].cornerPoints[j], true, ind);
+                        OpenCrack(localCracks[i].cornerPoints[j].position, localCracks[i].cornerPoints[j].forward, Random.Range(UnitPerBlendShape, maximumSideCrackRange),true, ind);
                     }
                     float lerp = 0;
                     while (lerp < 1)
@@ -142,10 +185,20 @@ public class CrackManager : MonoBehaviour
                 }
             }
         }
-
         yield return new WaitUntil(() => ShouldCloseCracks);
         StartCoroutine(AnimateCloseCrack(localCracks, range, isSideCrack));
     }
+
+    private List<int> GenerateRandomCornerIndexes(float range)
+    {
+        int count = Mathf.RoundToInt(maximumSideCrackCount * (range / maximumRange));
+        int maxIndex = Mathf.FloorToInt(range / UnitPerBlendShape);
+        return Globals.GenerateRandomIndexes(0, maxIndex, count);
+    }
+
+    #endregion
+
+    #region Close
 
     private IEnumerator AnimateCloseCrack(List<Crack> localCracks, float range, bool isSideCrack)
     {
@@ -170,6 +223,10 @@ public class CrackManager : MonoBehaviour
             c.gameObject.SetActive(false);
         }
     }
+
+    #endregion
+
+    #endregion
 
     #endregion
 }

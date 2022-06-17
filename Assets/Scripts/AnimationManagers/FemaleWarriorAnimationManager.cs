@@ -76,7 +76,8 @@ public class FemaleWarriorAnimationManager : CharacterAnimationManager
 
     public void GroundSlam()
     {
-        animator.SetTrigger(AnimatorLeapAttack);
+        IsUsingSkill = true;
+        animator.SetTrigger(AnimatorGroundSlam);
     }
 
     #endregion

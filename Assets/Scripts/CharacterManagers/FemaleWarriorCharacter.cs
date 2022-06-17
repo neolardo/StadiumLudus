@@ -85,9 +85,7 @@ public class FemaleWarriorCharacter : Character
 
     private const float whirlwindStartAnimationDelay = 0.5f;
     private const float whirlwindEndAnimationDelay = 0.3f;
-
     private const int WhirlwindSkillNumber = 2;
-
     private bool CanWhirlwind => IsAlive && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill;
 
     #endregion
@@ -96,6 +94,26 @@ public class FemaleWarriorCharacter : Character
     #region Ground Slam
 
     private const int GroundSlamSkillNumber = 3;
+
+    [Header("Ground Slam")]
+    [SerializeField]
+    private GroundSlamManager groundSlamManager;
+
+    [Tooltip("Represents the stamina cost of the ground slam skill.")]
+    [SerializeField]
+    private float groundSlamStaminaCost = 20f;
+
+    [Tooltip("Represents maximum distance of the ground slam.")]
+    [SerializeField]
+    private float groundSlamMaximumDistance = 3.5f;
+
+    [Tooltip("Represents cooldown of the ground slam skill in seconds.")]
+    [SerializeField]
+    private float groundSlamCooldown = 5f;
+    private bool IsGroundSlamAvailable { get; set; } = true;
+    private bool CanGroundSlam => IsAlive && IsGroundSlamAvailable && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill;
+
+    private const float GroundSlamStartDelay = 1f;
 
     #endregion  
 
@@ -199,7 +217,7 @@ public class FemaleWarriorCharacter : Character
                 StartWhirlwind();
                 break;
             case GroundSlamSkillNumber:
-                GroundSlam();
+                GroundSlam(clickPosition);
                 break;
             default:
                 Debug.LogWarning("Invalid skill number for a female warrior character.");
@@ -216,7 +234,6 @@ public class FemaleWarriorCharacter : Character
     }
 
     #region Leap Attack
-
     private void LeapAttack(Vector3 attackTarget)
     {
         if (CanLeapAttack)
@@ -338,13 +355,43 @@ public class FemaleWarriorCharacter : Character
 
     #region Ground Slam
 
-    private void GroundSlam()
+    private void GroundSlam(Vector3 attackTarget)
     {
-        if (IsAlive && !femaleWarriorAnimationManager.IsInterrupted && !femaleWarriorAnimationManager.IsAttacking && !femaleWarriorAnimationManager.IsGuarding)
+        if (CanGroundSlam)
         {
-
+            if ((attackTarget - rb.position).magnitude > groundSlamMaximumDistance)
+            {
+                var edgePoint = rb.position + (attackTarget - rb.position).normalized * groundSlamMaximumDistance;
+                var raycastPoint = edgePoint + Vector3.up * 5;
+                Ray ray = new Ray(raycastPoint, Vector3.down);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, 20, 1 << Globals.GroundLayer))
+                {
+                    edgePoint = hit.point;
+                }
+                attackTarget = edgePoint;
+            }
+            IsGroundSlamAvailable = false;
+            SetRotationTarget(attackTarget);
+            forceRotation = true;
+            femaleWarriorAnimationManager.GroundSlam();
+            //StartCoroutine(ManageAttackTrigger());
+            StartCoroutine(ManageGroundSlamCooldown());
+            groundSlamManager.Fire(attackTarget, GroundSlamStartDelay);
         }
     }
+
+    private IEnumerator ManageGroundSlamCooldown()
+    {
+        if (characterUI != null)
+        {
+            characterUI.StartSkillCooldown(GroundSlamSkillNumber, groundSlamCooldown);
+        }
+        yield return new WaitForSeconds(groundSlamCooldown);
+        forceRotation = false;
+        IsGroundSlamAvailable = true;
+    }
+
 
     #endregion
 
