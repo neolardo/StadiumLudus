@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -21,7 +19,6 @@ public class Crossbow : MonoBehaviour
     [Tooltip("The bolt game object which is attached to the crossbow.")]
     [SerializeField]
     private GameObject crossbowBolt;
-
     public bool IsReloading { get; private set; }
 
     #region Animator Constants

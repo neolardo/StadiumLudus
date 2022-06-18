@@ -135,6 +135,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c8b14f55702e9e4dbe4fbf5148bca5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterUI: {fileID: 0}
+  gameRoundManager: {fileID: 0}
   healthMaximum: 100
   healthRecoveryDelay: 1.6
   healthRecoveryInitialAmount: 0
@@ -151,23 +153,25 @@ MonoBehaviour:
   transform: {fileID: 0}
   animationManager: {fileID: 526193272}
   attackStaminaCost: 8
-  characterUI: {fileID: 0}
-  gameRoundManager: {fileID: 0}
+  leapAttackJumpForce: 250
+  leapAttackMaximumDistance: 3.5
+  leapAttackCooldown: 5
+  leapAttackStaminaCost: 15
+  whirlwindRotationSpeed: 920
+  whirlwindStaminaCost: 28
+  groundSlamManager: {fileID: 8882034874923164904}
+  groundSlamAttackTrigger: {fileID: 2126130498751598616}
+  groundSlamStaminaCost: 15
+  groundSlamMaximumDistance: 10
+  groundSlamMinimumDamage: 5
+  groundSlamMaximumDamage: 10
+  groundSlamCooldown: 10
   leftBattleAxeTrigger: {fileID: 2138755043}
   rightBattleAxeTrigger: {fileID: 622713651}
   battleAxeMinimumDamage: 10
   battleAxeMaximumDamage: 10
   leftBattleAxeAudioSource: {fileID: 2138755041}
   rightBattleAxeAudioSource: {fileID: 622713652}
-  leapAttackJumpForce: 250
-  leapAttackMaximumDistance: 3.5
-  leapAttackCooldown: 5
-  whirlwindRotationSpeed: 920
-  whirlwindStaminaCost: 20
-  groundSlamManager: {fileID: 8882034874923164904}
-  groundSlamStaminaCost: 20
-  groundSlamMaximumDistance: 10
-  groundSlamCooldown: 5
 --- !u!136 &1086230321
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -191,7 +195,7 @@ AudioSource:
   m_GameObject: {fileID: 8882034873407279612}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300002, guid: b7bb259e1bd1e8943a3ca1626686032e, type: 2}
+  OutputAudioMixerGroup: {fileID: 1311341109146075860, guid: b7bb259e1bd1e8943a3ca1626686032e, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -285,6 +289,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8882034873407279615}
     m_Modifications:
+    - target: {fileID: 985622859, guid: 7ace1fd8e9b3f464fb7e7f6a5719e5d0, type: 3}
+      propertyPath: characterTransform
+      value: 
+      objectReference: {fileID: 8882034873407279615}
     - target: {fileID: 7404722373769092538, guid: 7ace1fd8e9b3f464fb7e7f6a5719e5d0, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -339,6 +347,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ace1fd8e9b3f464fb7e7f6a5719e5d0, type: 3}
+--- !u!114 &2126130498751598616 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 985622859, guid: 7ace1fd8e9b3f464fb7e7f6a5719e5d0, type: 3}
+  m_PrefabInstance: {fileID: 2126130499730143571}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e5427545b46bac4c88d9995a338bd2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8882034874923164904 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7404722373769092539, guid: 7ace1fd8e9b3f464fb7e7f6a5719e5d0, type: 3}
@@ -2742,7 +2761,7 @@ AudioSource:
   m_GameObject: {fileID: 5681917768322467084}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300002, guid: b7bb259e1bd1e8943a3ca1626686032e, type: 2}
+  OutputAudioMixerGroup: {fileID: 1311341109146075860, guid: b7bb259e1bd1e8943a3ca1626686032e, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -2871,7 +2890,7 @@ AudioSource:
   m_GameObject: {fileID: 5950617315181633607}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300002, guid: b7bb259e1bd1e8943a3ca1626686032e, type: 2}
+  OutputAudioMixerGroup: {fileID: 1311341109146075860, guid: b7bb259e1bd1e8943a3ca1626686032e, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1

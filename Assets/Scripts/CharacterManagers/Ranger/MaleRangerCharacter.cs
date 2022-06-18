@@ -3,11 +3,14 @@ using UnityEngine;
 /// <summary>
 /// Manages a male ranger character.
 /// </summary>
-public class MaleRangerCharacter : Character
+public class MaleRangerCharacter : RangerCharacter
 {
     #region Properties and Fields
 
     private MaleRangerAnimationManager maleRangerAnimationManager;
+
+    public override CharacterFightingStyle FightingStyle => CharacterFightingStyle.Heavy;
+
     [Header("Bolt")]
     public Crossbow crossbow;
 
@@ -29,7 +32,22 @@ public class MaleRangerCharacter : Character
 
     private bool IsArrowLoaded { get; set; }
 
-    private bool HasInitialized { get; set; }
+    protected override bool CanAttack => base.CanAttack && !crossbow.IsReloading;
+
+    #region Skills
+
+    #region Dash
+    protected override float DashJumpingTime => 0.29f;
+
+    #endregion
+
+    #region Trap
+
+    protected override float TrapPlacementDelay => 0.7f;
+
+    #endregion
+
+    #endregion
 
     #endregion
 
@@ -37,18 +55,9 @@ public class MaleRangerCharacter : Character
 
     #region Init
 
-    protected void OnEnable()
+    protected override void Initialize()
     {
-        // order is important
-        if (!HasInitialized)
-        {
-            Initialize();
-            HasInitialized = true;
-        }
-    }
-
-    private void Initialize()
-    {
+        base.Initialize();
         if (boltMaximumDamage < Globals.CompareDelta)
         {
             Debug.LogWarning("Bolt maximum damage for a male ranger character is set to a non-positive value.");
@@ -69,36 +78,7 @@ public class MaleRangerCharacter : Character
 
     #endregion
 
-    #region Skills
-
-    public override void StartSkill(int skillNumber, Vector3 clickPosition)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override int InitialChargeCountOfSkill(int skillNumber)
-    {
-        return 0;
-    }
-
-    public override bool IsSkillChargeable(int skillNumber)
-    {
-        return false;
-    }
-
-    #endregion
-
     #region Attack
-
-    public override bool TryAttack(Vector3 attackTarget)
-    {
-        if (!maleRangerAnimationManager.IsInterrupted && !maleRangerAnimationManager.IsAttacking && !maleRangerAnimationManager.IsGuarding && !crossbow.IsReloading)
-        {
-            OnAttack(attackTarget);
-            return true;
-        }
-        return false;
-    }
 
     protected override void OnAttack(Vector3 attackTarget)
     {
@@ -110,13 +90,11 @@ public class MaleRangerCharacter : Character
         }
         else
         {
-            ClearDestination();
-            maleRangerAnimationManager.Reload(); ;
+            maleRangerAnimationManager.Reload();
             crossbow.Reload();
             IsArrowLoaded = true;
         }
     }
-
 
     #endregion
 

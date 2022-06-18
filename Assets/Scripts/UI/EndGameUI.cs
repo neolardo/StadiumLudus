@@ -36,7 +36,7 @@ public class EndGameUI : MonoBehaviour
 
     public void OnButtonHover()
     {
-        AudioManager.Instance.PlaySFX(audioSource, SFX.MenuButtonHover);
+        AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.MenuButtonHover);
     }
 
     #endregion

@@ -37,6 +37,7 @@ public class GroundSlamManager: MonoBehaviour
     private bool ShouldCloseCracks { get; set; } = false;
     private bool CrackDestinationReached { get; set; } = false;
     private float UnitPerBlendShape { get; set; }
+    public bool IsRockVisible { get; private set; } = false;
 
 
     #endregion
@@ -107,6 +108,7 @@ public class GroundSlamManager: MonoBehaviour
     private IEnumerator AnimateRock()
     {
         yield return new WaitUntil(() => CrackDestinationReached);
+        IsRockVisible = true;
         rockTransform.gameObject.SetActive(true);
         rockAnimator.SetTrigger(RockAnimatorAppear);
         endSmoke.Play();
@@ -115,6 +117,7 @@ public class GroundSlamManager: MonoBehaviour
         yield return new WaitForSeconds(RockDisableDelay);
         rockTransform.gameObject.SetActive(false);
         CrackDestinationReached = false;
+        IsRockVisible = false;
     }
 
     #endregion

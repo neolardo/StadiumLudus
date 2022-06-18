@@ -183,6 +183,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42db307b37c6ff4b8620985335d6932, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterUI: {fileID: 0}
+  gameRoundManager: {fileID: 0}
   healthMaximum: 100
   healthRecoveryDelay: 1.6
   healthRecoveryInitialAmount: 0
@@ -194,25 +196,20 @@ MonoBehaviour:
   deceleration: 20
   rotationSpeedMaximum: 1500
   rotationSpeedMinimum: 400
-  attackRange: 10
+  attackRange: 8
   characterAudioSource: {fileID: 1937259001231441841}
   transform: {fileID: 0}
   animationManager: {fileID: 1448896823}
-  attackStaminaCost: 10
-  characterUI: {fileID: 0}
-  gameRoundManager: {fileID: 0}
-  arrowPool: {fileID: 6789668969888963968}
-  animatedArrow: {fileID: 6317349093086673323}
-  arrowMinimumDamage: 5
-  arrowMaximumDamage: 10
-  arrowForce: 3
+  attackStaminaCost: 8
   dashJumpForce: 200
   dashMaximumDistance: 1.5
   dashCooldown: 2
+  dashStaminaCost: 10
   smokeParticleSystem: {fileID: 9016355843372198748}
   smokeTransform: {fileID: 9016355843372198747}
   smokeDuration: 10
-  smokeCooldown: 12
+  smokeCooldown: 15
+  smokeStaminaCost: 15
   trapPool: {fileID: 2040444107}
   trapMinimumDamage: 5
   trapMaximumDamage: 10
@@ -220,6 +217,11 @@ MonoBehaviour:
   trapCooldown: 8
   trapInitialChargeCount: 1
   trapMaximumChargeCount: 3
+  arrowPool: {fileID: 6789668969888963968}
+  animatedArrow: {fileID: 6317349093086673323}
+  arrowMinimumDamage: 5
+  arrowMaximumDamage: 10
+  arrowForce: 3
 --- !u!136 &178970221
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -243,7 +245,7 @@ AudioSource:
   m_GameObject: {fileID: 1937259002399550372}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300002, guid: b7bb259e1bd1e8943a3ca1626686032e, type: 2}
+  OutputAudioMixerGroup: {fileID: 1311341109146075860, guid: b7bb259e1bd1e8943a3ca1626686032e, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -2969,7 +2971,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1595381605107250770}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60e2e751ad749ee4e8aeda2c283eb0ef, type: 3}
+  m_Script: {fileID: 11500000, guid: 6eafabf60612c524d94bd7a870b58089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   attackAnimationCount: 1

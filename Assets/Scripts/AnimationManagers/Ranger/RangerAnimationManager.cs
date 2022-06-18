@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 /// <summary>
-/// Manages the animations of a <see cref="FemaleRangerCharacter"/>.
+/// Manages the animations of a <see cref="RangerCharacter"/>.
 /// </summary>
-public class FemaleRangerAnimationManager : CharacterAnimationManager
+public class RangerAnimationManager : CharacterAnimationManager
 {
     #region Fields and Properties
 
@@ -22,7 +18,6 @@ public class FemaleRangerAnimationManager : CharacterAnimationManager
     #region Methods
 
     #region Init
-
 
     protected override void Start()
     {

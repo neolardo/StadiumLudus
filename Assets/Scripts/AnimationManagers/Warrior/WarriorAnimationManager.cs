@@ -1,27 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 /// <summary>
-/// Manages the animations of a <see cref="FemaleWarriorCharacter"/>.
+/// An <see cref="CharacterAnimationManager"/> for any <see cref="WarriorCharacter"/>.
 /// </summary>
-public class FemaleWarriorAnimationManager : CharacterAnimationManager
+public class WarriorAnimationManager : CharacterAnimationManager
 {
     #region Fields and Properties
 
-    /// <summary>
-    /// Indicates whether continuing the combo attack is requested or not.
-    /// </summary>
-    public bool IsContinueAttackRequested { get; private set; }
+    #region Animator Constants
 
     /// <summary>
     /// Indicates whether the whirlwind animation is ongoing or not.
     /// </summary>
     public bool IsWhirlwindOnGoing { get; private set; }
 
-    #region Animator Constants
-
-    protected const string AnimatorContinueComboAttack = "ContinueAttack";
     protected const string AnimatorLeapAttack = "LeapAttack";
     protected const string AnimatorStartWhirlwind = "StartWhirlwind";
     protected const string AnimatorEndWhirlwind = "EndWhirlwind";
@@ -35,7 +25,6 @@ public class FemaleWarriorAnimationManager : CharacterAnimationManager
 
     #region Init
 
-
     protected override void Start()
     {
         base.Start();
@@ -47,10 +36,9 @@ public class FemaleWarriorAnimationManager : CharacterAnimationManager
 
     public void LeapAttack()
     {
-        IsAttacking = true;
+        IsUsingSkill = true;
         animator.SetTrigger(AnimatorLeapAttack);
     }
-
 
     #endregion
 
@@ -78,22 +66,6 @@ public class FemaleWarriorAnimationManager : CharacterAnimationManager
     {
         IsUsingSkill = true;
         animator.SetTrigger(AnimatorGroundSlam);
-    }
-
-    #endregion
-
-    #region Combo Attack
-
-    public void SetContinueComboAttack(bool value)
-    {
-        animator.SetBool(AnimatorContinueComboAttack, value);
-        IsContinueAttackRequested = value;
-    }
-
-
-    public void OnComboAttackContinued()
-    {
-        SetContinueComboAttack(false);
     }
 
     #endregion

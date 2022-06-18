@@ -10,6 +10,33 @@ public abstract class Character : MonoBehaviour
 {
     #region Properties and fields
 
+    #region Playstyle
+
+    /// <summary>
+    /// The <see cref="CharacterFightingStyle"/> of this <see cref="Character"/>.
+    /// </summary>
+    public abstract CharacterFightingStyle FightingStyle { get; }
+
+    /// <summary>
+    /// The <see cref="CharacterClass"/> of this <see cref="Character"/>.
+    /// </summary>
+    public abstract CharacterClass Class { get; }
+
+    #endregion
+
+
+    #region UI and Managers
+
+    /// <summary>
+    /// The <see cref="CharacterUI"/> of this character which is only visible to the player who controlls this character, thus this reference is set by the corresponding <see cref="CharacterController"/>.
+    /// </summary>
+    [HideInInspector]
+    public CharacterUI characterUI;
+
+    [SerializeField]
+    private GameRoundManager gameRoundManager;
+    #endregion
+
     #region Health
 
     /// <summary>
@@ -161,7 +188,9 @@ public abstract class Character : MonoBehaviour
     [Header("Basic Attack")]
     [Tooltip("Represents the stamina cost of a basic attack.")]
     [SerializeField]
-    private float attackStaminaCost;
+    protected float attackStaminaCost;
+
+    protected virtual bool CanAttack => IsAlive && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill && stamina > attackStaminaCost;
 
     #endregion
 
@@ -173,18 +202,8 @@ public abstract class Character : MonoBehaviour
 
     #endregion
 
-    #region UI and Managers
+    private bool AllowUpdate { get; set; } = true;
 
-    /// <summary>
-    /// The <see cref="CharacterUI"/> of this character which is only visible to the player who controlls this character, thus this reference is set by the corresponding <see cref="CharacterController"/>.
-    /// </summary>
-    [HideInInspector]
-    public CharacterUI characterUI;
-
-    [SerializeField]
-    private GameRoundManager gameRoundManager;
-
-    #endregion
 
     #endregion
 
@@ -216,17 +235,42 @@ public abstract class Character : MonoBehaviour
     }
     protected virtual void FixedUpdate()
     {
-        UpdateInteractionCheck();
-        UpdateChase();
-        UpdateMove();
+        if (AllowUpdate)
+        {
+            UpdateInteractionCheck();
+            UpdateChase();
+            UpdateMove();
+        }
     }
 
     #region Skills
-
     public abstract void StartSkill(int skillNumber, Vector3 clickPosition);
     public virtual void EndSkill(int skillNumber) { }
     public virtual bool IsSkillChargeable(int skillNumber) => false;
     public virtual int InitialChargeCountOfSkill(int skillNumber) => 0;
+   
+    /// <summary>
+    /// Clamps a point inside a given distance from the <see cref="Character"/>.
+    /// </summary>
+    /// <param name="target">The target point.</param>
+    /// <param name="range">The maximum range in the target point's direction.</param>
+    /// <returns>The target point closer than the given range.</returns>
+    protected Vector3 ClampPointInsideRange(Vector3 target, float range)
+    {
+        if ((target - rb.position).magnitude > range)
+        {
+            var edgePoint = rb.position + (target - rb.position).normalized * range;
+            var raycastPoint = edgePoint + Vector3.up * 5;
+            Ray ray = new Ray(raycastPoint, Vector3.down);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 10, 1 << Globals.GroundLayer))
+            {
+                edgePoint = hit.point;
+            }
+            target = edgePoint;
+        }
+        return target;
+    }
 
     #endregion
 
@@ -234,7 +278,7 @@ public abstract class Character : MonoBehaviour
 
     public virtual bool TryAttack(Vector3 attackTarget)
     {
-        if (IsAlive && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && stamina > attackStaminaCost)
+        if (CanAttack)
         {
             OnAttack(attackTarget);
             return true;
@@ -325,6 +369,7 @@ public abstract class Character : MonoBehaviour
             characterUI.ShowEndScreen(false);
         }
         gameRoundManager.OnCharacterDied(this);
+        AllowUpdate = false;
     }
 
     public void OnWin()
@@ -334,6 +379,7 @@ public abstract class Character : MonoBehaviour
         {
             characterUI.ShowEndScreen(true);
         }
+        AllowUpdate = false;
     }
 
     #endregion
