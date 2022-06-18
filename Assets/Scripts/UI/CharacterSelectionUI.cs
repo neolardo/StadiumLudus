@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,14 +16,16 @@ public class CharacterSelectionUI : MonoBehaviour
     public GameObject maleWarriorGameObject;
     public GameObject femaleRangerGameObject;
     public GameObject maleRangerGameObject;
+    public TextMeshProUGUI playerNamePrefab;
+    public Transform playerNameContainer;
+    public TextMeshProUGUI fightingStyleValueText;
+    public TextMeshProUGUI classValueText;
+    public TextMeshProUGUI descriptionText;
 
-    public Button lightButton;
-    public Button heavyButton;
-    public Button barbarianButton;
-    public Button rangerButton;
-    public Color buttonNormalColor;
-    public Color buttonSelectedColor;
-
+    private const string femaleBarbarianDescription = "Female barbarians use two battleaxes and are able to perform agile combo attacks with them.";
+    private const string maleBarbarianDescription = "Male barbarians wield a two-handed battleaxe to deal decent damage at a mediocre speed.";
+    private const string femaleRangerDescription = "Female rangers wield a shortbow which is easy to use in ranged battle but deals mediocre damage.";
+    private const string maleRangerDescription = "Male rangers wield a crossbow which deals much more damage than shortbows, but requires additional reloading to use.";
 
     #endregion
 
@@ -31,29 +34,27 @@ public class CharacterSelectionUI : MonoBehaviour
     private void Start()
     {
         RefreshCharacterGameObject();
+        LoadPlayerNames();
     }
 
-    public void OnLightFightingStyleSelected()
+    private void LoadPlayerNames()
     {
-        currentFightingStyle = CharacterFightingStyle.Light;
+        // TODO
+        var player = Instantiate(playerNamePrefab, playerNameContainer);
+        player.text = "Lajos leves";
+    }
+
+    public void OnFigthingStyleClicked()
+    {
+        currentFightingStyle = currentFightingStyle == CharacterFightingStyle.Light ? CharacterFightingStyle.Heavy : CharacterFightingStyle.Light;
+        fightingStyleValueText.text = currentFightingStyle.ToString();
         RefreshCharacterGameObject();
     }
 
-    public void OnHeavyFightingStyleSelected()
+    public void OnClassClicked()
     {
-        currentFightingStyle = CharacterFightingStyle.Heavy;
-        RefreshCharacterGameObject();
-    }
-
-    public void OnBarbarianClassSelected()
-    {
-        currentClass = CharacterClass.Barbarian;
-        RefreshCharacterGameObject();
-    }
-
-    public void OnRangerClassSelected()
-    {
-        currentClass = CharacterClass.Ranger;
+        currentClass = currentClass == CharacterClass.Ranger ? CharacterClass.Barbarian : CharacterClass.Ranger;
+        classValueText.text = currentClass.ToString();
         RefreshCharacterGameObject();
     }
 
@@ -63,18 +64,22 @@ public class CharacterSelectionUI : MonoBehaviour
         maleWarriorGameObject.SetActive(currentFightingStyle == CharacterFightingStyle.Heavy && currentClass == CharacterClass.Barbarian);
         femaleRangerGameObject.SetActive(currentFightingStyle == CharacterFightingStyle.Light && currentClass == CharacterClass.Ranger);
         maleRangerGameObject.SetActive(currentFightingStyle == CharacterFightingStyle.Heavy && currentClass == CharacterClass.Ranger);
-        var colors = lightButton.colors;
-        colors.normalColor = currentFightingStyle == CharacterFightingStyle.Light ? buttonSelectedColor : buttonNormalColor;
-        lightButton.colors = colors;
-        colors = heavyButton.colors;
-        colors.normalColor = currentFightingStyle == CharacterFightingStyle.Heavy ? buttonSelectedColor : buttonNormalColor;
-        heavyButton.colors = colors;
-        colors = barbarianButton.colors;
-        colors.normalColor = currentClass == CharacterClass.Barbarian ? buttonSelectedColor : buttonNormalColor;
-        barbarianButton.colors = colors;
-        colors = rangerButton.colors;
-        colors.normalColor = currentClass == CharacterClass.Ranger ? buttonSelectedColor : buttonNormalColor;
-        rangerButton.colors = colors;
+        if (currentFightingStyle == CharacterFightingStyle.Heavy && currentClass == CharacterClass.Ranger)
+        {
+            descriptionText.text = maleRangerDescription;
+        }
+        else if (currentFightingStyle == CharacterFightingStyle.Heavy && currentClass == CharacterClass.Barbarian)
+        {
+            descriptionText.text = maleBarbarianDescription;
+        }
+        else if (currentFightingStyle == CharacterFightingStyle.Light && currentClass == CharacterClass.Ranger)
+        {
+            descriptionText.text = femaleRangerDescription;
+        }
+        else if (currentFightingStyle == CharacterFightingStyle.Light && currentClass == CharacterClass.Barbarian)
+        {
+            descriptionText.text = femaleBarbarianDescription;
+        }
     }
 
     #endregion
