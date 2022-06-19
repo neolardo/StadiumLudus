@@ -12,6 +12,7 @@ public class CharacterSelectionUI : MonoBehaviour
     private CharacterFightingStyle currentFightingStyle = CharacterFightingStyle.Heavy;
     private CharacterClass currentClass = CharacterClass.Barbarian;
 
+    public AudioSource audioSource;
     public GameObject femaleWarriorGameObject;
     public GameObject maleWarriorGameObject;
     public GameObject femaleRangerGameObject;
@@ -80,6 +81,15 @@ public class CharacterSelectionUI : MonoBehaviour
         {
             descriptionText.text = femaleBarbarianDescription;
         }
+    }
+
+    public void OnButtonClicked()
+    {
+        AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.MenuClick);
+    }
+    public void OnButtonHovered()
+    {
+        AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.MenuButtonHover);
     }
 
     #endregion

@@ -8,6 +8,10 @@ public class Crossbow : MonoBehaviour
     #region Properties and Fields
     private Animator animator;
 
+    [Tooltip("The audio source of the character.")]
+    [SerializeField]
+    private AudioSource characterAudioSource;
+
     [Tooltip("The bolt projectile pool.")]
     [SerializeField]
     private ProjectilePoolManager boltPool;
@@ -60,6 +64,7 @@ public class Crossbow : MonoBehaviour
     {
         quiverBolt.SetActive(false);
         crossbowBolt.SetActive(true);
+        AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.CrossbowReload, doNotRepeat : true);
     }
 
     /// <summary>
@@ -82,6 +87,7 @@ public class Crossbow : MonoBehaviour
     {
         crossbowBolt.SetActive(false);
         boltPool.Fire();
+        AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.CrossbowFire, doNotRepeat: true);
     }
 
     #endregion

@@ -5,10 +5,9 @@ public enum SFX
 {
     // hit
     HitOnFlesh = 0,
-    HitOnMetal = 1,
-    HitOnWood = 2,
-    HitOnStone = 3,
-    GuardHit = 4,
+    HitOnWood = 1,
+    HitOnStone = 2,
+    GuardHit = 3,
 
     // step
     StepOnDirt = 10,
@@ -20,6 +19,8 @@ public enum SFX
 
     // projectile
     Projectile = 30,
+    CrossbowFire = 31,
+    CrossbowReload = 32,
 
     // water
     Waterfall = 40,
@@ -28,4 +29,5 @@ public enum SFX
     // menu
     MenuButtonHover = 50,
     MenuProceed = 51,
+    MenuClick = 52,
 }

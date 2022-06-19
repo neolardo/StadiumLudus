@@ -104,7 +104,6 @@ public class AttackTrigger : MonoBehaviour
                 {
                     Globals.WoodTag => SFX.HitOnWood,
                     Globals.StoneTag => SFX.HitOnStone,
-                    Globals.MetalTag => SFX.HitOnMetal,
                     _ => SFX.HitOnStone,
                 };
                 AudioManager.Instance.PlayOneShotSFX(audioSource, sfx);

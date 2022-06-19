@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -74,6 +75,9 @@ public class CharacterAnimationManager : MonoBehaviour
     /// </summary>
     protected const float MovementSpeedThreshold = 0.1f;
 
+    private bool canPlayStepSound = true;
+    private const float stepSoundCooldown = .15f;
+
     #region Animator Constants
 
     protected const string AnimatorIsMoving= "IsMoving";
@@ -104,6 +108,7 @@ public class CharacterAnimationManager : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         animatorMovementLayerIndex = animator.GetLayerIndex(AnimatorMovementLayerName);
+        StartCoroutine(ManageStepSoundCooldown());
     }
 
     #endregion
@@ -132,7 +137,25 @@ public class CharacterAnimationManager : MonoBehaviour
 
     public void OnStep()
     {
-        AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.StepOnStone, doNotRepeat:true);
+        if (canPlayStepSound)
+        {
+            AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.StepOnStone, doNotRepeat: true);
+            canPlayStepSound = false;
+            Debug.Log("Step");
+        }
+    }
+
+    private IEnumerator ManageStepSoundCooldown()
+    {
+        while (true)
+        {
+            if (!canPlayStepSound)
+            {
+                yield return new WaitForSeconds(stepSoundCooldown);
+                canPlayStepSound = true;
+            }
+            yield return null;
+        }
     }
 
     #endregion

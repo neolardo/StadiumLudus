@@ -665,7 +665,6 @@ GameObject:
   - component: {fileID: 1131998773343001476}
   - component: {fileID: 395226030}
   - component: {fileID: 1131998775310625163}
-  - component: {fileID: 1868740190}
   m_Layer: 6
   m_Name: Male Ranger
   m_TagString: Character
@@ -905,23 +904,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1868740190
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1131998773343001474}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcd049b5391ef714bad0207b0b4af5f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterUI: {fileID: 0}
-  gameRoundManager: {fileID: 0}
-  firstSkillKeyCode: 113
-  secondSkillKeyCode: 119
-  thirdSkillKeyCode: 101
 --- !u!1 &1131998773516273874
 GameObject:
   m_ObjectHideFlags: 0
@@ -5266,6 +5248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d781340b24c78c848bf4c685f62f5b4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterAudioSource: {fileID: 1131998775310625163}
   boltPool: {fileID: 583722974030691882}
   quiverBolt: {fileID: 3843627770020351465}
   crossbowBolt: {fileID: 2508858751073335366}

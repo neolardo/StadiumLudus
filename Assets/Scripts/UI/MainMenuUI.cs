@@ -29,6 +29,16 @@ public class MainMenuUI : MonoBehaviour
         currentPage = MainMenuPage.MainMenu;
     }
 
+    public void OnMenuButtonHover()
+    {
+        AudioManager.Instance.PlayOneShotSFX(menuAudioSource, SFX.MenuButtonHover);
+    }
+
+    public void OnMenuButtonClick()
+    {
+        AudioManager.Instance.PlayOneShotSFX(menuAudioSource, SFX.MenuClick);
+    }
+
     public void NavigateToMainMenuPage()
     {
         StartCoroutine(NavigateTo(MainMenuPage.MainMenu));
@@ -48,11 +58,6 @@ public class MainMenuUI : MonoBehaviour
     public void Exit()
     {
         Application.Quit();
-    }
-
-    public void OnMenuButtonHover()
-    {
-        AudioManager.Instance.PlayOneShotSFX(menuAudioSource, SFX.MenuButtonHover);
     }
 
     private RectTransform RectTransformOf( MainMenuPage page)
