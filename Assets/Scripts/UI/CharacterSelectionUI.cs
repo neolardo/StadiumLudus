@@ -1,6 +1,11 @@
+using Photon.Pun;
+using Photon.Realtime;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Manages the UI of the character selection scene.
@@ -22,6 +27,10 @@ public class CharacterSelectionUI : MonoBehaviour
     public TextMeshProUGUI fightingStyleValueText;
     public TextMeshProUGUI classValueText;
     public TextMeshProUGUI descriptionText;
+    private List<TextMeshProUGUI> playerNames;
+    public GameObject confirmButton;
+    public GameObject confirmedText;
+    public GameObject loadingPopUp;
 
     private const string femaleBarbarianDescription = "Female barbarians use two battleaxes and are able to perform agile combo attacks with them.";
     private const string maleBarbarianDescription = "Male barbarians wield a two-handed battleaxe to deal decent damage at a mediocre speed.";
@@ -34,16 +43,51 @@ public class CharacterSelectionUI : MonoBehaviour
 
     private void Start()
     {
+        playerNames = new List<TextMeshProUGUI>();
+        NetworkLauncher.Instance.PlayerEnteredRoom += OnPlayerEnteredRoom;
+        NetworkLauncher.Instance.PlayerLeftRoom += OnPlayerLeftRoom;
         RefreshCharacterGameObject();
         LoadPlayerNames();
     }
 
+    #region Add, Remove players
+
     private void LoadPlayerNames()
     {
-        // TODO
-        var player = Instantiate(playerNamePrefab, playerNameContainer);
-        player.text = "Lajos leves";
+        var currentPlayers = PhotonNetwork.PlayerList;
+        foreach (var p in currentPlayers)
+        {
+            AddPlayerName(p);
+        }
     }
+    private void AddPlayerName(Player player)
+    {
+        var playerNameText = Instantiate(playerNamePrefab, playerNameContainer);
+        playerNameText.text = player.NickName;
+        playerNames.Add(playerNameText);
+    }
+    private void RemovePlayerName(Player player)
+    {
+        var playerNameText = playerNames.FirstOrDefault(_ => _.text == player.NickName);
+        if(playerNameText!= null)
+        {
+            playerNames.Remove(playerNameText);
+            Destroy(playerNameText);
+        }
+    }
+
+    private void OnPlayerEnteredRoom(Player player)
+    {
+        AddPlayerName(player);
+    }
+    private void OnPlayerLeftRoom(Player player)
+    {
+        RemovePlayerName(player);
+    }
+
+    #endregion
+
+    #region Change Character
 
     public void OnFigthingStyleClicked()
     {
@@ -83,14 +127,41 @@ public class CharacterSelectionUI : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Handle Clicks
+
     public void OnButtonClicked()
     {
         AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.MenuClick);
     }
+
     public void OnButtonHovered()
     {
         AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.MenuButtonHover);
     }
+
+    public void OnLeaveClicked()
+    {
+        PhotonNetwork.LeaveRoom();
+        loadingPopUp.SetActive(true);
+        StartCoroutine(LoadMainMenuSceneAsync());
+    }
+
+    private IEnumerator LoadMainMenuSceneAsync()
+    {
+        yield return new WaitForSeconds(Globals.LoadingDelay);
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(Globals.MainMenuScene, LoadSceneMode.Single);
+    }
+
+    public void OnConfirmClicked()
+    {
+        confirmButton.SetActive(false);
+        confirmedText.SetActive(true);
+        NetworkLauncher.Instance.OnCharacterConfirmed(PhotonNetwork.LocalPlayer, currentFightingStyle, currentClass);
+    }
+
+    #endregion
 
     #endregion
 }

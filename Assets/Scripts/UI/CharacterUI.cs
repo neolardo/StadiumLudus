@@ -32,7 +32,7 @@ public class CharacterUI : MonoBehaviour
 
     private void InitializeSkillIcons()
     {
-        if (character is MaleWarriorCharacter || character is FemaleWarriorCharacter)
+        if (character.Class == CharacterClass.Barbarian)
         {
             for (int i = 0; i < skillSlots.Count; i++)
             {

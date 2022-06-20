@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Manages the rooms UI screen.
@@ -18,12 +20,13 @@ public class RoomsUI : MonoBehaviour
     public JoinRoomPopUpUI joinRoomPopUpUI;
     public Button joinRoomButton;
     public GameObject noRoomsText;
+    public GameObject loadingPopUp;
 
-    private List<Room> rooms;
+    private List<RoomInfo> localRooms;
     private List<RoomButton> roomButtons;
 
-    private Room _selectedRoom;
-    private Room SelectedRoom 
+    private RoomInfo _selectedRoom;
+    private RoomInfo SelectedRoom 
     {
         get 
         {
@@ -33,7 +36,7 @@ public class RoomsUI : MonoBehaviour
         {
             if (_selectedRoom != null)
             {
-                var rb = roomButtons.FirstOrDefault(_ => _.Room == _selectedRoom);
+                var rb = roomButtons.FirstOrDefault(_ => _.RoomInfo == _selectedRoom);
                 if (rb != null)
                 {
                     rb.ChangeSelectionColor(false);
@@ -42,7 +45,7 @@ public class RoomsUI : MonoBehaviour
             _selectedRoom = value;
             if (_selectedRoom != null)
             {
-                var rb = roomButtons.FirstOrDefault(_ => _.Room == _selectedRoom);
+                var rb = roomButtons.FirstOrDefault(_ => _.RoomInfo == _selectedRoom);
                 if (rb != null)
                 {
                     rb.ChangeSelectionColor(true);
@@ -52,36 +55,30 @@ public class RoomsUI : MonoBehaviour
         }
     }
 
-    private const float roomRefreshRate = 10f;
-
     #endregion
 
     #region Methods
 
-    private void Start()
+    #region Init
+
+    private void Awake()
     {
-        rooms = new List<Room>();
+        localRooms = new List<RoomInfo>();
         roomButtons = new List<RoomButton>();
-        StartCoroutine(ManageRefreshRooms());
         SelectedRoom = null;
+        NetworkLauncher.Instance.roomsUI = this;
     }
 
-    private IEnumerator ManageRefreshRooms()
-    {
-        while (true)
-        {
-            RefreshRooms();
-            yield return new WaitForSeconds(roomRefreshRate);
-        }
-    }
+    #endregion
+  
+    #region Rooms List
 
-    private void RefreshRooms()
+    public void RefreshRooms(List<RoomInfo> serverRooms)
     {
-        var serverRooms = GetRoomsFromServer();
-        var removables = new List<Room>();
-        foreach(var r in rooms)
+        var removables = new List<RoomInfo>();
+        foreach(var r in localRooms)
         {
-            if (!serverRooms.Any(_=> _.IsSameAs(r)))
+            if (!serverRooms.Any(_=>_.Name == r.Name))
             {
                 removables.Add(r);
             }
@@ -92,89 +89,150 @@ public class RoomsUI : MonoBehaviour
         }
         foreach (var r in serverRooms)
         {
-            if (!rooms.Any(_=>_.IsSameAs(r)))
+            if (!localRooms.Any(_=>_.Name == r.Name))
             {
                 AddLocalRoom(r);
             }
+            else
+            {
+                UpdateLocalRoom(r);
+            }
         }
-        noRoomsText.SetActive(rooms.Count == 0);
+        noRoomsText.SetActive(localRooms.Count == 0);
     }
 
-    public void OnRoomSelected(Room r)
-    {
-        SelectedRoom = r;
-    }
-
-    private List<Room> GetRoomsFromServer()
-    {
-        // todo
-        Room a = new Room("my room", "my pass", "player");
-        Room b = new Room("my second room", "my pass", "player");
-        Room c = new Room("my third room", "my pass", "player");
-        var list = new List<Room>();
-        list.Add(a);
-        list.Add(b);
-        list.Add(c);
-        return list;
-    }
-
-    private void AddLocalRoom(Room r)
+    private void AddLocalRoom(RoomInfo roomInfo)
     {
         var roomButton = Instantiate(roomButtonPrefab, roomButtonContainer);
-        roomButton.Room = r;
+        roomButton.RoomInfo = roomInfo;
         roomButton.MainMenuUI = mainMenuUI;
         roomButton.RoomsUI = this;
-        rooms.Add(r);
+        localRooms.Add(roomInfo);
         roomButtons.Add(roomButton);
     }
-
-    private void RemoveLocalRoom(Room r)
+    private void UpdateLocalRoom(RoomInfo newRoomInfo)
     {
-        rooms.Remove(r);
-        if (r == SelectedRoom)
+        var btn = roomButtons.FirstOrDefault(_ => _.RoomInfo.Name == newRoomInfo.Name);
+        if (btn != null)
+        {
+            if (SelectedRoom == btn.RoomInfo)
+            {
+                SelectedRoom = newRoomInfo;
+            }
+            btn.RoomInfo = newRoomInfo;
+        }
+        else
+        {
+            Debug.LogError("A room's name has been modified which is not expected.");
+        }
+    }
+
+    private void RemoveLocalRoom(RoomInfo roomInfo)
+    {
+        localRooms.Remove(roomInfo);
+        if (roomInfo == SelectedRoom)
         {
             SelectedRoom = null;
         }
-        var rb = roomButtons.FirstOrDefault(_ => _.Room == r);
+        var rb = roomButtons.FirstOrDefault(_ => _.RoomInfo == roomInfo);
         if(rb!=null)
         {
             roomButtons.Remove(rb);
             Destroy(rb.gameObject);
         }
     }
-    private void AddRoomToServer(Room r)
+
+    #endregion
+
+    #region Room Selection
+
+    public void OnRoomSelected(RoomInfo r)
     {
-        //TODO
+        SelectedRoom = r;
     }
+
+    #endregion
+
+    #region Create and Join Room
 
     public void TryCreateRoom(string roomName, string roomPassword, string username)
     {
-        if (rooms.Any(_ => _.Name == roomName))
+        if (!NetworkLauncher.Instance.IsNewRoomNameValid(roomName))
         {
-            //TODO: handle invalid roomname
+            OnIncorrectRoomName();
         }
-        else if(rooms.Any(_ =>_.Players.Any(_ => _ == username)))
-        { 
-            //TODO: handle invalid username
+        else if (string.IsNullOrWhiteSpace(username))
+        {
+            OnIncorrectUsername();
         }
         else
         {
-            var r = new Room(roomName, roomPassword, username);
-            AddLocalRoom(r);
-            AddRoomToServer(r);
-            // todo load character selection scene
+            NetworkLauncher.Instance.CreateRoom(roomName, roomPassword, username);
         }
     }
 
     public void TryJoinRoom(string roomPassword, string username)
     {
-        if (SelectedRoom != null && SelectedRoom.Password == roomPassword && !SelectedRoom.Players.Any(_ => _ == username) && SelectedRoom.Players.Count < Room.MaximumPlayerCount)
+        if (SelectedRoom == null)
         {
-            SelectedRoom.Players.Add(username);
-            //TODO refresh on server side
-            // todo load character selection scene
+            Debug.LogError("SelectedRoom is null.");
+        }
+        else
+        {
+            NetworkLauncher.Instance.JoinRoomAs(SelectedRoom, roomPassword, username);
         }
     }
+
+    public void OnSuccesfullyJoinedRoom()
+    {
+        ShowLoadingPopUp();
+        NetworkLauncher.Instance.roomsUI = null;
+        StartCoroutine(LoadCharacterSelectionSceneAsync());
+    }
+
+    private IEnumerator LoadCharacterSelectionSceneAsync()
+    {
+        yield return new WaitForSeconds(Globals.LoadingDelay);
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(Globals.CharacterSelectionScene, LoadSceneMode.Single);
+    }
+
+    public void OnIncorrectUsername()
+    {
+        Debug.Log("Incorrect username.");   
+    }
+    public void OnIncorrectRoomName()
+    {
+        Debug.Log("Incorrect room name.");
+    }
+    public void OnIncorrectRoomPassword()
+    {
+        Debug.Log("Incorrect room password.");
+    }
+    public void OnNetworkError(string errorMessage)
+    {
+        HideLoadingPopUp();
+        //todo network error types?
+    }
+
+    #endregion
+
+    #region Loading Popup
+
+    private void ShowLoadingPopUp()
+    {
+        loadingPopUp.SetActive(true);
+        joinRoomPopUpUI.gameObject.SetActive(false);
+        createRoomPopUp.SetActive(false);
+    }
+
+    private void HideLoadingPopUp()
+    {
+        loadingPopUp.SetActive(false);
+    }
+
+    #endregion
+
+    #region Button Click Handlers
 
     public void OpenCreateRoomPopUp()
     {
@@ -190,6 +248,8 @@ public class RoomsUI : MonoBehaviour
     {
         mainMenuUI.NavigateToMainMenuPage();
     }
+
+    #endregion
 
     #endregion
 }

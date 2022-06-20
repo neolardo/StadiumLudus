@@ -18,6 +18,7 @@ public static class Globals
     // delta
     public const float CompareDelta = 0.001f;
     public const float PositionThreshold = 0.1f;
+    public const float LoadingDelay = 0.2f;
 
     // layers
     public const int IgnoreRaycastLayer = 2;
@@ -30,6 +31,18 @@ public static class Globals
     public const string AudioMixerMusicVolume = "MusicVolume";
     public const float AudioMixerMaximumDecibel = 0;
     public const float AudioMixerMinimumDecibel = -80;
+
+    //scenes
+    public const string MainMenuScene = "MainMenuScene";
+    public const string CharacterSelectionScene = "CharacterSelectionScene";
+    public const string GameScene = "TestScene";
+
+    // network
+    public const int MaximumPlayerCountPerRoom = 4;
+    public const string RoomPasswordCustomPropertyKey = "Password";
+    public const string PlayerFightingStyleCustomPropertyKey = "FightingStyle";
+    public const string PlayerClassCustomPropertyKey = "Class";
+    public const string PlayerIsCharacterConfirmedKey = "IsCharacterConfirmed";
 
     #endregion
 

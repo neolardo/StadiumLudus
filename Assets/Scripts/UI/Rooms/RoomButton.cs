@@ -1,3 +1,4 @@
+using Photon.Realtime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,23 +8,22 @@ using UnityEngine.UI;
 /// </summary>
 public class RoomButton : MonoBehaviour
 {
-    private Room _room;
-    public Room Room
+    private RoomInfo _roomInfo;
+    public RoomInfo RoomInfo
     {
         get 
         {
-            return _room;
+            return _roomInfo;
         }
         set 
         {
-            _room = value;
+            _roomInfo = value;
             UpdateRoomTexts();
         }
     }
     public MainMenuUI MainMenuUI { get; set; }
     public RoomsUI RoomsUI { get; set; }
     public TextMeshProUGUI roomNameText;
-    public TextMeshProUGUI roomStatusText;
     public TextMeshProUGUI roomPlayerCountText;
     public Button button;
 
@@ -44,15 +44,15 @@ public class RoomButton : MonoBehaviour
     public void OnClick()
     {
         MainMenuUI.OnMenuButtonClick();
-        RoomsUI.OnRoomSelected(Room);
+        RoomsUI.OnRoomSelected(RoomInfo);
     }
 
     private void UpdateRoomTexts()
     {
-        roomNameText.text = Room.Name;
-        roomStatusText.text = Room.Status == RoomStatus.CharacterSelection ? "character selection" : "in-game" ;
-        roomPlayerCountText.text = $"{Room.Players.Count}/{Room.MaximumPlayerCount}";
+        roomNameText.text = RoomInfo.Name;
+        roomPlayerCountText.text = $"{RoomInfo.PlayerCount}/{Globals.MaximumPlayerCountPerRoom}";
     }
+
     public void ChangeSelectionColor(bool isSelected)
     {
         var colors = button.colors;

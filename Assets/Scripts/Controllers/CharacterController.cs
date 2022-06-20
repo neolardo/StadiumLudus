@@ -32,11 +32,22 @@ public class CharacterController : MonoBehaviour
     [SerializeField]
     private KeyCode thirdSkillKeyCode = KeyCode.E;
 
+    private bool hasInitialized = false;
+
     #endregion
 
     #region Methods
 
-    private void Start()
+    private void OnEnable()
+    {
+        if(!hasInitialized)
+        {
+            Initialize();
+            hasInitialized = true;
+        }
+    }
+
+    private void Initialize()
     {
         mainCamera = Camera.main;
         character = GetComponent<Character>();
