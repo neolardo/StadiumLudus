@@ -143,15 +143,14 @@ public class CharacterSelectionUI : MonoBehaviour
 
     public void OnLeaveClicked()
     {
-        PhotonNetwork.LeaveRoom();
         loadingPopUp.SetActive(true);
-        StartCoroutine(LoadMainMenuSceneAsync());
+        StartCoroutine(LeaveRoomAndLoadMainSceneAfterDelay());
     }
 
-    private IEnumerator LoadMainMenuSceneAsync()
+    private IEnumerator LeaveRoomAndLoadMainSceneAfterDelay()
     {
         yield return new WaitForSeconds(Globals.LoadingDelay);
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(Globals.MainMenuScene, LoadSceneMode.Single);
+        PhotonNetwork.LeaveRoom();
     }
 
     public void OnConfirmClicked()

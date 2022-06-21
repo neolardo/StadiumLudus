@@ -185,8 +185,16 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
         }
     }
 
+    #endregion
+
+    #region Left Room
+
     public override void OnLeftRoom()
     {
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != Globals.MainMenuScene)
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(Globals.MainMenuScene);
+        }
         Debug.Log("Left room.");
     }
 
@@ -227,6 +235,7 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.LoadLevel(Globals.GameScene);
             Debug.Log("Loading game...");
+            Destroy(gameObject);
         }
         else
         {
@@ -261,7 +270,7 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
         {
             hashtable.Add(Globals.PlayerClassCustomPropertyKey, (int)c);
         }
-        PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
+        player.SetCustomProperties(hashtable);
     }
 
     private void UpdatePlayerIsCharacterConfirmedCustomProperty(Player player, bool isCharacterConfirmed)
@@ -275,7 +284,7 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
         {
             hashtable.Add(Globals.PlayerIsCharacterConfirmedKey, isCharacterConfirmed);
         }
-        PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
+        player.SetCustomProperties(hashtable);
     }
 
     public bool IsEveryPlayerConfirmedTheirCharacter()
@@ -296,6 +305,4 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
     }
 
     #endregion
-
-
 }

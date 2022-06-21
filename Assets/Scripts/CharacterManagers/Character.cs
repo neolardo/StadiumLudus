@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -24,17 +25,11 @@ public abstract class Character : MonoBehaviour
 
     #endregion
 
-
     #region UI and Managers
 
-    /// <summary>
-    /// The <see cref="CharacterUI"/> of this character which is only visible to the player who controlls this character, thus this reference is set by the corresponding <see cref="CharacterController"/>.
-    /// </summary>
-    [HideInInspector]
-    public CharacterUI characterUI;
+    protected CharacterUI characterUI;
+    private PhotonView photonView;
 
-    [SerializeField]
-    private GameRoundManager gameRoundManager;
     #endregion
 
     #region Health
@@ -204,7 +199,6 @@ public abstract class Character : MonoBehaviour
 
     private bool AllowUpdate { get; set; } = true;
 
-
     #endregion
 
     #region Methods
@@ -219,6 +213,7 @@ public abstract class Character : MonoBehaviour
         transform = GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
+        photonView = GetComponent<PhotonView>();
         agent.updatePosition = false;
         agent.updateRotation = false;
         agent.speed = movementSpeedInitialMaximum * agentSpeedMultiplier;
@@ -231,15 +226,24 @@ public abstract class Character : MonoBehaviour
         }
         ClearDestination();
         StartCoroutine(RecoverHealth()); 
-        StartCoroutine(RecoverStamina()); 
+        StartCoroutine(RecoverStamina());
     }
+
+    public void InitializeAsLocalCharacter(CharacterUI characterUI)
+    {
+        this.characterUI = characterUI;
+    }
+
     protected virtual void FixedUpdate()
     {
         if (AllowUpdate)
         {
             UpdateInteractionCheck();
             UpdateChase();
-            UpdateMove();
+            if (photonView.IsMine)
+            {
+                UpdateMove();
+            }
         }
     }
 
@@ -368,7 +372,10 @@ public abstract class Character : MonoBehaviour
         {
             characterUI.ShowEndScreen(false);
         }
-        gameRoundManager.OnCharacterDied(this);
+        if (photonView.IsMine)
+        {
+            GameRoundManager.Instance.OnCharacterDied(this);
+        }
         AllowUpdate = false;
     }
 

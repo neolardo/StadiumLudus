@@ -7,31 +7,25 @@ using UnityEngine;
 /// </summary>
 public class CharacterUI : MonoBehaviour
 {
-    /// <summary>
-    /// The character depends on the corresponding <see cref="CharacterController"/> so it's set by that.
-    /// </summary>
-    [HideInInspector]
-    public Character character;
     public PauseMenuUI pauseMenuUI;
     public EndGameUI endGameUI;
     public Material healthBarMaterial;
     public Material staminaBarMaterial;
     public List<SkillSlotUI> skillSlots;
-    public bool isUIVisible { get; private set; } = true;
+    private Character character;
+    public bool IsUIVisible { get; private set; } = true;
 
     private const float endScreenDelay = 0.5f;
 
     private const string valueShaderPropertyReference = "Vector1_0ae9bdea3f184704b6c11dd6513db5a4";
 
+    private bool hasInitialized = false;
+
     #region Methods
 
-    private void Start()
+    public void Initialize(Character character)
     {
-        InitializeSkillIcons();
-    }
-
-    private void InitializeSkillIcons()
-    {
+        this.character = character;
         if (character.Class == CharacterClass.Barbarian)
         {
             for (int i = 0; i < skillSlots.Count; i++)
@@ -46,11 +40,15 @@ public class CharacterUI : MonoBehaviour
                 skillSlots[i].InitializeAsRanger(character.IsSkillChargeable(i + 1), character.InitialChargeCountOfSkill(i + 1));
             }
         }
+        hasInitialized = true;
     }
 
     private void Update()
     {
-        UpdateShaders();
+        if (hasInitialized)
+        {
+            UpdateShaders();
+        }
     }
 
     private void UpdateShaders()
@@ -87,9 +85,9 @@ public class CharacterUI : MonoBehaviour
 
     public void ShowHidePauseMenu()
     {
-        isUIVisible = !isUIVisible;
-        gameObject.SetActive(isUIVisible);
-        pauseMenuUI.gameObject.SetActive(!isUIVisible);
+        IsUIVisible = !IsUIVisible;
+        gameObject.SetActive(IsUIVisible);
+        pauseMenuUI.gameObject.SetActive(!IsUIVisible);
     }
 
     #endregion
@@ -104,10 +102,10 @@ public class CharacterUI : MonoBehaviour
     private IEnumerator ShowEndScreenAfterDelay(bool win, float delaySeconds)
     {
         yield return new WaitForSeconds(delaySeconds);
-        isUIVisible = !isUIVisible;
-        gameObject.SetActive(isUIVisible);
+        IsUIVisible = !IsUIVisible;
+        gameObject.SetActive(IsUIVisible);
         endGameUI.SetMainText(win);
-        endGameUI.gameObject.SetActive(!isUIVisible);
+        endGameUI.gameObject.SetActive(!IsUIVisible);
     }
 
     #endregion

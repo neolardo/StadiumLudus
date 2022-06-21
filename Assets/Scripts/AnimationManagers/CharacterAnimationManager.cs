@@ -141,7 +141,6 @@ public class CharacterAnimationManager : MonoBehaviour
         {
             AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.StepOnStone, doNotRepeat: true);
             canPlayStepSound = false;
-            Debug.Log("Step");
         }
     }
 

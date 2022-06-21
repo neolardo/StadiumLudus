@@ -10,14 +10,8 @@ public class CharacterController : MonoBehaviour
 
     private Character character;
     private Camera mainCamera;
-
-    [SerializeField]
     private CharacterUI characterUI;
-
-    [SerializeField]
-    private GameRoundManager gameRoundManager;
-
-    private bool AreInputsEnabled => characterUI.isUIVisible;
+    private bool AreInputsEnabled => characterUI.IsUIVisible;
     private bool ignoreUntilRelease = false;
 
     [Tooltip("The key which should be pressed to trigger the first skill of the character.")]
@@ -38,26 +32,17 @@ public class CharacterController : MonoBehaviour
 
     #region Methods
 
-    private void OnEnable()
-    {
-        if(!hasInitialized)
-        {
-            Initialize();
-            hasInitialized = true;
-        }
-    }
-
-    private void Initialize()
+    public void Initialize(CharacterUI characterUI)
     {
         mainCamera = Camera.main;
         character = GetComponent<Character>();
-        characterUI.character = character;
-        character.characterUI = characterUI;
+        this.characterUI = characterUI;
+        hasInitialized = true;
     }
 
     private void Update()
     {
-        if (character.IsAlive)
+        if (hasInitialized && character.IsAlive)
         {
             HandleInputs();
         }
@@ -185,7 +170,7 @@ public class CharacterController : MonoBehaviour
             characterUI.ChangeSkillButtonPress(3, false);
         }
         // pause menu
-        if (character.IsAlive && !gameRoundManager.RoundEnded && Input.GetKeyDown(KeyCode.Escape))
+        if (character.IsAlive && !GameRoundManager.Instance.RoundEnded && Input.GetKeyDown(KeyCode.Escape))
         {
             characterUI.ShowHidePauseMenu();
         }

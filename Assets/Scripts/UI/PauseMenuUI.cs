@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 
@@ -77,9 +78,16 @@ public class PauseMenuUI : MonoBehaviour
 
     public void OnExit()
     {
-        // todo exit for every player
-        // load scene
+        //TODO
+        StartCoroutine(LeaveRoomAndLoadMainSceneAfterDelay());
     }
+
+    private IEnumerator LeaveRoomAndLoadMainSceneAfterDelay()
+    {
+        yield return new WaitForSeconds(Globals.LoadingDelay);
+        PhotonNetwork.LeaveRoom();
+    }
+
     public void OnButtonHover()
     {
         AudioManager.Instance.PlayOneShotSFX(pauseMenuAudioSource, SFX.MenuButtonHover);

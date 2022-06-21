@@ -24,7 +24,7 @@ public static class Globals
     public const int IgnoreRaycastLayer = 2;
     public const int CharacterLayer = 6;
     public const int GroundLayer = 7;
-    public const int InteractableLayer =8;
+    public const int InteractableLayer = 8;
 
     // audio mixer 
     public const string AudioMixerSFXVolume = "SFXVolume";
@@ -35,7 +35,7 @@ public static class Globals
     //scenes
     public const string MainMenuScene = "MainMenuScene";
     public const string CharacterSelectionScene = "CharacterSelectionScene";
-    public const string GameScene = "TestScene";
+    public const string GameScene = "GameScene";
 
     // network
     public const int MaximumPlayerCountPerRoom = 4;
@@ -82,5 +82,5 @@ public static class Globals
     }
 
     #endregion
-
 }
+

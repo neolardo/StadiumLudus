@@ -88,7 +88,7 @@ public class Projectile : MonoBehaviour
     {
         if (rb.isKinematic == false && (rb.position - ProjectilePool.characterTransform.position).magnitude > distanceMaximum)
         {
-            Debug.Log("Arrow went too far, it's been deactivated.");
+            Debug.Log("Projectile went too far, it's been deactivated.");
             Stop();
             ProjectilePool.OnProjectileDisappeared(this);
             gameObject.SetActive(false);

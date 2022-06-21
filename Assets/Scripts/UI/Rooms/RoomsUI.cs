@@ -186,7 +186,7 @@ public class RoomsUI : MonoBehaviour
     public void OnSuccesfullyJoinedRoom()
     {
         ShowLoadingPopUp();
-        NetworkLauncher.Instance.roomsUI = null;
+        NetworkLauncher.Instance.roomsUI = null; 
         StartCoroutine(LoadCharacterSelectionSceneAsync());
     }
 

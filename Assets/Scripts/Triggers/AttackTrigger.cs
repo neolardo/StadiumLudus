@@ -100,14 +100,16 @@ public class AttackTrigger : MonoBehaviour
             }
             else if(!AnyObjectHit && !other.CompareTag(Globals.CharacterTag))
             {
-                var sfx = other.tag switch
+                if (other.tag == Globals.WoodTag)
                 {
-                    Globals.WoodTag => SFX.HitOnWood,
-                    Globals.StoneTag => SFX.HitOnStone,
-                    _ => SFX.HitOnStone,
-                };
-                AudioManager.Instance.PlayOneShotSFX(audioSource, sfx);
-                AnyObjectHit = true;
+                    AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.HitOnWood);
+                    AnyObjectHit = true;
+                }
+                else if(other.tag == Globals.StoneTag)
+                {
+                    AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.HitOnStone);
+                    AnyObjectHit = true;
+                }
             }
         }
     }
