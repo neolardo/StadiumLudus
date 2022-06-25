@@ -10,6 +10,9 @@ public class Buff : MonoBehaviour
 {
     #region Properties and Fields
 
+    [SerializeField]
+    private AudioSource audioSource;
+
     #region Orb Effect
 
     [SerializeField]
@@ -61,7 +64,7 @@ public class Buff : MonoBehaviour
     public bool IsActive
     {
         get { return _isActive; }
-        private set 
+        private set
         {
             if (value != _isActive)
             {
@@ -93,7 +96,7 @@ public class Buff : MonoBehaviour
 
     [Tooltip("The duration of this effect in seconds.")]
     [SerializeField]
-    [Range(20, 3*60)]
+    [Range(20, 3 * 60)]
     private int duration;
 
     /// <summary>
@@ -139,6 +142,8 @@ public class Buff : MonoBehaviour
         orbVFXSizeInitialValue = orbVFX.GetFloat(orbVFXSizeValueName);
         orbVFXAttractionSpeedInitialValue = orbVFX.GetFloat(orbVFXAttractionSpeedName);
         orbVFXSpawnRateValue = orbVFX.GetInt(orbVFXSpawnRateName);
+        audioSource.loop = true;
+        AudioManager.Instance.PlaySFX(audioSource, SFX.BuffIdle);
         hasInitialized = true;
     }
 
@@ -168,6 +173,9 @@ public class Buff : MonoBehaviour
         orbTransform.gameObject.SetActive(false);
         characterEffectTransform.gameObject.SetActive(true);
         characterEffectVFX.SetInt(characterVFXSpawnRateName, characterVFXSpawnRateValue);
+        AudioManager.Instance.Stop(audioSource);
+        audioSource.loop = false;
+        AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.BuffUse);
         StartCoroutine(StickCharacterEffectToTarget());
     }
 
@@ -180,7 +188,6 @@ public class Buff : MonoBehaviour
             yield return null;
         }
     }
-
 
     private IEnumerator FadeInOrbLight()
     {
@@ -195,7 +202,7 @@ public class Buff : MonoBehaviour
 
     private IEnumerator StickCharacterEffectToTarget()
     {
-        while(IsActive)
+        while (IsActive)
         {
             characterEffectTransform.position = target.transform.position;
             yield return null;
@@ -204,11 +211,34 @@ public class Buff : MonoBehaviour
 
     private IEnumerator DeactivateAfterDurationElapsed()
     {
-        yield return new WaitForSeconds(duration - characterVFXSpawnRateDelay);
+        if (IsActive)
+        {
+            yield return new WaitForSeconds(duration - characterVFXSpawnRateDelay);
+        }
+        if (IsActive)
+        {
+            characterEffectVFX.SetInt(characterVFXSpawnRateName, 0);
+        }
+        if (IsActive)
+        {
+            yield return new WaitForSeconds(characterVFXSpawnRateDelay);
+            IsActive = false;
+        }
+    }
+
+
+    public void ForceDeactivate()
+    {
+        StartCoroutine(ForceDeactivateAfterDelay());
+    }
+
+    private  IEnumerator ForceDeactivateAfterDelay()
+    {
         characterEffectVFX.SetInt(characterVFXSpawnRateName, 0);
         yield return new WaitForSeconds(characterVFXSpawnRateDelay);
         IsActive = false;
     }
+
 
     private void ResetToInitialState()
     {
@@ -219,6 +249,8 @@ public class Buff : MonoBehaviour
         orbVFX.SetFloat(orbVFXSizeValueName, orbVFXSizeInitialValue);
         orbVFX.SetFloat(orbVFXAttractionSpeedName, orbVFXAttractionSpeedInitialValue);
         target.RemoveBuffs();
+        audioSource.loop = true;
+        AudioManager.Instance.PlaySFX(audioSource, SFX.BuffIdle);
     }
 
     #endregion

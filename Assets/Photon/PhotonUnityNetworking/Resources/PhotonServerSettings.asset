@@ -40,6 +40,32 @@ MonoBehaviour:
   - Fire
   - RespawnSpaceship
   - InstantiateCharacter
+  - OnInputReceived
+  - OnAttackTargetUpdated
+  - OnChaseTargetUpdated
+  - OnPositionTargetUpdated
+  - OnRotationTargetUpdated
+  - OnSkillPress
+  - EndGuarding
+  - SetDestination
+  - SetRotationTarget
+  - StartGuarding
+  - TryAttack
+  - LeapAttack
+  - StartWhirlwind
+  - EndWhirlwind
+  - GroundSlam
+  - PlaceTrap
+  - Dash
+  - Smoke
+  - ContinueComboAttack
+  - StartComboAttack
+  - FireBolt
+  - Reload
+  - OnDie
+  - OnWin
+  - TryInteract
+  - SpawnBuff
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

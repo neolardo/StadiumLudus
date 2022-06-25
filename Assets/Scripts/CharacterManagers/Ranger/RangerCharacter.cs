@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 
@@ -11,8 +12,6 @@ public abstract class RangerCharacter : Character
     protected RangerAnimationManager rangerAnimationManager;
 
     public override CharacterClass Class => CharacterClass.Ranger;
-
-    private bool hasInitialized = false;
 
     #region Skills
 
@@ -129,18 +128,9 @@ public abstract class RangerCharacter : Character
 
     #region Initialize
 
-    protected virtual void OnEnable()
+    protected override void Awake()
     {
-        // order is important
-        if (!hasInitialized)
-        {
-            Initialize();
-            hasInitialized = true;
-        }
-    }
-
-    protected virtual void Initialize()
-    {
+        base.Awake();
         if (smokeDuration < Globals.CompareDelta)
         {
             Debug.LogWarning("Cmoke duration for a female ranger character is set to a non-positive value.");
@@ -169,11 +159,6 @@ public abstract class RangerCharacter : Character
         trapPool.MinimumDamage = trapMinimumDamage;
         trapPool.MaximumDamage = trapMaximumDamage;
         trapPool.Duration = trapDuration;
-    }
-
-    protected override void Start()
-    {
-        base.Start();
         rangerAnimationManager = animationManager as RangerAnimationManager;
         StartCoroutine(ManageTrapCooldownAndRecharge());
     }
@@ -252,10 +237,15 @@ public abstract class RangerCharacter : Character
 
     #region Dash
 
-    private void Dash(Vector3 target)
+    [PunRPC]
+    public void Dash(Vector3 target)
     {
-        if (CanDash)
-        {
+        if (CanDash || !photonView.IsMine)
+        { 
+            if (photonView.IsMine)
+            {
+                photonView.RPC(nameof(Dash), RpcTarget.Others, target);
+            }
             var edgePoint = rb.position - (target - rb.position).normalized * dashMaximumDistance;
             var raycastPoint = edgePoint + Vector3.up * 5;
             Ray ray = new Ray(raycastPoint, Vector3.down);
@@ -306,12 +296,18 @@ public abstract class RangerCharacter : Character
 
     #region Smoke
 
-    private void Smoke()
+    [PunRPC]
+    public void Smoke()
     {
-        if (CanSmoke)
+        if (CanSmoke || !photonView.IsMine)
         {
+            if (photonView.IsMine)
+            {
+                photonView.RPC(nameof(Smoke), RpcTarget.Others);
+            }
             IsSmokeAvailable = false;
             rangerAnimationManager.Smoke();
+            AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.Smoke);
             smokeTransform.position = rb.position + smokePositionDelta;
             smokeParticleSystem.Play();
             StartCoroutine(ManageCooldown(SmokeSkillNumber));
@@ -323,10 +319,15 @@ public abstract class RangerCharacter : Character
 
     #region Trap
 
-    private void PlaceTrap()
+    [PunRPC]
+    public void PlaceTrap()
     {
-        if (CanPlaceTrap)
+        if (CanPlaceTrap || !photonView.IsMine)
         {
+            if (photonView.IsMine)
+            {
+                photonView.RPC(nameof(PlaceTrap), RpcTarget.Others);
+            }
             trapChargeCount -= 1;
             rangerAnimationManager.PlaceTrap();
             trapPool.PlaceTrap(TrapPlacementDelay);

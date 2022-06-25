@@ -51,9 +51,9 @@ public class FemaleRangerCharacter : RangerCharacter
 
     #region Initialize
 
-    protected override void Initialize()
+    protected override void Awake()
     {
-        base.Initialize();
+        base.Awake();
         if (arrowMaximumDamage < Globals.CompareDelta)
         {
             Debug.LogWarning("Arrow maximum damage for a female ranger character is set to a non-positive value.");

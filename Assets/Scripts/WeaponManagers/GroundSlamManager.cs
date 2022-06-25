@@ -9,6 +9,8 @@ public class GroundSlamManager: MonoBehaviour
 {
     #region Fields and Properties
 
+    [SerializeField] private AudioSource startAudioSource;
+    [SerializeField] private AudioSource endAudioSource;
     [SerializeField] private Transform crackContainer;
     [SerializeField] private Transform startTransform;
     [SerializeField] private Transform rockTransform;
@@ -84,6 +86,8 @@ public class GroundSlamManager: MonoBehaviour
     {
         yield return new WaitForSeconds(delaySeconds);
         StartCoroutine(SignalWhenCracksShouldClose());
+        AudioManager.Instance.PlayOneShotSFX(startAudioSource, SFX.GroundSlamStart);
+        AudioManager.Instance.PlaySFX(startAudioSource, SFX.GroundSlamCracking);
         startCrack.transform.position = startTransform.position + startCrackPositionDelta;
         startSmoke.transform.position = startTransform.position + startSmokePositionDelta;
         startCrack.Play();
@@ -108,12 +112,14 @@ public class GroundSlamManager: MonoBehaviour
     private IEnumerator AnimateRock()
     {
         yield return new WaitUntil(() => CrackDestinationReached);
+        AudioManager.Instance.PlayOneShotSFX(endAudioSource, SFX.GroundSlamEnd);
         IsRockVisible = true;
         rockTransform.gameObject.SetActive(true);
         rockAnimator.SetTrigger(RockAnimatorAppear);
         endSmoke.Play();
         yield return new WaitUntil(() => ShouldCloseCracks);
         rockAnimator.SetTrigger(RockAnimatorDisappear);
+        AudioManager.Instance.Stop(startAudioSource);
         yield return new WaitForSeconds(RockDisableDelay);
         rockTransform.gameObject.SetActive(false);
         CrackDestinationReached = false;

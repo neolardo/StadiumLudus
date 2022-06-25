@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,7 +34,7 @@ public class Fountain :  Interactable
                 _isFilled = value;
                 if (!_isFilled)
                 {
-                    StartCoroutine(WaitUntilRefill());
+                    StartCoroutine(WaitAndRefill());
                     StartCoroutine(AnimateEmpty());
                 }
                 else
@@ -57,6 +58,9 @@ public class Fountain :  Interactable
     [SerializeField]
     private Material smallWaterMaterial;
 
+    [SerializeField]
+    private AudioSource audioSource;
+
     private const string waterShaderAlphaReference = "Vector1_ebe175a0fc8a44548e7e79ef349e1724";
     private const float waterAnimationDelay = .9f;
     private const float waterAnimationSpeed = 1;
@@ -66,16 +70,14 @@ public class Fountain :  Interactable
 
 
     #endregion
-
-
     void Start()
     {
         interactionPoints = new List<Vector3>();
-        IsFilled = true;
         for (int i = 0; i < interactionPointContainer.transform.childCount; i++)
         {
             interactionPoints.Add(interactionPointContainer.transform.GetChild(i).position);
         }
+        IsFilled = true;
     }
 
     /// <inheritdoc/>
@@ -95,19 +97,21 @@ public class Fountain :  Interactable
         return closestPoint;
     }
 
+    [PunRPC]
     /// <inheritdoc/>
-    public override bool TryInteract(Character character)
+    public override bool TryInteract(int characterPhotonViewID)
     {
         if (IsFilled)
         {
             IsFilled = false;
+            var character = PhotonView.Find(characterPhotonViewID).gameObject.GetComponent<Character>();
             character.DrinkFromFountain(transform.position);
             return true;
         }
         return false;
     }
 
-    private IEnumerator WaitUntilRefill()
+    private IEnumerator WaitAndRefill()
     {
         yield return new WaitForSeconds(refillTime);
         IsFilled = true;
@@ -116,6 +120,9 @@ public class Fountain :  Interactable
     private IEnumerator AnimateEmpty()
     {
         yield return new WaitForSeconds(waterAnimationDelay);
+        AudioManager.Instance.Stop(audioSource);
+        audioSource.loop = false;
+        AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.FountainUse);
         var scale = largeWater.transform.localScale;
         var scaleZ = largeWater.transform.localScale.z;
         while (scaleZ > waterSizeEmpty && !IsFilled)
@@ -133,6 +140,8 @@ public class Fountain :  Interactable
 
     private IEnumerator AnimateFill()
     {
+        audioSource.loop = true;
+        AudioManager.Instance.PlaySFX(audioSource, SFX.FountainIdle);
         var scale = largeWater.transform.localScale;
         var scaleZ = largeWater.transform.localScale.z;
         while (scaleZ < waterSizeFilled && IsFilled)

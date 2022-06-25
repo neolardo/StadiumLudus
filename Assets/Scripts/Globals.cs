@@ -43,6 +43,7 @@ public static class Globals
     public const string PlayerFightingStyleCustomPropertyKey = "FightingStyle";
     public const string PlayerClassCustomPropertyKey = "Class";
     public const string PlayerIsCharacterConfirmedKey = "IsCharacterConfirmed";
+    public const string PlayerIsAliveKey = "IsAlive";
 
     #endregion
 

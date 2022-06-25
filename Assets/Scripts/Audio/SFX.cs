@@ -22,12 +22,22 @@ public enum SFX
     CrossbowFire = 31,
     CrossbowReload = 32,
 
-    // water
-    Waterfall = 40,
-
+    // fountain
+    FountainUse = 40,
+    FountainIdle = 41,
+    
+    // buff
+    BuffUse = 42,
+    BuffIdle = 43,
 
     // menu
     MenuButtonHover = 50,
     MenuProceed = 51,
     MenuClick = 52,
+
+    // skills
+    Smoke = 60,
+    GroundSlamStart = 61,
+    GroundSlamEnd = 62,
+    GroundSlamCracking = 63,
 }

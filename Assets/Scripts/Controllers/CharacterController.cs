@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ public class CharacterController : MonoBehaviour
     private Character character;
     private Camera mainCamera;
     private CharacterUI characterUI;
+    private PhotonView photonView;
     private bool AreInputsEnabled => characterUI.IsUIVisible;
     private bool ignoreUntilRelease = false;
 
@@ -32,19 +34,32 @@ public class CharacterController : MonoBehaviour
 
     #region Methods
 
-    public void Initialize(CharacterUI characterUI)
+    private void Awake()
     {
         mainCamera = Camera.main;
         character = GetComponent<Character>();
-        this.characterUI = characterUI;
-        hasInitialized = true;
+        photonView = GetComponent<PhotonView>();
     }
 
-    private void Update()
+    public void Initialize(CharacterUI characterUI)
     {
-        if (hasInitialized && character.IsAlive)
+        if (!hasInitialized)
+        {
+            hasInitialized = true;
+            this.characterUI = characterUI;
+            if (photonView.IsMine)
+            {
+                StartCoroutine(HandleInputsUntilAlive());
+            }
+        }
+    }
+
+    private IEnumerator HandleInputsUntilAlive()
+    {
+        while (character.IsAlive)
         {
             HandleInputs();
+            yield return null;
         }
     }
 
@@ -158,6 +173,7 @@ public class CharacterController : MonoBehaviour
         {
             character.EndSkill(1);
             characterUI.ChangeSkillButtonPress(1, false);
+
         }
         if (Input.GetKeyUp(secondSkillKeyCode))
         {

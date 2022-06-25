@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 
 /// <summary>
@@ -55,9 +56,9 @@ public class MaleRangerCharacter : RangerCharacter
 
     #region Init
 
-    protected override void Initialize()
+    protected override void Awake()
     {
-        base.Initialize();
+        base.Awake();
         if (boltMaximumDamage < Globals.CompareDelta)
         {
             Debug.LogWarning("Bolt maximum damage for a male ranger character is set to a non-positive value.");
@@ -80,26 +81,57 @@ public class MaleRangerCharacter : RangerCharacter
 
     #region Attack
 
+    public override bool TryAttack(Vector3 attackTarget)
+    {
+        if (CanAttack)
+        {
+            OnAttack(attackTarget);
+            return true;
+        }
+        return false;
+    }
+
     protected override void OnAttack(Vector3 attackTarget)
     {
         if (IsArrowLoaded)
         {
-            base.OnAttack(attackTarget);
-            crossbow.Attack();
-            IsArrowLoaded = false;
+            FireBolt(attackTarget);
         }
         else
         {
-            maleRangerAnimationManager.Reload();
-            crossbow.Reload();
-            IsArrowLoaded = true;
+            Reload();
         }
+    }
+
+    [PunRPC]
+    public void FireBolt(Vector3 attackTarget)
+    {
+        if (photonView.IsMine)
+        {
+            photonView.RPC(nameof(FireBolt), RpcTarget.Others, attackTarget);
+        }
+        base.OnAttack(attackTarget);
+        crossbow.Attack();
+        IsArrowLoaded = false;
+    }
+
+    [PunRPC]
+    public void Reload()
+    {
+        if (photonView.IsMine)
+        {
+            photonView.RPC(nameof(Reload), RpcTarget.Others);
+        }
+        maleRangerAnimationManager.Reload();
+        crossbow.Reload();
+        IsArrowLoaded = true;
     }
 
     #endregion
 
     #region Die
 
+    [PunRPC]
     protected override void OnDie(HitDirection direction)
     {
         base.OnDie(direction);

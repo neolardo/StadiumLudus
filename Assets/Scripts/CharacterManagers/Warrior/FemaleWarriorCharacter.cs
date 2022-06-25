@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 
@@ -70,9 +71,9 @@ public class FemaleWarriorCharacter : WarriorCharacter
 
     #region Methods
 
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
+        base.Awake();
         leftBattleAxeTrigger.MinimumDamage = battleAxeMinimumDamage;
         leftBattleAxeTrigger.MaximumDamage = battleAxeMaximumDamage;
         rightBattleAxeTrigger.MinimumDamage = battleAxeMinimumDamage;
@@ -94,21 +95,41 @@ public class FemaleWarriorCharacter : WarriorCharacter
     {
         if (CanAttack)
         {
-            OnAttack(attackTarget);
-            currentComboCount = 0;
-            canComboContinue = false;
-            femaleWarriorAnimationManager.SetContinueComboAttack(false);
+            StartComboAttack(attackTarget);
             return true;
         }
         else if (CanRequestAnotherComboAttack)
         {
-            StartCoroutine(ComboDelay());
-            femaleWarriorAnimationManager.SetContinueComboAttack(true);
-            currentComboCount++;
-            stamina -= attackStaminaCost;
+            ContinueComboAttack();
             return true;
         }
         return false;
+    }
+
+    [PunRPC]
+    public void StartComboAttack(Vector3 attackTarget)
+    {
+        if (photonView.IsMine)
+        {
+            photonView.RPC(nameof(StartComboAttack), RpcTarget.Others, attackTarget);
+        }
+        OnAttack(attackTarget);
+        currentComboCount = 0;
+        canComboContinue = false;
+        femaleWarriorAnimationManager.SetContinueComboAttack(false);
+    }
+
+    [PunRPC]
+    public void ContinueComboAttack()
+    {
+        if (photonView.IsMine)
+        {
+            photonView.RPC(nameof(ContinueComboAttack), RpcTarget.Others);
+        }
+        StartCoroutine(ComboDelay());
+        femaleWarriorAnimationManager.SetContinueComboAttack(true);
+        currentComboCount++;
+        stamina -= attackStaminaCost;
     }
 
     protected override void OnAttack(Vector3 attackTarget)

@@ -53,9 +53,9 @@ public class MaleWarriorCharacter : WarriorCharacter
 
     #region Methods
 
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
+        base.Awake();
         battleAxeTrigger.MinimumDamage = battleAxeMinimumDamage;
         battleAxeTrigger.MaximumDamage = battleAxeMaximumDamage;
         if (battleAxeMaximumDamage < Globals.CompareDelta)

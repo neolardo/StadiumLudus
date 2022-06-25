@@ -28,7 +28,7 @@ public abstract class Character : MonoBehaviour
     #region UI and Managers
 
     protected CharacterUI characterUI;
-    private PhotonView photonView;
+    protected PhotonView photonView;
 
     #endregion
 
@@ -177,7 +177,7 @@ public abstract class Character : MonoBehaviour
 
     #endregion
 
-    #region Basic Attack
+    #region Attack
 
 
     [Header("Basic Attack")]
@@ -189,11 +189,19 @@ public abstract class Character : MonoBehaviour
 
     #endregion
 
+    #region Guard
+
+    protected virtual bool CanGuard => IsAlive && !animationManager.IsInterrupted && !animationManager.IsGuarding && !animationManager.IsAttacking && !animationManager.IsUsingSkill;
+
+    #endregion
+
     #region Interactions
 
     private Interactable interactionTarget;
     private Vector3 interactionPoint;
     protected const float interactionRange = 0.1f;
+    protected Buff currentBuff;
+
 
     #endregion
 
@@ -203,7 +211,9 @@ public abstract class Character : MonoBehaviour
 
     #region Methods
 
-    protected virtual void Start()
+    #region Initialize
+
+    protected virtual void Awake()
     {
         health = healthMaximum;
         healthRecoveryAmount = healthRecoveryInitialAmount;
@@ -227,6 +237,7 @@ public abstract class Character : MonoBehaviour
         ClearDestination();
         StartCoroutine(RecoverHealth()); 
         StartCoroutine(RecoverStamina());
+        // destroy rb?
     }
 
     public void InitializeAsLocalCharacter(CharacterUI characterUI)
@@ -234,18 +245,24 @@ public abstract class Character : MonoBehaviour
         this.characterUI = characterUI;
     }
 
+    #endregion
+
+    #region Updates
+
     protected virtual void FixedUpdate()
     {
         if (AllowUpdate)
         {
-            UpdateInteractionCheck();
-            UpdateChase();
             if (photonView.IsMine)
             {
-                UpdateMove();
+                UpdateInteractionCheck();
+                UpdateChase();
             }
+            UpdateMove();
         }
     }
+
+    #endregion
 
     #region Skills
     public abstract void StartSkill(int skillNumber, Vector3 clickPosition);
@@ -280,10 +297,15 @@ public abstract class Character : MonoBehaviour
 
     #region Attack
 
+    [PunRPC]
     public virtual bool TryAttack(Vector3 attackTarget)
     {
-        if (CanAttack)
+        if (CanAttack || !photonView.IsMine)
         {
+            if (photonView.IsMine)
+            {
+                photonView.RPC(nameof(TryAttack), RpcTarget.Others, attackTarget);
+            }
             OnAttack(attackTarget);
             return true;
         }
@@ -301,21 +323,27 @@ public abstract class Character : MonoBehaviour
 
     #region Guarding
 
+    [PunRPC]
     public void StartGuarding()
     {
-        if (IsAlive && !animationManager.IsInterrupted && !animationManager.IsGuarding && !animationManager.IsAttacking)
+        if (CanGuard || !photonView.IsMine)
         {
+            if (photonView.IsMine)
+            {
+                photonView.RPC(nameof(StartGuarding), RpcTarget.Others);
+            }
             animationManager.StartGuarding();
         }
     }
 
-    public void SetRotationTarget(Vector3 guardTarget) 
-    {
-        rotationTarget = guardTarget;
-    }
 
+    [PunRPC]
     public void EndGuarding()
     {
+        if (photonView.IsMine)
+        {
+            photonView.RPC(nameof(EndGuarding), RpcTarget.Others);
+        }
         animationManager.EndGuarding();
     }
 
@@ -364,8 +392,13 @@ public abstract class Character : MonoBehaviour
 
     #region Die and Win
 
+    [PunRPC]
     protected virtual void OnDie(HitDirection direction)
     {
+        if (photonView.IsMine)
+        {
+            photonView.RPC(nameof(OnDie), RpcTarget.Others, direction);
+        }
         animationManager.Die(direction);
         rb.constraints = RigidbodyConstraints.FreezeAll;
         if (characterUI != null)
@@ -374,13 +407,18 @@ public abstract class Character : MonoBehaviour
         }
         if (photonView.IsMine)
         {
-            GameRoundManager.Instance.OnCharacterDied(this);
+            GameRoundManager.Instance.OnLocalCharacterDied();
         }
         AllowUpdate = false;
     }
 
+    [PunRPC]
     public void OnWin()
     {
+        if (photonView.IsMine)
+        {
+            photonView.RPC(nameof(OnWin), RpcTarget.Others);
+        }
         rb.constraints = RigidbodyConstraints.FreezeAll;
         if (characterUI != null)
         {
@@ -423,7 +461,7 @@ public abstract class Character : MonoBehaviour
 
     private void Interract()
     {
-        interactionTarget.TryInteract(this);
+        interactionTarget.PhotonView.RPC(nameof(Interactable.TryInteract), RpcTarget.All, photonView.ViewID);
         interactionTarget = null;
         ClearDestination();
     }
@@ -432,8 +470,9 @@ public abstract class Character : MonoBehaviour
 
     public void DrinkFromFountain(Vector3 fountainPosition)
     {
-        rotationTarget = fountainPosition;
+        SetRotationTarget(fountainPosition);
         animationManager.Drink();
+         //TODO restore hp
     }
 
     #endregion
@@ -442,7 +481,7 @@ public abstract class Character : MonoBehaviour
 
     public void KneelBeforeStatue(Vector3 statuePosition)
     {
-        rotationTarget = statuePosition;
+        SetRotationTarget(statuePosition); 
         animationManager.Kneel();
     }
 
@@ -470,7 +509,7 @@ public abstract class Character : MonoBehaviour
             }
             else
             {
-                Destination = chaseTarget.position;
+                SetDestination(chaseTarget.position);
             }
         }
     }
@@ -479,6 +518,26 @@ public abstract class Character : MonoBehaviour
     #endregion
 
     #region Movement
+
+    [PunRPC]
+    public void SetDestination(Vector3 destination)
+    {
+        if(photonView.IsMine)
+        {
+            photonView.RPC(nameof(SetDestination), RpcTarget.Others, destination);
+        }
+        Destination = destination;
+    }
+
+    [PunRPC]
+    public void SetRotationTarget(Vector3 rotationTarget)
+    {
+        if (photonView.IsMine)
+        {
+            photonView.RPC(nameof(SetRotationTarget), RpcTarget.Others, rotationTarget);
+        }
+        this.rotationTarget = rotationTarget;
+    }
 
     public void MoveTo(Vector3 position)
     {
@@ -489,11 +548,11 @@ public abstract class Character : MonoBehaviour
             if ((lastCorner - rb.position).magnitude < destinationMinimum)
             {
                 var dir = new Vector3(characterPositionRatioOnScreen.x - Input.mousePosition.x / Screen.width, 0, characterPositionRatioOnScreen.y - Input.mousePosition.y / Screen.height).normalized;
-                Destination = rb.position + dir * destinationMinimum;
+                SetDestination( rb.position + dir * destinationMinimum);
             }
             else
             {
-                Destination = lastCorner;
+                SetDestination(lastCorner);
             }
             chaseTarget = null;
             interactionTarget = null;
@@ -531,7 +590,7 @@ public abstract class Character : MonoBehaviour
 
     protected void ClearDestination()
     {
-        Destination = rb.position;
+        SetDestination(rb.position);
     }
 
     #endregion
@@ -582,6 +641,8 @@ public abstract class Character : MonoBehaviour
 
     public void AddBuff(Buff buff)
     {
+        RemoveBuffs();
+        currentBuff = buff;
         switch (buff.type)
         {
             case BuffType.HealthRecovery:
@@ -602,6 +663,11 @@ public abstract class Character : MonoBehaviour
 
     public void RemoveBuffs()
     {
+        if(currentBuff != null)
+        {
+            currentBuff.ForceDeactivate();
+            currentBuff = null;
+        }
         healthRecoveryAmount = healthRecoveryInitialAmount;
         staminaRecoveryAmount = staminaRecoveryInitialAmount;
         movementSpeedMaximum = movementSpeedInitialMaximum;

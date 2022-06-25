@@ -94,7 +94,6 @@ GameObject:
   - component: {fileID: 178970221}
   - component: {fileID: 1937259001231441841}
   - component: {fileID: 1319003897}
-  - component: {fileID: 1173447851}
   m_Layer: 6
   m_Name: FemaleRanger
   m_TagString: Character
@@ -350,28 +349,10 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents:
-  - {fileID: 1173447851}
-  - {fileID: 1173447852}
+  ObservedComponents: []
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &1173447851
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1937259002399550372}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!1 &2550622103485625573
 GameObject:
   m_ObjectHideFlags: 0
@@ -3002,74 +2983,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a78d8e5b2fadee941998d30c00f828c3, type: 3}
   m_PrefabInstance: {fileID: 1937259000883120899}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1173447852
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1595381605107250770}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 4
-    SynchronizeType: 1
-    Name: IsMoving
-  - Type: 9
-    SynchronizeType: 1
-    Name: StartGuard
-  - Type: 9
-    SynchronizeType: 1
-    Name: EndGuard
-  - Type: 9
-    SynchronizeType: 1
-    Name: Attack1
-  - Type: 9
-    SynchronizeType: 1
-    Name: DieFront
-  - Type: 9
-    SynchronizeType: 1
-    Name: DieBack
-  - Type: 9
-    SynchronizeType: 1
-    Name: ImpactBack
-  - Type: 9
-    SynchronizeType: 1
-    Name: ImpactFrontLeft
-  - Type: 9
-    SynchronizeType: 1
-    Name: ImpactFrontRight
-  - Type: 9
-    SynchronizeType: 1
-    Name: GuardImpactFront
-  - Type: 9
-    SynchronizeType: 1
-    Name: GuardImpactBack
-  - Type: 9
-    SynchronizeType: 1
-    Name: Drink
-  - Type: 9
-    SynchronizeType: 1
-    Name: Kneel
-  - Type: 9
-    SynchronizeType: 1
-    Name: Dash
-  - Type: 9
-    SynchronizeType: 1
-    Name: Smoke
-  - Type: 9
-    SynchronizeType: 1
-    Name: Trap
-  m_SynchronizeLayers:
-  - SynchronizeType: 1
-    LayerIndex: 0
-  - SynchronizeType: 1
-    LayerIndex: 1
 --- !u!114 &1448896823
 MonoBehaviour:
   m_ObjectHideFlags: 0

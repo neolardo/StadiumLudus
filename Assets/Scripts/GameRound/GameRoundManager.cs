@@ -16,6 +16,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
     [SerializeField] private CharacterUI characterUI;
     [SerializeField] private CameraController cameraController;
     [SerializeField] private List<Transform> spawnPoints;
+    private Character localCharacter;
     public bool RoundEnded { get; private set; } = false;
 
     private const string PhotonPrefabsFolder = "PhotonPrefabs";
@@ -39,16 +40,6 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
         {
             Destroy(this);
         }
-    }
-
-    public void OnCharacterDied(Character character)
-    {
-        /*aliveCharacters.Remove(character);
-        if (aliveCharacters.Count == 1)
-        {
-            aliveCharacters[0].OnWin();
-            OnGameEnd();
-        }*/
     }
 
     #region Initialize
@@ -108,9 +99,10 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
         var randomNumberList = Globals.GenerateRandomIndexes(0, PhotonNetwork.CurrentRoom.PlayerCount, spawnPoints.Count);
         var dictionary = new Dictionary<string, int>();
         var playerList = PhotonNetwork.PlayerList;
-        for (int i = 0; i < randomNumberList.Count; i++)
+        for (int i = 0; i < playerList.Length; i++)
         {
             dictionary.Add(playerList[i].NickName, randomNumberList[i]);
+            SetPlayerIsAlive(playerList[i], true);
         }
         photonView.RPC(nameof(InstantiateCharacter), RpcTarget.AllBuffered, dictionary);
     }
@@ -122,20 +114,15 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
         Debug.Log($"Initialiazing the character of {PhotonNetwork.LocalPlayer.NickName}...");
         int spawnIndex = playerNameSpawnIndexDictionary[PhotonNetwork.LocalPlayer.NickName];
         var characterPrefab = PhotonNetwork.Instantiate(GetCharacterPrefabNameOfPlayer(PhotonNetwork.LocalPlayer), spawnPoints[spawnIndex].position, spawnPoints[spawnIndex].rotation);
-        InitializeCharacter(characterPrefab);
-    }
-
-    private void InitializeCharacter(GameObject characterGameObject)
-    {
-        var character = characterGameObject.GetComponent<Character>();
-        var characterController = characterGameObject.AddComponent<CharacterController>();
-        character.InitializeAsLocalCharacter(characterUI);
-        characterUI.Initialize(character);
+        localCharacter = characterPrefab.GetComponent<Character>();
+        characterPrefab.AddComponent<AudioListener>();
+        var characterController = characterPrefab.AddComponent<CharacterController>();
+        localCharacter.InitializeAsLocalCharacter(characterUI);
+        characterUI.Initialize(localCharacter);
         characterController.Initialize(characterUI);
-        cameraController.Initialize(character);
+        cameraController.Initialize(localCharacter);
         Debug.Log($"The character of {PhotonNetwork.LocalPlayer.NickName} has been initialized.");
     }
-
 
     #endregion
 
@@ -149,14 +136,72 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
 
     #endregion
 
-    private void OnGameEnd()
+    #region Game End
+
+    private void SetPlayerIsAlive(Player player, bool value)
     {
-        // TODO:
-        // wait for rematch requests
-        // or quit if at least on of them quitted
-        Debug.Log("Game round ended.");
-        RoundEnded = true;
+        var hashtable = player.CustomProperties == null ? new ExitGames.Client.Photon.Hashtable() : player.CustomProperties;
+        if (hashtable.ContainsKey(Globals.PlayerIsAliveKey))
+        {
+            hashtable[Globals.PlayerIsAliveKey] = value;
+        }
+        else
+        {
+            hashtable.Add(Globals.PlayerIsAliveKey, value);
+        }
+        player.SetCustomProperties(hashtable);
     }
+
+    public void OnLocalCharacterDied()
+    {
+        SetPlayerIsAlive(PhotonNetwork.LocalPlayer, false);
+    }
+
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        if (ShouldEndRound())
+        {
+            EndRound();
+        }
+    }
+
+    private bool ShouldEndRound()
+    {
+        if (RoundEnded)
+        {
+            return false;
+        }
+        else
+        {
+            var playerList = PhotonNetwork.PlayerList;
+            int aliveCount = 0;
+            foreach (var p in playerList)
+            {
+                if (p.CustomProperties.ContainsKey(Globals.PlayerIsAliveKey) && (bool)p.CustomProperties[Globals.PlayerIsAliveKey])
+                {
+                    aliveCount++;
+                }
+            }
+            return aliveCount == 1;
+        }
+    }
+
+    private void EndRound()
+    {
+        Debug.Log("Game round ended.");
+        if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey(Globals.PlayerIsAliveKey) && (bool)PhotonNetwork.LocalPlayer.CustomProperties[Globals.PlayerIsAliveKey])
+        {
+            localCharacter.OnWin();
+        }
+        RoundEnded = true;
+        var playerList = PhotonNetwork.PlayerList;
+        foreach (var p in playerList)
+        {
+            SetPlayerIsAlive(p, true);
+        }
+    }
+
+    #endregion
 
     #endregion
 }

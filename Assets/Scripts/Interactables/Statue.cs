@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -49,13 +50,23 @@ public class Statue : Interactable
     private IEnumerator SpawnFirstBuff()
     {
         yield return new WaitForSeconds(firstBuffSpawnDelay);
-        SpawnBuff();
+        StartBuffSpawning();
     }
 
-    private void SpawnBuff()
+    private void StartBuffSpawning()
+    {
+        if (PhotonView.IsMine)
+        {
+            var index = Random.Range(0, buffs.Count);
+            PhotonView.RPC(nameof(SpawnBuff), RpcTarget.All, index);
+        }
+    }
+
+    [PunRPC]
+    public void SpawnBuff(int buffIndex)
     {
         IsBuffAvailable = true;
-        currentBuff = buffs[Random.Range(0, buffs.Count)];
+        currentBuff = buffs[buffIndex];
         currentBuff.gameObject.SetActive(true);
     }
 
@@ -63,7 +74,7 @@ public class Statue : Interactable
     {
         yield return new WaitUntil(() => !currentBuff.IsActive);
         yield return new WaitForSeconds(buffSpawnDelay);
-        SpawnBuff();
+        StartBuffSpawning();
     }
 
     /// <inheritdoc/>
@@ -74,12 +85,14 @@ public class Statue : Interactable
         return distance > interactionRangeDistance ? transform.position + dir * interactionRangeDistance : point;
     }
 
+    [PunRPC]
     /// <inheritdoc/>
-    public override bool TryInteract(Character character)
+    public override bool TryInteract(int characterPhotonViewID)
     {
         if (IsBuffAvailable)
         {
             IsBuffAvailable = false;
+            var character = PhotonView.Find(characterPhotonViewID).gameObject.GetComponent<Character>();
             character.KneelBeforeStatue(transform.position);
             currentBuff.UseOn(character);
             StartCoroutine(WaitUntilCurrentBuffDeactivatedAndSpawnNewOne());

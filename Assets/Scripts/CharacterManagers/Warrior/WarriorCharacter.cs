@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 
@@ -113,9 +114,9 @@ public abstract class WarriorCharacter : Character
 
     #region Methods
 
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
+        base.Awake();
         groundSlamAttackTrigger.MinimumDamage = groundSlamMinimumDamage;
         groundSlamAttackTrigger.MaximumDamage = groundSlamMaximumDamage;
         if (groundSlamMinimumDamage < Globals.CompareDelta)
@@ -200,10 +201,15 @@ public abstract class WarriorCharacter : Character
 
     #region Leap Attack
 
-    private void LeapAttack(Vector3 attackTarget)
+    [PunRPC]
+    public void LeapAttack(Vector3 attackTarget)
     {
-        if (CanLeapAttack)
+        if (CanLeapAttack || !photonView.IsMine)
         {
+            if (photonView.IsMine)
+            {
+                photonView.RPC(nameof(LeapAttack), RpcTarget.Others, attackTarget);     
+            }
             attackTarget = ClampPointInsideRange(attackTarget, leapAttackMaximumDistance);
             IsLeapAttackFirstFrame = true;
             IsLeapAttackAvailable = false;
@@ -251,10 +257,15 @@ public abstract class WarriorCharacter : Character
 
     #region Whirlwind
 
-    private void StartWhirlwind()
+    [PunRPC]
+    public void StartWhirlwind()
     {
-        if (CanWhirlwind)
+        if (CanWhirlwind || !photonView.IsMine)
         {
+            if (photonView.IsMine)
+            {
+                photonView.RPC(nameof(StartWhirlwind), RpcTarget.Others);
+            }
             warriorAnimationManager.StartWhirlwind();
             StartCoroutine(ManageWhirlwindStaminaDrain());
             StartCoroutine(ManageWhirlwindRotation());
@@ -262,10 +273,15 @@ public abstract class WarriorCharacter : Character
         }
     }
 
-    private void EndWhirlwind()
+    [PunRPC]
+    public void EndWhirlwind()
     {
-        if (IsAlive && warriorAnimationManager.IsWhirlwindOnGoing)
+        if ((IsAlive && warriorAnimationManager.IsWhirlwindOnGoing) || !photonView.IsMine)
         {
+            if (photonView.IsMine)
+            {
+                photonView.RPC(nameof(EndWhirlwind), RpcTarget.Others);
+            }
             warriorAnimationManager.EndWhirlwind();
         }
     }
@@ -308,10 +324,15 @@ public abstract class WarriorCharacter : Character
 
     #region Ground Slam
 
-    private void GroundSlam(Vector3 attackTarget)
+    [PunRPC]
+    public void GroundSlam(Vector3 attackTarget)
     {
-        if (CanGroundSlam)
+        if (CanGroundSlam || !photonView.IsMine)
         {
+            if (photonView.IsMine)
+            {
+                photonView.RPC(nameof(GroundSlam), RpcTarget.Others, attackTarget);
+            }
             attackTarget = ClampPointInsideRange(attackTarget, groundSlamMaximumDistance);
             IsGroundSlamAvailable = false;
             SetRotationTarget(attackTarget);
