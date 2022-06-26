@@ -109,9 +109,9 @@ public class FemaleWarriorCharacter : WarriorCharacter
     [PunRPC]
     public void StartComboAttack(Vector3 attackTarget)
     {
-        if (photonView.IsMine)
+        if (PhotonView.IsMine)
         {
-            photonView.RPC(nameof(StartComboAttack), RpcTarget.Others, attackTarget);
+            PhotonView.RPC(nameof(StartComboAttack), RpcTarget.Others, attackTarget);
         }
         OnAttack(attackTarget);
         currentComboCount = 0;
@@ -122,9 +122,9 @@ public class FemaleWarriorCharacter : WarriorCharacter
     [PunRPC]
     public void ContinueComboAttack()
     {
-        if (photonView.IsMine)
+        if (PhotonView.IsMine)
         {
-            photonView.RPC(nameof(ContinueComboAttack), RpcTarget.Others);
+            PhotonView.RPC(nameof(ContinueComboAttack), RpcTarget.Others);
         }
         StartCoroutine(ComboDelay());
         femaleWarriorAnimationManager.SetContinueComboAttack(true);

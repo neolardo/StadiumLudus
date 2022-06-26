@@ -41,7 +41,7 @@ public class TestCharacterController : MonoBehaviour
     {
         if (die)
         {
-            character.TryTakeDamage(200, HitDirection.Back);
+            //character.TryTakeDamage(200, HitDirection.Back);
             die = false;
         }
         if (attack)

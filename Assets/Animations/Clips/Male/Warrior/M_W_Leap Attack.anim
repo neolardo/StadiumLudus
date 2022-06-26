@@ -78039,6 +78039,13 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
+  - time: 0.5
+    functionName: OnCannotBeInterrupted
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.56666666
     functionName: OnJumpingStarted
     data: 
@@ -78062,6 +78069,13 @@ AnimationClip:
     messageOptions: 0
   - time: 1.4
     functionName: OnAttackCannotDealDamage
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 1.5
+    functionName: OnCanBeInterrupted
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

@@ -13,7 +13,7 @@ public class CharacterUI : MonoBehaviour
     public Material staminaBarMaterial;
     public List<SkillSlotUI> skillSlots;
     private Character character;
-    public bool IsUIVisible { get; private set; } = true;
+    public bool IsUIVisible { get; private set; } = false;
 
     private const float endScreenDelay = 0.5f;
 
@@ -55,6 +55,11 @@ public class CharacterUI : MonoBehaviour
     {
         healthBarMaterial.SetFloat(valueShaderPropertyReference, character.HealthRatio);
         staminaBarMaterial.SetFloat(valueShaderPropertyReference, character.StaminaRatio);
+    }
+    public void SetUIVisiblity(bool value)
+    {
+        IsUIVisible = value;
+        gameObject.SetActive(IsUIVisible);
     }
 
     #region Skills

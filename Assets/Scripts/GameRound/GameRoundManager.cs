@@ -14,9 +14,11 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
     public static GameRoundManager Instance { get; private set; }
 
     [SerializeField] private CharacterUI characterUI;
+    [SerializeField] private BlackScreenUI blackScreenUI;
     [SerializeField] private CameraController cameraController;
     [SerializeField] private List<Transform> spawnPoints;
     private Character localCharacter;
+    public bool RoundStarted { get; private set; } = false;
     public bool RoundEnded { get; private set; } = false;
 
     private const string PhotonPrefabsFolder = "PhotonPrefabs";
@@ -102,7 +104,6 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
         for (int i = 0; i < playerList.Length; i++)
         {
             dictionary.Add(playerList[i].NickName, randomNumberList[i]);
-            SetPlayerIsAlive(playerList[i], true);
         }
         photonView.RPC(nameof(InstantiateCharacter), RpcTarget.AllBuffered, dictionary);
     }
@@ -121,6 +122,8 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
         characterUI.Initialize(localCharacter);
         characterController.Initialize(characterUI);
         cameraController.Initialize(localCharacter);
+        SetPlayerIsInitialized(PhotonNetwork.LocalPlayer, true);
+        SetPlayerIsAlive(PhotonNetwork.LocalPlayer, true);
         Debug.Log($"The character of {PhotonNetwork.LocalPlayer.NickName} has been initialized.");
     }
 
@@ -130,13 +133,83 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
+        SetPlayerIsInitialized(PhotonNetwork.LocalPlayer, false);
+        SetPlayerIsAlive(PhotonNetwork.LocalPlayer, false);
         UnityEngine.SceneManagement.SceneManager.LoadScene(Globals.MainMenuScene);
         Debug.Log("Left room.");
     }
 
     #endregion
 
-    #region Game End
+    #region Player Properties
+
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        if (CanRoundStart())
+        {
+            StartRound();
+        }
+        else if (CanRoundEnd())
+        {
+            EndRound();
+        }
+    }
+
+    #endregion
+
+    #region Round Start
+
+    private void SetPlayerIsInitialized(Player player, bool value)
+    {
+        var hashtable = player.CustomProperties == null ? new ExitGames.Client.Photon.Hashtable() : player.CustomProperties;
+        if (hashtable.ContainsKey(Globals.PlayerIsInitializedKey))
+        {
+            hashtable[Globals.PlayerIsInitializedKey] = value;
+        }
+        else
+        {
+            hashtable.Add(Globals.PlayerIsInitializedKey, value);
+        }
+        player.SetCustomProperties(hashtable);
+    }
+
+    private bool CanRoundStart()
+    {
+        if (RoundStarted)
+        {
+            return false;
+        }
+        else
+        {
+            var playerList = PhotonNetwork.PlayerList;
+            int aliveCount = 0;
+            int initializedCount = 0;
+            foreach (var p in playerList)
+            {
+                if (p.CustomProperties.ContainsKey(Globals.PlayerIsAliveKey) && (bool)p.CustomProperties[Globals.PlayerIsAliveKey])
+                {
+                    aliveCount++;
+                }
+                if (p.CustomProperties.ContainsKey(Globals.PlayerIsInitializedKey) && (bool)p.CustomProperties[Globals.PlayerIsInitializedKey])
+                {
+                    initializedCount++;
+                }
+            }
+            return (aliveCount == initializedCount) && (initializedCount == playerList.Length);
+        }
+    }
+
+    private void StartRound()
+    {
+        Debug.Log("Game round started.");
+        RoundStarted = true;
+        characterUI.SetUIVisiblity(true);
+        blackScreenUI.FadeOutAndDisable();
+    }
+
+    #endregion
+
+    #region Round End
 
     private void SetPlayerIsAlive(Player player, bool value)
     {
@@ -157,17 +230,9 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
         SetPlayerIsAlive(PhotonNetwork.LocalPlayer, false);
     }
 
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    private bool CanRoundEnd()
     {
-        if (ShouldEndRound())
-        {
-            EndRound();
-        }
-    }
-
-    private bool ShouldEndRound()
-    {
-        if (RoundEnded)
+        if (RoundEnded || !RoundStarted)
         {
             return false;
         }
@@ -182,7 +247,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
                     aliveCount++;
                 }
             }
-            return aliveCount == 1;
+            return aliveCount <= 1;
         }
     }
 
@@ -194,11 +259,6 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
             localCharacter.OnWin();
         }
         RoundEnded = true;
-        var playerList = PhotonNetwork.PlayerList;
-        foreach (var p in playerList)
-        {
-            SetPlayerIsAlive(p, true);
-        }
     }
 
     #endregion

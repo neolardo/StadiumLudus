@@ -1,5 +1,6 @@
 using Photon.Pun;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -28,7 +29,7 @@ public abstract class Character : MonoBehaviour
     #region UI and Managers
 
     protected CharacterUI characterUI;
-    protected PhotonView photonView;
+    public PhotonView PhotonView { get; private set; }
 
     #endregion
 
@@ -106,7 +107,7 @@ public abstract class Character : MonoBehaviour
     /// <summary>
     /// Inidicates whether this character can move or not.
     /// </summary>
-    protected virtual bool CanMove => animationManager.CanMove;
+    protected virtual bool CanMove => !animationManager.IsMovementLocked;
 
     [Header("Movement")]
     [Tooltip("Represents the maximum movement speed of the character.")]
@@ -185,7 +186,30 @@ public abstract class Character : MonoBehaviour
     [SerializeField]
     protected float attackStaminaCost;
 
+    [SerializeField]
+    protected Transform hitValidationColliderContainer;
+
     protected virtual bool CanAttack => IsAlive && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill && stamina > attackStaminaCost;
+
+    /// <summary>
+    /// A list of <see cref="Transform"/>s of the character's hitbox <see cref="Collider"/>s.
+    /// </summary>
+    private List<Transform> hitBoxTransforms;
+
+    /// <summary>
+    /// A list of <see cref="Collider"/> <see cref="Transform"/>s used for validating a hit.
+    /// </summary>
+    private List<Transform> validationColliderTransforms;
+
+    /// <summary>
+    /// A  <see cref="CachedCircularBuffer"/> storing the most recent info of the <see cref="hitBoxTransforms"/>.
+    /// </summary>
+    private CachedCircularBuffer<HitBoxInfoStorage> hitBoxInfoCircularBuffer;
+
+    /// <summary>
+    /// The number of fixed update frames recorded for validating a hit info.
+    /// </summary>
+    private const int NumberOfRecordedHitBoxFrames = 50*3;
 
     #endregion
 
@@ -223,7 +247,7 @@ public abstract class Character : MonoBehaviour
         transform = GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
-        photonView = GetComponent<PhotonView>();
+        PhotonView = GetComponent<PhotonView>();
         agent.updatePosition = false;
         agent.updateRotation = false;
         agent.speed = movementSpeedInitialMaximum * agentSpeedMultiplier;
@@ -234,12 +258,11 @@ public abstract class Character : MonoBehaviour
         {
             Debug.LogWarning($"Basic attack stamina cost for a {gameObject.name} is set to a non-positive value.");
         }
+        InitializeHitBoxRecording();
         ClearDestination();
         StartCoroutine(RecoverHealth()); 
         StartCoroutine(RecoverStamina());
-        // destroy rb?
     }
-
     public void InitializeAsLocalCharacter(CharacterUI characterUI)
     {
         this.characterUI = characterUI;
@@ -253,10 +276,11 @@ public abstract class Character : MonoBehaviour
     {
         if (AllowUpdate)
         {
-            if (photonView.IsMine)
+            if (PhotonView.IsMine)
             {
                 UpdateInteractionCheck();
                 UpdateChase();
+                UpdateHitBoxInfo();
             }
             UpdateMove();
         }
@@ -300,11 +324,11 @@ public abstract class Character : MonoBehaviour
     [PunRPC]
     public virtual bool TryAttack(Vector3 attackTarget)
     {
-        if (CanAttack || !photonView.IsMine)
+        if (CanAttack || !PhotonView.IsMine)
         {
-            if (photonView.IsMine)
+            if (PhotonView.IsMine)
             {
-                photonView.RPC(nameof(TryAttack), RpcTarget.Others, attackTarget);
+                PhotonView.RPC(nameof(TryAttack), RpcTarget.Others, attackTarget);
             }
             OnAttack(attackTarget);
             return true;
@@ -321,71 +345,154 @@ public abstract class Character : MonoBehaviour
 
     #endregion
 
-    #region Guarding
+    #region HitBox Validation
 
-    [PunRPC]
-    public void StartGuarding()
+    private void InitializeHitBoxRecording()
     {
-        if (CanGuard || !photonView.IsMine)
+        if (PhotonView.IsMine)
         {
-            if (photonView.IsMine)
+            hitBoxTransforms = new List<Transform>();
+            validationColliderTransforms = new List<Transform>();
+            hitBoxInfoCircularBuffer = new CachedCircularBuffer<HitBoxInfoStorage>(NumberOfRecordedHitBoxFrames);
+            FindAndAddHitBoxTransformsToList(transform);
+            foreach (var t in hitBoxTransforms)
             {
-                photonView.RPC(nameof(StartGuarding), RpcTarget.Others);
+                var copy = Instantiate(t.GetComponent<Collider>(), hitValidationColliderContainer);
+                copy.gameObject.SetActive(false);
+                Destroy(copy.GetComponent<HitBox>());
+                copy.gameObject.layer = Globals.ValidationLayer;
+                validationColliderTransforms.Add(copy.transform);
             }
-            animationManager.StartGuarding();
         }
     }
 
-
-    [PunRPC]
-    public void EndGuarding()
+    private void FindAndAddHitBoxTransformsToList(Transform t)
     {
-        if (photonView.IsMine)
+        for (int i = 0; i < t.childCount; i++)
         {
-            photonView.RPC(nameof(EndGuarding), RpcTarget.Others);
+            FindAndAddHitBoxTransformsToList(t.GetChild(i));
         }
-        animationManager.EndGuarding();
+        if (t.CompareTag(Globals.HitBoxTag))
+        {
+            hitBoxTransforms.Add(t);
+        }
+    }
+
+    private void UpdateHitBoxInfo()
+    {
+        var info = hitBoxInfoCircularBuffer.GetNext();
+        info.CanBeInterrupted = animationManager.CanBeInterrupted;
+        if (info.CanBeInterrupted)
+        {
+            for (int i = 0; i < hitBoxTransforms.Count; i++)
+            {
+                info.ColliderTransformArray[i] = (hitBoxTransforms[i].position, hitBoxTransforms[i].rotation);
+            }
+        }
+    }
+
+    public bool IsHitValid(Vector3 colliderPoint1, Vector3 colliderPoint2, float colliderRadius, int oldTimeStamp)
+    {
+        int deltaFixedUpdateFrames = Mathf.RoundToInt((PhotonNetwork.ServerTimestamp - oldTimeStamp) / 20f); // 1000/50 ms is one fixed update frame
+        if(deltaFixedUpdateFrames < NumberOfRecordedHitBoxFrames)
+        {
+            var info = hitBoxInfoCircularBuffer[deltaFixedUpdateFrames];
+            if (info.CanBeInterrupted)
+            {
+                for (int i = 0; i < validationColliderTransforms.Count; i++)
+                {
+                    validationColliderTransforms[i].position = info.ColliderTransformArray[i].position;
+                    validationColliderTransforms[i].rotation = info.ColliderTransformArray[i].rotation;
+                    validationColliderTransforms[i].gameObject.SetActive(true);
+                }
+                var result = Physics.CheckCapsule(colliderPoint2, colliderPoint1, colliderRadius, 1 << Globals.ValidationLayer);
+                foreach (var c in validationColliderTransforms)
+                {
+                    c.gameObject.SetActive(false);
+                }
+                return result;
+            }
+        }
+        return false;
     }
 
     #endregion
 
     #region Take Damage
 
-    public bool TryTakeDamage(float amount, HitDirection direction)
+    [PunRPC]
+    public void TryTakeDamage(float amount, HitDirection direction, Vector3 attackColliderPoint0, Vector3 attackColliderPoint1, float attackColliderRadius, PhotonMessageInfo info)
     {
-        if (IsAlive) // && CanBeInterrupted
+        if (IsAlive && animationManager.CanBeInterrupted && PhotonView.IsMine && IsHitValid(attackColliderPoint0,  attackColliderPoint1,  attackColliderRadius, info.SentServerTimestamp)) 
         {
-            if (animationManager.IsGuarding)
+            PhotonView.RPC(nameof(TakeDamage), RpcTarget.All, amount, direction);
+        }
+    }
+
+    [PunRPC]
+    public void TakeDamage(float amount, HitDirection direction)
+    {
+        if (animationManager.IsGuarding)
+        {
+            float guardedAmount = stamina - Mathf.Max(0, stamina - amount);
+            stamina -= guardedAmount;
+            amount -= guardedAmount;
+        }
+        health -= amount;
+        if (IsAlive)
+        {
+            animationManager.Impact(stamina > 0 && animationManager.IsGuarding, direction);
+            if (stamina <= Globals.CompareDelta && animationManager.IsGuarding)
             {
-                float guardedAmount = stamina - Mathf.Max(0, stamina - amount);
-                stamina -= guardedAmount;
-                amount -= guardedAmount;
-            }
-            health -= amount;
-            if (IsAlive)
-            {
-                animationManager.Impact(stamina > 0 && animationManager.IsGuarding, direction);
-                if (stamina <= Globals.CompareDelta && animationManager.IsGuarding)
+                if (PhotonView.IsMine)
                 {
                     EndGuarding();
-                    AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
                 }
-                else if (stamina > Globals.CompareDelta && animationManager.IsGuarding)
-                {
-                    AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.GuardHit);
-                }
-                else
-                {
-                    AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
-                }
+                AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
+            }
+            else if (stamina > Globals.CompareDelta && animationManager.IsGuarding)
+            {
+                AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.GuardHit);
             }
             else
             {
+                AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
+            }
+        }
+        else
+        {
+            if (PhotonView.IsMine)
+            {
                 OnDie(direction);
             }
-            return true;
         }
-        return false;
+    }
+
+    #endregion
+
+    #region Guarding
+
+    [PunRPC]
+    public void StartGuarding()
+    {
+        if (CanGuard || !PhotonView.IsMine)
+        {
+            if (PhotonView.IsMine)
+            {
+                PhotonView.RPC(nameof(StartGuarding), RpcTarget.Others);
+            }
+            animationManager.StartGuarding();
+        }
+    }
+
+    [PunRPC]
+    public void EndGuarding()
+    {
+        if (PhotonView.IsMine)
+        {
+            PhotonView.RPC(nameof(EndGuarding), RpcTarget.Others);
+        }
+        animationManager.EndGuarding();
     }
 
     #endregion
@@ -395,9 +502,9 @@ public abstract class Character : MonoBehaviour
     [PunRPC]
     protected virtual void OnDie(HitDirection direction)
     {
-        if (photonView.IsMine)
+        if (PhotonView.IsMine)
         {
-            photonView.RPC(nameof(OnDie), RpcTarget.Others, direction);
+            PhotonView.RPC(nameof(OnDie), RpcTarget.Others, direction);
         }
         animationManager.Die(direction);
         rb.constraints = RigidbodyConstraints.FreezeAll;
@@ -405,7 +512,7 @@ public abstract class Character : MonoBehaviour
         {
             characterUI.ShowEndScreen(false);
         }
-        if (photonView.IsMine)
+        if (PhotonView.IsMine)
         {
             GameRoundManager.Instance.OnLocalCharacterDied();
         }
@@ -415,9 +522,9 @@ public abstract class Character : MonoBehaviour
     [PunRPC]
     public void OnWin()
     {
-        if (photonView.IsMine)
+        if (PhotonView.IsMine)
         {
-            photonView.RPC(nameof(OnWin), RpcTarget.Others);
+            PhotonView.RPC(nameof(OnWin), RpcTarget.Others);
         }
         rb.constraints = RigidbodyConstraints.FreezeAll;
         if (characterUI != null)
@@ -461,7 +568,7 @@ public abstract class Character : MonoBehaviour
 
     private void Interract()
     {
-        interactionTarget.PhotonView.RPC(nameof(Interactable.TryInteract), RpcTarget.All, photonView.ViewID);
+        interactionTarget.PhotonView.RPC(nameof(Interactable.TryInteract), RpcTarget.All, PhotonView.ViewID);
         interactionTarget = null;
         ClearDestination();
     }
@@ -522,9 +629,9 @@ public abstract class Character : MonoBehaviour
     [PunRPC]
     public void SetDestination(Vector3 destination)
     {
-        if(photonView.IsMine)
+        if(PhotonView.IsMine)
         {
-            photonView.RPC(nameof(SetDestination), RpcTarget.Others, destination);
+            PhotonView.RPC(nameof(SetDestination), RpcTarget.Others, destination);
         }
         Destination = destination;
     }
@@ -532,9 +639,9 @@ public abstract class Character : MonoBehaviour
     [PunRPC]
     public void SetRotationTarget(Vector3 rotationTarget)
     {
-        if (photonView.IsMine)
+        if (PhotonView.IsMine)
         {
-            photonView.RPC(nameof(SetRotationTarget), RpcTarget.Others, rotationTarget);
+            PhotonView.RPC(nameof(SetRotationTarget), RpcTarget.Others, rotationTarget);
         }
         this.rotationTarget = rotationTarget;
     }

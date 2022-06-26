@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1369728629281420253}
   - component: {fileID: 1369728629281420252}
   - component: {fileID: 1369728629281420255}
+  - component: {fileID: 2966621245536889444}
   m_Layer: 0
   m_Name: RangerTrap
   m_TagString: Untagged
@@ -175,6 +176,28 @@ MonoBehaviour:
   trapTrigger: {fileID: 1369728629281420253}
   trapPool: {fileID: 0}
   activeDuration: 5
+--- !u!114 &2966621245536889444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369728629281420250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1001 &1369728629691777108
 PrefabInstance:
   m_ObjectHideFlags: 0

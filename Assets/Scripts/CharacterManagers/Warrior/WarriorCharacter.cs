@@ -204,11 +204,11 @@ public abstract class WarriorCharacter : Character
     [PunRPC]
     public void LeapAttack(Vector3 attackTarget)
     {
-        if (CanLeapAttack || !photonView.IsMine)
+        if (CanLeapAttack || !PhotonView.IsMine)
         {
-            if (photonView.IsMine)
+            if (PhotonView.IsMine)
             {
-                photonView.RPC(nameof(LeapAttack), RpcTarget.Others, attackTarget);     
+                PhotonView.RPC(nameof(LeapAttack), RpcTarget.Others, attackTarget);     
             }
             attackTarget = ClampPointInsideRange(attackTarget, leapAttackMaximumDistance);
             IsLeapAttackFirstFrame = true;
@@ -260,11 +260,11 @@ public abstract class WarriorCharacter : Character
     [PunRPC]
     public void StartWhirlwind()
     {
-        if (CanWhirlwind || !photonView.IsMine)
+        if (CanWhirlwind || !PhotonView.IsMine)
         {
-            if (photonView.IsMine)
+            if (PhotonView.IsMine)
             {
-                photonView.RPC(nameof(StartWhirlwind), RpcTarget.Others);
+                PhotonView.RPC(nameof(StartWhirlwind), RpcTarget.Others);
             }
             warriorAnimationManager.StartWhirlwind();
             StartCoroutine(ManageWhirlwindStaminaDrain());
@@ -276,11 +276,11 @@ public abstract class WarriorCharacter : Character
     [PunRPC]
     public void EndWhirlwind()
     {
-        if ((IsAlive && warriorAnimationManager.IsWhirlwindOnGoing) || !photonView.IsMine)
+        if ((IsAlive && warriorAnimationManager.IsWhirlwindOnGoing) || !PhotonView.IsMine)
         {
-            if (photonView.IsMine)
+            if (PhotonView.IsMine)
             {
-                photonView.RPC(nameof(EndWhirlwind), RpcTarget.Others);
+                PhotonView.RPC(nameof(EndWhirlwind), RpcTarget.Others);
             }
             warriorAnimationManager.EndWhirlwind();
         }
@@ -327,11 +327,11 @@ public abstract class WarriorCharacter : Character
     [PunRPC]
     public void GroundSlam(Vector3 attackTarget)
     {
-        if (CanGroundSlam || !photonView.IsMine)
+        if (CanGroundSlam || !PhotonView.IsMine)
         {
-            if (photonView.IsMine)
+            if (PhotonView.IsMine)
             {
-                photonView.RPC(nameof(GroundSlam), RpcTarget.Others, attackTarget);
+                PhotonView.RPC(nameof(GroundSlam), RpcTarget.Others, attackTarget);
             }
             attackTarget = ClampPointInsideRange(attackTarget, groundSlamMaximumDistance);
             IsGroundSlamAvailable = false;

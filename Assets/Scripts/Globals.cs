@@ -25,6 +25,7 @@ public static class Globals
     public const int CharacterLayer = 6;
     public const int GroundLayer = 7;
     public const int InteractableLayer = 8;
+    public const int ValidationLayer = 11;
 
     // audio mixer 
     public const string AudioMixerSFXVolume = "SFXVolume";
@@ -44,6 +45,7 @@ public static class Globals
     public const string PlayerClassCustomPropertyKey = "Class";
     public const string PlayerIsCharacterConfirmedKey = "IsCharacterConfirmed";
     public const string PlayerIsAliveKey = "IsAlive";
+    public const string PlayerIsInitializedKey = "IsInitialized";
 
     #endregion
 

@@ -240,11 +240,11 @@ public abstract class RangerCharacter : Character
     [PunRPC]
     public void Dash(Vector3 target)
     {
-        if (CanDash || !photonView.IsMine)
+        if (CanDash || !PhotonView.IsMine)
         { 
-            if (photonView.IsMine)
+            if (PhotonView.IsMine)
             {
-                photonView.RPC(nameof(Dash), RpcTarget.Others, target);
+                PhotonView.RPC(nameof(Dash), RpcTarget.Others, target);
             }
             var edgePoint = rb.position - (target - rb.position).normalized * dashMaximumDistance;
             var raycastPoint = edgePoint + Vector3.up * 5;
@@ -299,11 +299,11 @@ public abstract class RangerCharacter : Character
     [PunRPC]
     public void Smoke()
     {
-        if (CanSmoke || !photonView.IsMine)
+        if (CanSmoke || !PhotonView.IsMine)
         {
-            if (photonView.IsMine)
+            if (PhotonView.IsMine)
             {
-                photonView.RPC(nameof(Smoke), RpcTarget.Others);
+                PhotonView.RPC(nameof(Smoke), RpcTarget.Others);
             }
             IsSmokeAvailable = false;
             rangerAnimationManager.Smoke();
@@ -322,11 +322,11 @@ public abstract class RangerCharacter : Character
     [PunRPC]
     public void PlaceTrap()
     {
-        if (CanPlaceTrap || !photonView.IsMine)
+        if (CanPlaceTrap || !PhotonView.IsMine)
         {
-            if (photonView.IsMine)
+            if (PhotonView.IsMine)
             {
-                photonView.RPC(nameof(PlaceTrap), RpcTarget.Others);
+                PhotonView.RPC(nameof(PlaceTrap), RpcTarget.Others);
             }
             trapChargeCount -= 1;
             rangerAnimationManager.PlaceTrap();

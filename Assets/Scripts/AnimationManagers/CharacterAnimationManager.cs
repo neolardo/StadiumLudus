@@ -23,12 +23,7 @@ public class CharacterAnimationManager : MonoBehaviour
     /// <summary>
     /// Indicates whether the character can be interrupted or not.
     /// </summary>
-    public virtual bool CanBeInterrupted => !IsAttacking && !IsInterrupted;
-
-    /// <summary>
-    /// Indicates whether the character can move or not.
-    /// </summary>
-    public virtual bool CanMove => !IsInterrupted && !IsMovementLocked;
+    public bool CanBeInterrupted { get; protected set; } = true;
 
     /// <summary>
     /// Indicates whether the movement is locked by an animation.
@@ -38,7 +33,7 @@ public class CharacterAnimationManager : MonoBehaviour
     /// <summary>
     /// Indicates whether the character can deal damage currntly or not.
     /// </summary>
-    public bool CanDealDamage {get; protected set; }
+    public bool CanDealDamage { get; protected set; }
 
     /// <summary>
     /// Indicates whether the character is currently interruped or not.
@@ -80,7 +75,7 @@ public class CharacterAnimationManager : MonoBehaviour
 
     #region Animator Constants
 
-    protected const string AnimatorIsMoving= "IsMoving";
+    protected const string AnimatorIsMoving = "IsMoving";
     protected const string AnimatorStartGuard = "StartGuard";
     protected const string AnimatorEndGuard = "EndGuard";
     protected const string AnimatorAttack = "Attack";
@@ -178,7 +173,7 @@ public class CharacterAnimationManager : MonoBehaviour
     public void Attack()
     {
         IsAttacking = true;
-        animator.SetTrigger($"{AnimatorAttack}{Random.Range(1, attackAnimationCount+1)}");
+        animator.SetTrigger($"{AnimatorAttack}{Random.Range(1, attackAnimationCount + 1)}");
     }
 
     public void OnAttackCanDealDamage()
@@ -239,7 +234,7 @@ public class CharacterAnimationManager : MonoBehaviour
         {
             animator.SetTrigger(direction == HitDirection.Back ? AnimatorGuardImpactBack : AnimatorGuardImpactFront);
         }
-        else 
+        else
         {
             switch (direction)
             {
@@ -256,12 +251,31 @@ public class CharacterAnimationManager : MonoBehaviour
                     Debug.LogWarning($"Invalid {nameof(HitDirection)} received when trying to trigger impact animation.");
                     break;
             }
+            IsGuarding = false;
         }
+        IsAttacking = false;
+        IsUsingSkill = false;
+        IsInteracting = false;
+        CanDealDamage = false;
+        IsJumping = false;
     }
 
     public void OnImpactFinished()
     {
         IsInterrupted = false;
+    }
+
+    #endregion
+
+    #region Interrupt
+
+    public void OnCanBeInterrupted()
+    {
+        CanBeInterrupted = true;
+    }
+    public void OnCannotBeInterrupted()
+    {
+        CanBeInterrupted = false;
     }
 
     #endregion

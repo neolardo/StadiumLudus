@@ -106,9 +106,9 @@ public class MaleRangerCharacter : RangerCharacter
     [PunRPC]
     public void FireBolt(Vector3 attackTarget)
     {
-        if (photonView.IsMine)
+        if (PhotonView.IsMine)
         {
-            photonView.RPC(nameof(FireBolt), RpcTarget.Others, attackTarget);
+            PhotonView.RPC(nameof(FireBolt), RpcTarget.Others, attackTarget);
         }
         base.OnAttack(attackTarget);
         crossbow.Attack();
@@ -118,9 +118,9 @@ public class MaleRangerCharacter : RangerCharacter
     [PunRPC]
     public void Reload()
     {
-        if (photonView.IsMine)
+        if (PhotonView.IsMine)
         {
-            photonView.RPC(nameof(Reload), RpcTarget.Others);
+            PhotonView.RPC(nameof(Reload), RpcTarget.Others);
         }
         maleRangerAnimationManager.Reload();
         crossbow.Reload();
