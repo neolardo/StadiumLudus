@@ -33,7 +33,9 @@ public enum SFX
     // menu
     MenuButtonHover = 50,
     MenuProceed = 51,
-    MenuClick = 52,
+    MenuBack = 52,
+    MenuButtonClick = 53,
+    MenuButtonClickAlt = 54,
 
     // skills
     Smoke = 60,

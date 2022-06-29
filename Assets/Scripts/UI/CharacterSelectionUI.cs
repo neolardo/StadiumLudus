@@ -91,6 +91,7 @@ public class CharacterSelectionUI : MonoBehaviour
 
     public void OnFigthingStyleClicked()
     {
+        AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.MenuButtonClickAlt);
         currentFightingStyle = currentFightingStyle == CharacterFightingStyle.Light ? CharacterFightingStyle.Heavy : CharacterFightingStyle.Light;
         fightingStyleValueText.text = currentFightingStyle.ToString();
         RefreshCharacterGameObject();
@@ -98,6 +99,7 @@ public class CharacterSelectionUI : MonoBehaviour
 
     public void OnClassClicked()
     {
+        AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.MenuButtonClickAlt);
         currentClass = currentClass == CharacterClass.Ranger ? CharacterClass.Barbarian : CharacterClass.Ranger;
         classValueText.text = currentClass.ToString();
         RefreshCharacterGameObject();
@@ -133,7 +135,7 @@ public class CharacterSelectionUI : MonoBehaviour
 
     public void OnButtonClicked()
     {
-        AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.MenuClick);
+        AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.MenuButtonClick);
     }
 
     public void OnButtonHovered()

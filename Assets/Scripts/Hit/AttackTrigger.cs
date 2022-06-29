@@ -63,10 +63,9 @@ public class AttackTrigger : MonoBehaviour
             }
         }
     }
-
+    private Character character;
     private new Collider collider;
     private bool IsColliderCapsule;
-    private PhotonView photonView;
 
     #endregion
 
@@ -78,9 +77,9 @@ public class AttackTrigger : MonoBehaviour
         {
             Debug.LogWarning("An attack trigger's character field is null.");
         }
+        character = characterTransform.GetComponent<Character>();
         collider = GetComponent<Collider>();
         IsColliderCapsule = collider is CapsuleCollider;
-        photonView = GetComponent<PhotonView>();
     }
 
     private HitDirection CalculateHitDirection(Vector3 otherForward)
@@ -153,7 +152,7 @@ public class AttackTrigger : MonoBehaviour
 
     private void DealDamage(Collider other)
     {
-        if (photonView.IsMine)
+        if (character.PhotonView.IsMine)
         {
             var hitBox = other.GetComponent<HitBox>();
             if (!DamagedCharacters.Contains(hitBox.character))

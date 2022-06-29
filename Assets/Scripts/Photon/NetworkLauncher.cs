@@ -14,6 +14,7 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
     #region Properties and Fields
 
     public static NetworkLauncher Instance { get; private set; }
+    public MainMenuUI mainMenuUI;
     public RoomsUI roomsUI;
     private List<RoomInfo> networkRooms;
     private bool isPlayerTheCreatorOfTheRoom = false;
@@ -58,9 +59,24 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinLobby();
     }
 
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        switch (cause)
+        {
+            case DisconnectCause.MaxCcuReached:
+                mainMenuUI.SetLoadingText("Servers are full.\nPlease try again later.");
+                break;
+            default:
+                mainMenuUI.SetLoadingText(MainMenuUI.NetworkErrorMessage);
+                break;
+        }
+        mainMenuUI.OnConnectionFailed();
+    }
+
     public override void OnJoinedLobby()
     {
         Debug.Log("Joined lobby.");
+        mainMenuUI.OnLoaded();
     }
 
     public override void OnLeftLobby()
@@ -72,20 +88,6 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
             PhotonNetwork.JoinLobby();
         }
     }
-
-    public void TryRejoinLobby()
-    {
-        if (!PhotonNetwork.InRoom && PhotonNetwork.InLobby)
-        {
-            shouldRejoinLobby = true;
-            PhotonNetwork.LeaveLobby();
-        }
-        else if(!PhotonNetwork.InRoom && !PhotonNetwork.InLobby)
-        { 
-            PhotonNetwork.JoinLobby();
-        }
-    }
-
 
     #endregion
 
@@ -162,7 +164,7 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
             isPlayerTheCreatorOfTheRoom = false;
             SetRoomPassword();
             Debug.Log($"Created and joined room: {PhotonNetwork.CurrentRoom.Name}, password:{PhotonNetwork.CurrentRoom.CustomProperties[Globals.RoomPasswordCustomPropertyKey]}  username: {PhotonNetwork.NickName}");
-            roomsUI.OnSuccesfullyJoinedRoom();
+            roomsUI.OnSuccessfullyJoinedRoom();
         }
         else
         {
@@ -179,7 +181,7 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
             else
             {
                 Debug.Log($"Joined room: {PhotonNetwork.CurrentRoom.Name}, password:{PhotonNetwork.CurrentRoom.CustomProperties[Globals.RoomPasswordCustomPropertyKey]},  username: {PhotonNetwork.NickName}");
-                roomsUI.OnSuccesfullyJoinedRoom();
+                roomsUI.OnSuccessfullyJoinedRoom();
             }
             tempRoomPassword = "";
         }

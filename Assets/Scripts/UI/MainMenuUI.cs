@@ -1,4 +1,6 @@
+using Photon.Pun;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -14,10 +16,18 @@ public class MainMenuUI : MonoBehaviour
     public RectTransform mainMenuPageRectTransform;
     public RectTransform settingsPageRectTransform;
     public RectTransform roomsPageRectTransform;
+    public CanvasGroup titleCanvasGroup;
+    public TextMeshProUGUI loadingText;
+    public CanvasGroup buttonContainerCanvasGroup;
+    public CanvasGroup exitButtonCanvasGroup;
     private MainMenuPage currentPage;
 
     public const float slideDuration = 0.35f;
+    private const float fadeDuration = 0.8f;
     private bool IsNavigating { get; set; }
+    private bool IsFading { get; set; }
+
+    public const  string NetworkErrorMessage = "Network error.\nPlease check your internet connection and try again.";
 
 
     #endregion
@@ -26,8 +36,127 @@ public class MainMenuUI : MonoBehaviour
 
     private void Start()
     {
+        NetworkLauncher.Instance.mainMenuUI = this;
         currentPage = MainMenuPage.MainMenu;
+        if (PhotonNetwork.InLobby)
+        {
+            InitializeAsLoaded();
+        }
+        else if (PhotonNetwork.NetworkClientState == Photon.Realtime.ClientState.Disconnected)
+        {
+            SetLoadingText(NetworkErrorMessage);
+            StartCoroutine(FadeInTitleAndLoadingText());
+            StartCoroutine(FadeInExitButton());
+        }
+        else 
+        {
+            StartCoroutine(FadeInTitleAndLoadingText());
+        }
     }
+
+    #region Loading
+
+    private void InitializeAsLoaded()
+    {
+        titleCanvasGroup.alpha = 1;
+        var loadingCanvasGroup = loadingText.GetComponent<CanvasGroup>();
+        loadingCanvasGroup.alpha = 0;
+        loadingText.gameObject.SetActive(false);
+        buttonContainerCanvasGroup.alpha = 1;
+    }
+
+    private IEnumerator FadeInTitleAndLoadingText()
+    {
+        yield return new WaitUntil(() => !IsFading);
+        IsFading = true;
+        float elapsedTime = 0;
+        while (elapsedTime < fadeDuration)
+        {
+            titleCanvasGroup.alpha = Mathf.Lerp(0, 1, elapsedTime / fadeDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        titleCanvasGroup.alpha = 1;
+        elapsedTime = 0;
+        var loadingCanvasGroup = loadingText.GetComponent<CanvasGroup>();
+        while (elapsedTime < fadeDuration)
+        {
+            loadingCanvasGroup.alpha = Mathf.Lerp(0, 1, elapsedTime / fadeDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        loadingCanvasGroup.alpha = 1;
+        IsFading = false;
+    }
+
+    public void SetLoadingText(string text)
+    {
+        loadingText.text = text;
+    }
+
+    public void OnLoaded()
+    {
+        StartCoroutine(FadeOutLoadingTextAndFadeInButtons());  
+    }
+
+    public void OnConnectionFailed()
+    {
+        var loadingCanvasGroup = loadingText.GetComponent<CanvasGroup>();
+        loadingCanvasGroup.alpha = 1;
+        loadingCanvasGroup.gameObject.SetActive(true);
+        buttonContainerCanvasGroup.alpha = 0;
+        if (currentPage != MainMenuPage.MainMenu)
+        {
+            StartCoroutine(NavigateTo(MainMenuPage.MainMenu));
+        }
+        StartCoroutine(FadeInExitButton());
+        Debug.Log("Disconnected.");
+    }
+
+    private IEnumerator FadeInExitButton()
+    {
+        yield return new WaitUntil(() => !IsFading);
+        IsFading = true;
+        exitButtonCanvasGroup.gameObject.SetActive(true);
+        float elapsedTime = 0;
+        while (elapsedTime < fadeDuration)
+        {
+            exitButtonCanvasGroup.alpha = Mathf.Lerp(0, 1, elapsedTime / fadeDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        exitButtonCanvasGroup.alpha = 1;
+        IsFading = false;
+    }
+
+    private IEnumerator FadeOutLoadingTextAndFadeInButtons()
+    {
+        yield return new WaitUntil(() => !IsFading);
+        IsFading = true;
+        float elapsedTime = 0;
+        var loadingCanvasGroup = loadingText.GetComponent<CanvasGroup>();
+        while (elapsedTime < fadeDuration)
+        {
+            loadingCanvasGroup.alpha = Mathf.Lerp(1, 0, elapsedTime / fadeDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        loadingCanvasGroup.alpha = 0;
+        loadingText.gameObject.SetActive(false);
+        elapsedTime = 0;
+        while (elapsedTime < fadeDuration)
+        {
+            buttonContainerCanvasGroup.alpha = Mathf.Lerp(0, 1, elapsedTime / fadeDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        buttonContainerCanvasGroup.alpha = 1;
+        IsFading = false;
+    }
+
+    #endregion
+
+    #region Button Sounds
 
     public void OnMenuButtonHover()
     {
@@ -36,14 +165,27 @@ public class MainMenuUI : MonoBehaviour
 
     public void OnMenuButtonClick()
     {
-        AudioManager.Instance.PlayOneShotSFX(menuAudioSource, SFX.MenuClick);
+        AudioManager.Instance.PlayOneShotSFX(menuAudioSource, SFX.MenuButtonClick);
     }
+    public void OnButtonClickAlt()
+    {
+        AudioManager.Instance.PlayOneShotSFX(menuAudioSource, SFX.MenuButtonClick);
+    }
+
+    public void OnBackButtonClick()
+    {
+        AudioManager.Instance.PlayOneShotSFX(menuAudioSource, SFX.MenuBack);
+    }
+
+    #endregion
+
+
+    #region Navigation
 
     public void NavigateToMainMenuPage()
     {
         StartCoroutine(NavigateTo(MainMenuPage.MainMenu));
     }
-
 
     public void NavigateToRoomsPage()
     {
@@ -87,9 +229,9 @@ public class MainMenuUI : MonoBehaviour
     private IEnumerator NavigateTo(MainMenuPage targetPage)
     {
         yield return new WaitUntil(() => !IsNavigating);
-        AudioManager.Instance.PlayOneShotSFX(menuAudioSource, SFX.MenuProceed);
         if(targetPage != currentPage)
         {
+            AudioManager.Instance.PlayOneShotSFX(menuAudioSource, SFX.MenuProceed);
             IsNavigating = true;
             var currentPageRect = RectTransformOf(currentPage); 
             var targetPageRect = RectTransformOf(targetPage);
@@ -127,7 +269,9 @@ public class MainMenuUI : MonoBehaviour
             }
             IsNavigating = false;
         }
-    }     
+    }
+
+    #endregion
 
     #endregion
 }

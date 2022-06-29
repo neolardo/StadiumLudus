@@ -1624,6 +1624,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 946774136, guid: 51b48d3849ba0ad4aaa4b0fe046d4cec, type: 3}
+      propertyPath: sceneViewId
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 1508549705930642384, guid: 51b48d3849ba0ad4aaa4b0fe046d4cec, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -1675,6 +1679,10 @@ PrefabInstance:
     - target: {fileID: 1508549705953906672, guid: 51b48d3849ba0ad4aaa4b0fe046d4cec, type: 3}
       propertyPath: sceneViewId
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580234884663054056, guid: 51b48d3849ba0ad4aaa4b0fe046d4cec, type: 3}
+      propertyPath: sceneViewId
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 8227419231785594255, guid: 51b48d3849ba0ad4aaa4b0fe046d4cec, type: 3}
       propertyPath: audioSource
@@ -2167,6 +2175,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1196167234}
     m_Modifications:
+    - target: {fileID: 627625849542911108, guid: dccc7febbf42dab44b2273710cd6b86d, type: 3}
+      propertyPath: sceneViewId
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1965843335305261353, guid: dccc7febbf42dab44b2273710cd6b86d, type: 3}
+      propertyPath: sceneViewId
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 3436836726040681810, guid: dccc7febbf42dab44b2273710cd6b86d, type: 3}
       propertyPath: m_Name
       value: Statue
@@ -2219,6 +2235,14 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 3436836725991958059}
+    - target: {fileID: 5358047535861060521, guid: dccc7febbf42dab44b2273710cd6b86d, type: 3}
+      propertyPath: sceneViewId
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 6961916370860849179, guid: dccc7febbf42dab44b2273710cd6b86d, type: 3}
+      propertyPath: sceneViewId
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dccc7febbf42dab44b2273710cd6b86d, type: 3}
 --- !u!1 &3436836725991958058 stripped
@@ -2825,6 +2849,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1196167234}
     m_Modifications:
+    - target: {fileID: 1994776541720453360, guid: f3e5b8f2235e5844493fe235b59e58bb, type: 3}
+      propertyPath: sceneViewId
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 7607558169003297258, guid: f3e5b8f2235e5844493fe235b59e58bb, type: 3}
       propertyPath: m_RootOrder
       value: 9
@@ -3142,6 +3170,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1339614407, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
+      propertyPath: sceneViewId
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1339614408, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
+      propertyPath: sceneViewId
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 1360269922, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
       propertyPath: gameRoundManager
       value: 
@@ -3149,6 +3185,10 @@ PrefabInstance:
     - target: {fileID: 1589707957, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
       propertyPath: sceneViewId
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3071503802256885647, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
+      propertyPath: sceneViewId
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8882034873407279612, guid: 66e5e7564291df045a7493cbd1773901, type: 3}
       propertyPath: m_Name

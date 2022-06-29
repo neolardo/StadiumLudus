@@ -94,18 +94,6 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2213584689089296035}
         m_TargetAssemblyTypeName: CharacterSelectionUI, Assembly-CSharp
-        m_MethodName: OnButtonClicked
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2213584689089296035}
-        m_TargetAssemblyTypeName: CharacterSelectionUI, Assembly-CSharp
         m_MethodName: OnConfirmClicked
         m_Mode: 1
         m_Arguments:
@@ -427,6 +415,7 @@ GameObject:
   - component: {fileID: 6579633893330813558}
   - component: {fileID: 5488996887914596457}
   - component: {fileID: 5352006125245896506}
+  - component: {fileID: 4050379116235336278}
   m_Layer: 3
   m_Name: LeftButton
   m_TagString: Untagged
@@ -518,18 +507,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 2213584689089296035}
-        m_TargetAssemblyTypeName: CharacterSelectionUI, Assembly-CSharp
-        m_MethodName: OnButtonClicked
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &5352006125245896506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -557,6 +534,35 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!114 &4050379116235336278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 282764696233225560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2213584689089296035}
+          m_TargetAssemblyTypeName: CharacterSelectionUI, Assembly-CSharp
+          m_MethodName: OnButtonHovered
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &2213584687630786523
 GameObject:
   m_ObjectHideFlags: 0
@@ -1008,7 +1014,7 @@ RectTransform:
   m_Father: {fileID: 2213584688776406924}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.4, y: 0.1}
+  m_AnchorMin: {x: 0.45, y: 0.1}
   m_AnchorMax: {x: 1, y: 0.8}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -1878,6 +1884,7 @@ GameObject:
   - component: {fileID: 27854568475553677}
   - component: {fileID: 1418911345349746341}
   - component: {fileID: 4123486815690555868}
+  - component: {fileID: 2213584688050494631}
   m_Layer: 3
   m_Name: LeftButton
   m_TagString: Untagged
@@ -1969,18 +1976,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 2213584689089296035}
-        m_TargetAssemblyTypeName: CharacterSelectionUI, Assembly-CSharp
-        m_MethodName: OnButtonClicked
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &4123486815690555868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2008,6 +2003,35 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!114 &2213584688050494631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3303457764204070972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2213584689089296035}
+          m_TargetAssemblyTypeName: CharacterSelectionUI, Assembly-CSharp
+          m_MethodName: OnButtonHovered
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &4296420088475833399
 GameObject:
   m_ObjectHideFlags: 0
@@ -2196,6 +2220,7 @@ GameObject:
   - component: {fileID: 2770168727377309735}
   - component: {fileID: 5382222843808361858}
   - component: {fileID: 2991964130198184921}
+  - component: {fileID: 3754626665219382494}
   m_Layer: 3
   m_Name: RightButton
   m_TagString: Untagged
@@ -2287,18 +2312,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 2213584689089296035}
-        m_TargetAssemblyTypeName: CharacterSelectionUI, Assembly-CSharp
-        m_MethodName: OnButtonClicked
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &2991964130198184921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2326,6 +2339,35 @@ MonoBehaviour:
     y: 0
     width: -1
     height: 1
+--- !u!114 &3754626665219382494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6162114313639402987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2213584689089296035}
+          m_TargetAssemblyTypeName: CharacterSelectionUI, Assembly-CSharp
+          m_MethodName: OnButtonHovered
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &6744540481165948045
 GameObject:
   m_ObjectHideFlags: 0
@@ -2473,6 +2515,7 @@ GameObject:
   - component: {fileID: 3969382277365547474}
   - component: {fileID: 5965157474425401239}
   - component: {fileID: 4851771089364888048}
+  - component: {fileID: 2213584688050494630}
   m_Layer: 3
   m_Name: RightButton
   m_TagString: Untagged
@@ -2564,18 +2607,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 2213584689089296035}
-        m_TargetAssemblyTypeName: CharacterSelectionUI, Assembly-CSharp
-        m_MethodName: OnButtonClicked
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &4851771089364888048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2603,6 +2634,35 @@ MonoBehaviour:
     y: 0
     width: -1
     height: 1
+--- !u!114 &2213584688050494630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7558167144552526962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2213584689089296035}
+          m_TargetAssemblyTypeName: CharacterSelectionUI, Assembly-CSharp
+          m_MethodName: OnButtonHovered
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &8995405023923271017
 GameObject:
   m_ObjectHideFlags: 0

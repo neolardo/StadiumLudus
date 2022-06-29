@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Linq;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 /// <summary>
 /// Manages the rooms UI screen.
@@ -21,6 +22,8 @@ public class RoomsUI : MonoBehaviour
     public Button joinRoomButton;
     public GameObject noRoomsText;
     public GameObject loadingPopUp;
+    public TextMeshProUGUI infoText;
+    public CanvasGroup infoCanvasGroup;
 
     private List<RoomInfo> localRooms;
     private List<RoomButton> roomButtons;
@@ -55,13 +58,18 @@ public class RoomsUI : MonoBehaviour
         }
     }
 
+    private const float infoFadeDuration = 0.5f;
+    private const float infoShowDuration = 2.2f;
+    private bool IsInfoBeingAnimated { get; set; }
+    private bool RequestInfoRefresh { get; set; }
+
     #endregion
 
     #region Methods
 
     #region Init
 
-    private void Awake()
+    private void Start()
     {
         localRooms = new List<RoomInfo>();
         roomButtons = new List<RoomButton>();
@@ -183,7 +191,7 @@ public class RoomsUI : MonoBehaviour
         }
     }
 
-    public void OnSuccesfullyJoinedRoom()
+    public void OnSuccessfullyJoinedRoom()
     {
         ShowLoadingPopUp();
         NetworkLauncher.Instance.roomsUI = null; 
@@ -196,23 +204,70 @@ public class RoomsUI : MonoBehaviour
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(Globals.CharacterSelectionScene, LoadSceneMode.Single);
     }
 
+    #region Info
+
     public void OnIncorrectUsername()
     {
-        Debug.Log("Incorrect username.");   
+        ShowHideInfoMessage("Username is invalid or already exists in the room.");
     }
     public void OnIncorrectRoomName()
     {
-        Debug.Log("Incorrect room name.");
+        ShowHideInfoMessage("Room name is invalid or a room already exists with this name.");
     }
     public void OnIncorrectRoomPassword()
     {
-        Debug.Log("Incorrect room password.");
+        ShowHideInfoMessage("Incorrect room password.");
     }
+    private void ShowHideInfoMessage(string message)
+    {
+        infoText.text = message;
+        StartCoroutine(FadeInAndOutInfoMessage());
+    }
+
+    private IEnumerator FadeInAndOutInfoMessage()
+    {
+        if (IsInfoBeingAnimated)
+        {
+            RequestInfoRefresh = true;
+        }
+        yield return new WaitUntil(() => !IsInfoBeingAnimated);
+        IsInfoBeingAnimated = true;
+        infoCanvasGroup.gameObject.SetActive(true);
+        while (infoCanvasGroup.alpha < 1 && !RequestInfoRefresh)
+        {
+            infoCanvasGroup.alpha += Time.deltaTime / infoFadeDuration;
+            yield return null;
+        }
+        if (!RequestInfoRefresh)
+        {
+            infoCanvasGroup.alpha = 1;
+        }
+        float elapsedSeconds = 0;
+        while (elapsedSeconds < infoShowDuration && !RequestInfoRefresh)
+        {
+            elapsedSeconds += Time.deltaTime;
+            yield return null;
+        }
+        while (infoCanvasGroup.alpha > 0 && !RequestInfoRefresh)
+        {
+            infoCanvasGroup.alpha -= Time.deltaTime / infoFadeDuration;
+            yield return null;
+        }
+        if (!RequestInfoRefresh)
+        {
+            infoCanvasGroup.alpha = 0;
+            infoCanvasGroup.gameObject.SetActive(true);
+        }
+        RequestInfoRefresh = false;
+        IsInfoBeingAnimated = false;
+    }
+
     public void OnNetworkError(string errorMessage)
     {
         HideLoadingPopUp();
-        //todo network error types?
     }
+
+    #endregion
 
     #endregion
 
