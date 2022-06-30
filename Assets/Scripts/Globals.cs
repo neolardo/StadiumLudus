@@ -1,3 +1,4 @@
+using ExitGames.Client.Photon;
 using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
@@ -46,6 +47,7 @@ public static class Globals
     public const string PlayerIsCharacterConfirmedKey = "IsCharacterConfirmed";
     public const string PlayerIsAliveKey = "IsAlive";
     public const string PlayerIsInitializedKey = "IsInitialized";
+    public const string PlayerIsRematchRequestedKey = "IsRematchRequested";
 
     #endregion
 
@@ -83,6 +85,61 @@ public static class Globals
         }
         return resultList;
     }
+
+    #region Hashtable
+
+    public static Hashtable SetHash(Hashtable hashtable, string key, string value)
+    {
+        if (hashtable == null)
+        {
+            hashtable = new Hashtable();
+        }
+        if (hashtable.ContainsKey(key))
+        {
+            hashtable[key] = value;
+        }
+        else
+        {
+            hashtable.Add(key, value);
+        }
+        return hashtable;
+    }
+
+    public static Hashtable SetHash(Hashtable hashtable, string key, int value)
+    {
+        if (hashtable == null)
+        {
+            hashtable = new Hashtable();
+        }
+        if (hashtable.ContainsKey(key))
+        {
+            hashtable[key] = value;
+        }
+        else
+        {
+            hashtable.Add(key, value);
+        }
+        return hashtable;
+    }
+
+    public static Hashtable SetHash(Hashtable hashtable, string key, bool value)
+    {
+        if (hashtable == null)
+        {
+            hashtable = new Hashtable();
+        }
+        if (hashtable.ContainsKey(key))
+        {
+            hashtable[key] = value;
+        }
+        else
+        {
+            hashtable.Add(key, value);
+        }
+        return hashtable;
+    }
+
+    #endregion
 
     #endregion
 }

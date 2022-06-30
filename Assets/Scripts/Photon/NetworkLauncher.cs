@@ -14,19 +14,21 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
     #region Properties and Fields
 
     public static NetworkLauncher Instance { get; private set; }
-    public MainMenuUI mainMenuUI;
-    public RoomsUI roomsUI;
+    public bool IsDisconnected { get; private set; }
     private List<RoomInfo> networkRooms;
+    public RoomsUI roomsUI;
     private bool isPlayerTheCreatorOfTheRoom = false;
     private string tempRoomPassword;
-    private bool shouldRejoinLobby = false;
 
     #endregion
 
     #region Events
 
+    public event Action Connected;
+    public event Action<string> Disconnected;
     public event Action<Player> PlayerEnteredRoom;
     public event Action<Player> PlayerLeftRoom;
+    public event Action StartingGame;
 
     #endregion
 
@@ -61,32 +63,24 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        switch (cause)
+        string message = cause switch
         {
-            case DisconnectCause.MaxCcuReached:
-                mainMenuUI.SetLoadingText("Servers are full.\nPlease try again later.");
-                break;
-            default:
-                mainMenuUI.SetLoadingText(MainMenuUI.NetworkErrorMessage);
-                break;
-        }
-        mainMenuUI.OnConnectionFailed();
+            DisconnectCause.MaxCcuReached => "Servers are full.\nPlease try again later.",
+            _ => MainMenuUI.NetworkErrorMessage,
+        };
+        IsDisconnected = true;
+        Disconnected?.Invoke(message);
     }
 
     public override void OnJoinedLobby()
     {
         Debug.Log("Joined lobby.");
-        mainMenuUI.OnLoaded();
+        Connected?.Invoke();
     }
 
     public override void OnLeftLobby()
     {
         Debug.Log("Left lobby.");
-        if (shouldRejoinLobby)
-        {
-            shouldRejoinLobby = false;
-            PhotonNetwork.JoinLobby();
-        }
     }
 
     #endregion
@@ -122,7 +116,6 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
         Debug.LogError(message);
         tempRoomPassword = "";
         isPlayerTheCreatorOfTheRoom = false;
-        roomsUI.OnNetworkError(message);
     }
 
     public bool IsNewRoomNameValid(string roomName)
@@ -132,15 +125,7 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
 
     private void SetRoomPassword()
     {
-        var hashtable = PhotonNetwork.CurrentRoom.CustomProperties == null ? new Hashtable() : PhotonNetwork.CurrentRoom.CustomProperties;
-        if (hashtable.ContainsKey(Globals.RoomPasswordCustomPropertyKey))
-        {
-            hashtable[Globals.RoomPasswordCustomPropertyKey] = tempRoomPassword;
-        }
-        else
-        {
-            hashtable.Add(Globals.RoomPasswordCustomPropertyKey, tempRoomPassword);
-        }
+        var hashtable = Globals.SetHash(PhotonNetwork.CurrentRoom.CustomProperties, Globals.RoomPasswordCustomPropertyKey, tempRoomPassword);
         PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
         tempRoomPassword = "";
     }
@@ -193,6 +178,7 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
+        UpdatePlayerIsCharacterConfirmedCustomProperty(PhotonNetwork.LocalPlayer, false);
         if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != Globals.MainMenuScene)
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(Globals.MainMenuScene);
@@ -214,7 +200,6 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        UpdatePlayerIsCharacterConfirmedCustomProperty(otherPlayer, false);
         if (PlayerLeftRoom != null)
         {
             PlayerLeftRoom(otherPlayer);
@@ -235,6 +220,7 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
     {
         if (IsEveryPlayerConfirmedTheirCharacter())
         {
+            StartingGame?.Invoke();
             PhotonNetwork.LoadLevel(Globals.GameScene);
             Debug.Log("Loading game...");
             Destroy(gameObject);
@@ -253,39 +239,14 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
 
     private void UpdatePlayerCharacterCustomProperties(Player player, CharacterFightingStyle fs, CharacterClass c)
     {
-        var hashtable = player.CustomProperties == null ? new Hashtable() : player.CustomProperties;
-        // fighting style
-        if (hashtable.ContainsKey(Globals.PlayerFightingStyleCustomPropertyKey))
-        {
-            hashtable[Globals.PlayerFightingStyleCustomPropertyKey] = (int)fs;
-        }
-        else
-        {
-            hashtable.Add(Globals.PlayerFightingStyleCustomPropertyKey, (int)fs);
-        }
-        // class
-        if (hashtable.ContainsKey(Globals.PlayerClassCustomPropertyKey))
-        {
-            hashtable[Globals.PlayerClassCustomPropertyKey] = (int)c;
-        }
-        else
-        {
-            hashtable.Add(Globals.PlayerClassCustomPropertyKey, (int)c);
-        }
+        var hashtable = Globals.SetHash(player.CustomProperties, Globals.PlayerFightingStyleCustomPropertyKey, (int)fs);
+        hashtable = Globals.SetHash(hashtable, Globals.PlayerClassCustomPropertyKey, (int)c);
         player.SetCustomProperties(hashtable);
     }
 
     private void UpdatePlayerIsCharacterConfirmedCustomProperty(Player player, bool isCharacterConfirmed)
     {
-        var hashtable = player.CustomProperties == null ? new Hashtable() : player.CustomProperties;
-        if (hashtable.ContainsKey(Globals.PlayerFightingStyleCustomPropertyKey))
-        {
-            hashtable[Globals.PlayerIsCharacterConfirmedKey] = isCharacterConfirmed;
-        }
-        else
-        {
-            hashtable.Add(Globals.PlayerIsCharacterConfirmedKey, isCharacterConfirmed);
-        }
+        var hashtable = Globals.SetHash(player.CustomProperties, Globals.PlayerIsCharacterConfirmedKey, isCharacterConfirmed);
         player.SetCustomProperties(hashtable);
     }
 

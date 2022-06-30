@@ -1,3 +1,4 @@
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,12 +33,25 @@ public class EndGameUI : MonoBehaviour
         rematchTextGameObject.SetActive(false);
         rematchButton.enabled = false;
         rematchRequestedTextGameObject.SetActive(true);
+        GameRoundManager.Instance.OnLocalPlayerRequestedRematch();
     }
+    public void OnExit()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
+
+    #region Button Sounds
 
     public void OnButtonHover()
     {
         AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.MenuButtonHover);
     }
+    public void OnButtonClick()
+    {
+        AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.MenuButtonClick);
+    }
+
+    #endregion
 
     #endregion
 }

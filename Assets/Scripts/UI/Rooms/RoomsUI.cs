@@ -58,8 +58,9 @@ public class RoomsUI : MonoBehaviour
         }
     }
 
-    private const float infoFadeDuration = 0.5f;
-    private const float infoShowDuration = 2.2f;
+    private const float infoFadeInDuration = 0.3f;
+    private const float infoFadeOutDuration = 0.5f;
+    private const float infoShowDuration = 2.5f;
     private bool IsInfoBeingAnimated { get; set; }
     private bool RequestInfoRefresh { get; set; }
 
@@ -235,7 +236,7 @@ public class RoomsUI : MonoBehaviour
         infoCanvasGroup.gameObject.SetActive(true);
         while (infoCanvasGroup.alpha < 1 && !RequestInfoRefresh)
         {
-            infoCanvasGroup.alpha += Time.deltaTime / infoFadeDuration;
+            infoCanvasGroup.alpha += Time.deltaTime / infoFadeInDuration;
             yield return null;
         }
         if (!RequestInfoRefresh)
@@ -250,7 +251,7 @@ public class RoomsUI : MonoBehaviour
         }
         while (infoCanvasGroup.alpha > 0 && !RequestInfoRefresh)
         {
-            infoCanvasGroup.alpha -= Time.deltaTime / infoFadeDuration;
+            infoCanvasGroup.alpha -= Time.deltaTime / infoFadeOutDuration;
             yield return null;
         }
         if (!RequestInfoRefresh)

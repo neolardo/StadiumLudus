@@ -1,6 +1,5 @@
 using Photon.Pun;
 using Photon.Realtime;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -20,6 +19,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
     private Character localCharacter;
     public bool RoundStarted { get; private set; } = false;
     public bool RoundEnded { get; private set; } = false;
+    public bool RematchStarted { get; private set; } = false;
 
     private const string PhotonPrefabsFolder = "PhotonPrefabs";
     private const string CharactersFolder = "Characters";
@@ -34,13 +34,13 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        if (Instance == null)
+        if (Instance != this)
         {
+            if (Instance != null)
+            {
+                Destroy(Instance);
+            }
             Instance = this;
-        }
-        else if (Instance != this)
-        {
-            Destroy(this);
         }
     }
 
@@ -116,14 +116,16 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
         int spawnIndex = playerNameSpawnIndexDictionary[PhotonNetwork.LocalPlayer.NickName];
         var characterPrefab = PhotonNetwork.Instantiate(GetCharacterPrefabNameOfPlayer(PhotonNetwork.LocalPlayer), spawnPoints[spawnIndex].position, spawnPoints[spawnIndex].rotation);
         localCharacter = characterPrefab.GetComponent<Character>();
-        characterPrefab.AddComponent<AudioListener>();
+        cameraController.gameObject.AddComponent<AudioListener>();
         var characterController = characterPrefab.AddComponent<CharacterController>();
         localCharacter.InitializeAsLocalCharacter(characterUI);
         characterUI.Initialize(localCharacter);
         characterController.Initialize(characterUI);
         cameraController.Initialize(localCharacter);
+        SetPlayerIsCharacterConfirmed(PhotonNetwork.LocalPlayer, false);
         SetPlayerIsInitialized(PhotonNetwork.LocalPlayer, true);
         SetPlayerIsAlive(PhotonNetwork.LocalPlayer, true);
+        SetPlayerIsRematchRequested(PhotonNetwork.LocalPlayer, false);
         Debug.Log($"The character of {PhotonNetwork.LocalPlayer.NickName} has been initialized.");
     }
 
@@ -133,10 +135,20 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
+        SetPlayerIsCharacterConfirmed(PhotonNetwork.LocalPlayer, false);
         SetPlayerIsInitialized(PhotonNetwork.LocalPlayer, false);
         SetPlayerIsAlive(PhotonNetwork.LocalPlayer, false);
+        SetPlayerIsRematchRequested(PhotonNetwork.LocalPlayer, false);
         UnityEngine.SceneManagement.SceneManager.LoadScene(Globals.MainMenuScene);
         Debug.Log("Left room.");
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        if (PhotonNetwork.PlayerList.Length == 1)
+        {
+            PhotonNetwork.LeaveRoom();
+        }
     }
 
     #endregion
@@ -153,23 +165,25 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
         {
             EndRound();
         }
+        else if (CanRematch())
+        {
+            Rematch();
+        }
     }
 
     #endregion
 
     #region Round Start
 
+    private void SetPlayerIsCharacterConfirmed(Player player, bool value)
+    {
+        var hashtable = Globals.SetHash(player.CustomProperties, Globals.PlayerIsCharacterConfirmedKey, value);
+        player.SetCustomProperties(hashtable);
+    }
+
     private void SetPlayerIsInitialized(Player player, bool value)
     {
-        var hashtable = player.CustomProperties == null ? new ExitGames.Client.Photon.Hashtable() : player.CustomProperties;
-        if (hashtable.ContainsKey(Globals.PlayerIsInitializedKey))
-        {
-            hashtable[Globals.PlayerIsInitializedKey] = value;
-        }
-        else
-        {
-            hashtable.Add(Globals.PlayerIsInitializedKey, value);
-        }
+        var hashtable = Globals.SetHash(player.CustomProperties, Globals.PlayerIsInitializedKey, value);
         player.SetCustomProperties(hashtable);
     }
 
@@ -184,6 +198,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
             var playerList = PhotonNetwork.PlayerList;
             int aliveCount = 0;
             int initializedCount = 0;
+            int rematchNotRequestedCount = 0;
             foreach (var p in playerList)
             {
                 if (p.CustomProperties.ContainsKey(Globals.PlayerIsAliveKey) && (bool)p.CustomProperties[Globals.PlayerIsAliveKey])
@@ -194,8 +209,12 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
                 {
                     initializedCount++;
                 }
+                if (!p.CustomProperties.ContainsKey(Globals.PlayerIsRematchRequestedKey) || (p.CustomProperties.ContainsKey(Globals.PlayerIsRematchRequestedKey) && !(bool)p.CustomProperties[Globals.PlayerIsRematchRequestedKey]))
+                {
+                    rematchNotRequestedCount++;
+                }
             }
-            return (aliveCount == initializedCount) && (initializedCount == playerList.Length);
+            return (aliveCount == initializedCount) && (aliveCount == rematchNotRequestedCount) && (aliveCount == playerList.Length);
         }
     }
 
@@ -213,15 +232,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
 
     private void SetPlayerIsAlive(Player player, bool value)
     {
-        var hashtable = player.CustomProperties == null ? new ExitGames.Client.Photon.Hashtable() : player.CustomProperties;
-        if (hashtable.ContainsKey(Globals.PlayerIsAliveKey))
-        {
-            hashtable[Globals.PlayerIsAliveKey] = value;
-        }
-        else
-        {
-            hashtable.Add(Globals.PlayerIsAliveKey, value);
-        }
+        var hashtable = Globals.SetHash(player.CustomProperties, Globals.PlayerIsAliveKey, value);
         player.SetCustomProperties(hashtable);
     }
 
@@ -259,6 +270,50 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
             localCharacter.OnWin();
         }
         RoundEnded = true;
+    }
+
+    #endregion
+
+    #region Rematch
+
+    public void OnLocalPlayerRequestedRematch()
+    {
+        SetPlayerIsRematchRequested(PhotonNetwork.LocalPlayer, true);
+    }
+
+    private void SetPlayerIsRematchRequested(Player player, bool value)
+    {
+        var hashtable = Globals.SetHash(player.CustomProperties, Globals.PlayerIsRematchRequestedKey, value);
+        player.SetCustomProperties(hashtable);
+    }
+
+    private bool CanRematch()
+    {
+        if (RematchStarted || !RoundEnded)
+        {
+            return false;
+        }
+        else
+        {
+            var playerList = PhotonNetwork.PlayerList;
+            int rematchCount = 0;
+            foreach (var p in playerList)
+            {
+                if (p.CustomProperties.ContainsKey(Globals.PlayerIsRematchRequestedKey) && (bool)p.CustomProperties[Globals.PlayerIsRematchRequestedKey])
+                {
+                    rematchCount++;
+                }
+            }
+            return RoundEnded && playerList.Length > 1 && (rematchCount == playerList.Length);
+        }
+    }
+
+    private void Rematch()
+    {
+        Debug.Log("Starting a rematch...");
+        RematchStarted = true;
+        blackScreenUI.EnableAndFadeIn();
+        PhotonNetwork.LoadLevel(Globals.GameScene);
     }
 
     #endregion

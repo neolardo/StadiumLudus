@@ -18,10 +18,14 @@ public class PauseMenuUI : MonoBehaviour
 
     #region Methods
 
+    #region Resume
+
     public void OnResume()
     {
         characterUI.ShowHidePauseMenu();
     }
+
+    #endregion
 
     #region Navigation
 
@@ -76,9 +80,10 @@ public class PauseMenuUI : MonoBehaviour
 
     #endregion
 
+    #region Exit
+
     public void OnExit()
     {
-        //TODO
         StartCoroutine(LeaveRoomAndLoadMainSceneAfterDelay());
     }
 
@@ -88,11 +93,20 @@ public class PauseMenuUI : MonoBehaviour
         PhotonNetwork.LeaveRoom();
     }
 
+    #endregion
+
+    #region Button Sounds
+
     public void OnButtonHover()
     {
         AudioManager.Instance.PlayOneShotSFX(pauseMenuAudioSource, SFX.MenuButtonHover);
     }
+    public void OnButtonClick()
+    {
+        AudioManager.Instance.PlayOneShotSFX(pauseMenuAudioSource, SFX.MenuButtonClick);
+    }
 
+    #endregion
 
     #endregion
 }

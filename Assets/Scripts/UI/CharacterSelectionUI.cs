@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Manages the UI of the character selection scene.
@@ -29,13 +28,13 @@ public class CharacterSelectionUI : MonoBehaviour
     public TextMeshProUGUI descriptionText;
     private List<TextMeshProUGUI> playerNames;
     public GameObject confirmButton;
-    public GameObject confirmedText;
+    public TextMeshProUGUI confirmedText;
     public GameObject loadingPopUp;
 
-    private const string femaleBarbarianDescription = "Female barbarians use two battleaxes and are able to perform agile combo attacks with them.";
-    private const string maleBarbarianDescription = "Male barbarians wield a two-handed battleaxe to deal decent damage at a mediocre speed.";
-    private const string femaleRangerDescription = "Female rangers wield a shortbow which is easy to use in ranged battle but deals mediocre damage.";
-    private const string maleRangerDescription = "Male rangers wield a crossbow which deals much more damage than shortbows, but requires additional reloading to use.";
+    private const string femaleBarbarianDescription = "Female barbarians militate quickly wielding a pair of axes and are able to perform combo attacks with them.";
+    private const string maleBarbarianDescription = "Male barbarians strike slow but strong with their large battle-axe.";
+    private const string femaleRangerDescription = "Female rangers use a shortbow to quickly damage their enemies from the distance.";
+    private const string maleRangerDescription = "Male rangers fight with a heavy crossbow to deal decent damage but the additional reloading time makes them somewhat delayed.";
 
     #endregion
 
@@ -46,6 +45,7 @@ public class CharacterSelectionUI : MonoBehaviour
         playerNames = new List<TextMeshProUGUI>();
         NetworkLauncher.Instance.PlayerEnteredRoom += OnPlayerEnteredRoom;
         NetworkLauncher.Instance.PlayerLeftRoom += OnPlayerLeftRoom;
+        NetworkLauncher.Instance.StartingGame += OnGameStarting;
         RefreshCharacterGameObject();
         LoadPlayerNames();
     }
@@ -69,7 +69,7 @@ public class CharacterSelectionUI : MonoBehaviour
     private void RemovePlayerName(Player player)
     {
         var playerNameText = playerNames.FirstOrDefault(_ => _.text == player.NickName);
-        if(playerNameText!= null)
+        if (playerNameText != null)
         {
             playerNames.Remove(playerNameText);
             Destroy(playerNameText);
@@ -131,6 +131,15 @@ public class CharacterSelectionUI : MonoBehaviour
 
     #endregion
 
+    #region Starting Game
+
+    private void OnGameStarting()
+    {
+        confirmedText.text = "Loading game...";
+    }
+
+    #endregion
+
     #region Handle Clicks
 
     public void OnButtonClicked()
@@ -158,8 +167,21 @@ public class CharacterSelectionUI : MonoBehaviour
     public void OnConfirmClicked()
     {
         confirmButton.SetActive(false);
-        confirmedText.SetActive(true);
+        confirmedText.gameObject.SetActive(true);
         NetworkLauncher.Instance.OnCharacterConfirmed(PhotonNetwork.LocalPlayer, currentFightingStyle, currentClass);
+    }
+
+    #endregion
+
+    #region Destroy
+
+    private void OnDestroy()
+    {
+        if (NetworkLauncher.Instance != null)
+        {
+            NetworkLauncher.Instance.PlayerEnteredRoom -= OnPlayerEnteredRoom;
+            NetworkLauncher.Instance.PlayerLeftRoom -= OnPlayerLeftRoom;
+        }
     }
 
     #endregion

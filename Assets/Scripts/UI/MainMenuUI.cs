@@ -29,20 +29,20 @@ public class MainMenuUI : MonoBehaviour
 
     public const  string NetworkErrorMessage = "Network error.\nPlease check your internet connection and try again.";
 
-
     #endregion
 
     #region Methods
 
     private void Start()
     {
-        NetworkLauncher.Instance.mainMenuUI = this;
         currentPage = MainMenuPage.MainMenu;
+        NetworkLauncher.Instance.Connected += OnLoaded;
+        NetworkLauncher.Instance.Disconnected += OnConnectionFailed;
         if (PhotonNetwork.InLobby)
         {
             InitializeAsLoaded();
         }
-        else if (PhotonNetwork.NetworkClientState == Photon.Realtime.ClientState.Disconnected)
+        else if (NetworkLauncher.Instance.IsDisconnected)
         {
             SetLoadingText(NetworkErrorMessage);
             StartCoroutine(FadeInTitleAndLoadingText());
@@ -89,7 +89,7 @@ public class MainMenuUI : MonoBehaviour
         IsFading = false;
     }
 
-    public void SetLoadingText(string text)
+    private void SetLoadingText(string text)
     {
         loadingText.text = text;
     }
@@ -99,8 +99,9 @@ public class MainMenuUI : MonoBehaviour
         StartCoroutine(FadeOutLoadingTextAndFadeInButtons());  
     }
 
-    public void OnConnectionFailed()
+    public void OnConnectionFailed(string errorMessage)
     {
+        SetLoadingText(errorMessage);
         var loadingCanvasGroup = loadingText.GetComponent<CanvasGroup>();
         loadingCanvasGroup.alpha = 1;
         loadingCanvasGroup.gameObject.SetActive(true);
@@ -178,7 +179,6 @@ public class MainMenuUI : MonoBehaviour
     }
 
     #endregion
-
 
     #region Navigation
 
@@ -268,6 +268,19 @@ public class MainMenuUI : MonoBehaviour
                 currentPage = targetPage;
             }
             IsNavigating = false;
+        }
+    }
+
+    #endregion
+
+    #region Destroy
+
+    private void OnDestroy()
+    {
+        if (NetworkLauncher.Instance != null)
+        {
+            NetworkLauncher.Instance.Connected -= OnLoaded;
+            NetworkLauncher.Instance.Disconnected -= OnConnectionFailed;
         }
     }
 
