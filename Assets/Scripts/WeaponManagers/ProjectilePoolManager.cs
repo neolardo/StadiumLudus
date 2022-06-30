@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,19 +8,14 @@ public class ProjectilePoolManager : MonoBehaviour
 {
     #region Properties and Fields
 
-    [Tooltip("Indicates how many projectiles should be in the pool.")]
-    [SerializeField]
-    private int numberOfProjectiles;
-
-    [Tooltip("The prefab of a projectile.")]
-    [SerializeField]
-    private GameObject projectilePrefab;
-
     [Tooltip("The transform of the character which fires projectiles.")]
     public Transform characterTransform;
 
     [Tooltip("The transform of the spawn zone with the correct starting position and rotation of the projectile.")]
     public Transform spawnZone;
+
+    [Tooltip("The transform of the projectile container.")]
+    public Transform projectileContainer;
 
     /// <summary>
     /// Indicates the starting force of the projectiles.
@@ -56,21 +50,21 @@ public class ProjectilePoolManager : MonoBehaviour
     {
         inactiveProjectiles = new List<Projectile>();
         activeProjectiles = new List<Projectile>();
-        if (numberOfProjectiles <= 0)
+        if (projectileContainer.childCount == 0)
         {
-            Debug.LogWarning($"The number of projectiles of a {characterTransform.name} is set to a non-positive value.");
+            Debug.LogWarning($"The number of projectiles of a {characterTransform.name} is 0.");
         }
-        CreateProjectiles();
+        InitializeProjectiles();
     }
 
     /// <summary>
     /// Instantiates the <see cref="Projectile"/>s of this pool.
     /// </summary>
-    private void CreateProjectiles()
+    private void InitializeProjectiles()
     {
-        for (int i = 0; i < numberOfProjectiles; i++)
+        for (int i = 0; i < projectileContainer.childCount; i++)
         {
-            var proj = Instantiate(projectilePrefab, transform).GetComponent<Projectile>();
+            var proj = projectileContainer.GetChild(i).GetComponent<Projectile>();
             proj.ProjectilePool = this;
             proj.projectileTrigger.MinimumDamage = MinimumDamage;
             proj.projectileTrigger.MaximumDamage = MaximumDamage;

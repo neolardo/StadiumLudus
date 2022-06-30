@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class BlackScreenUI : MonoBehaviour
 {
     [SerializeField] private RawImage rawImageBackground;
-    [SerializeField] private float fadeSeconds;
+    public float fadeSeconds;
 
     #region Fade In
 

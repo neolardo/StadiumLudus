@@ -11,7 +11,7 @@ public class CircularBuffer<T> :  IEnumerable<T>
     #region Properties and Fields
     protected T[] ArrayBuffer { get; }
     public int Size { get; }
-    public T this[int index] { get => ArrayBuffer[(HeadIndex - index)%Size]; set => ArrayBuffer[(HeadIndex - index) % Size] = value; }
+    public T this[int index] { get => ArrayBuffer[(Size + HeadIndex - index)%Size]; set => ArrayBuffer[(Size + HeadIndex - index) % Size] = value; }
 
     protected int HeadIndex = 0;
 

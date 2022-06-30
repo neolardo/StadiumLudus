@@ -9,14 +9,6 @@ public class TrapPoolManager : MonoBehaviour
 {
     #region Properties and Fields
 
-    [Tooltip("Indicates how many traps should be in the pool.")]
-    [SerializeField]
-    private int numberOfTraps;
-
-    [Tooltip("The prefab of a trap.")]
-    [SerializeField]
-    private GameObject trapPrefab;
-
     [Tooltip("The transform of the character which places traps.")]
     public Transform characterTransform;
 
@@ -53,9 +45,9 @@ public class TrapPoolManager : MonoBehaviour
     {
         inactiveTraps = new List<Trap>();
         activeTraps = new List<Trap>();
-        if (numberOfTraps <= 0)
+        if (transform.childCount == 0)
         {
-            Debug.LogWarning($"The number of traps of a {characterTransform.name} is set to a non-positive value.");
+            Debug.LogWarning($"The number of traps of a {characterTransform.name} is set to 0.");
         }
         CreateTraps();
     }
@@ -65,9 +57,11 @@ public class TrapPoolManager : MonoBehaviour
     /// </summary>
     private void CreateTraps()
     {
-        for (int i = 0; i < numberOfTraps; i++)
+        var t = GetComponent<Transform>();
+        for (int i = 0; i < t.childCount; i++)
         {
-            var trap = Instantiate(trapPrefab, null).GetComponent<Trap>();
+            var trap = t.GetChild(i).GetComponent<Trap>();
+            trap.gameObject.transform.parent = null;
             trap.trapPool = this;
             trap.trapTrigger.MinimumDamage = MinimumDamage;
             trap.trapTrigger.MaximumDamage = MaximumDamage;

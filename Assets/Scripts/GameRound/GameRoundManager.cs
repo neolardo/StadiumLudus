@@ -1,5 +1,6 @@
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -17,12 +18,14 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
     [SerializeField] private CameraController cameraController;
     [SerializeField] private List<Transform> spawnPoints;
     private Character localCharacter;
+    public Dictionary<int, Character> LocalCharacterReferenceDictionary { get; private set; }
     public bool RoundStarted { get; private set; } = false;
     public bool RoundEnded { get; private set; } = false;
     public bool RematchStarted { get; private set; } = false;
 
-    private const string PhotonPrefabsFolder = "PhotonPrefabs";
-    private const string CharactersFolder = "Characters";
+    private const string PhotonPrefabsFolderName = "PhotonPrefabs";
+    private const string CharactersFolderName = "Characters";
+    private const string WeaponsFolderName = "Weapons";
     private const string MaleWarriorPrefabName = "MaleWarrior";
     private const string FemaleWarriorPrefabName = "FemaleWarrior";
     private const string MaleRangerPrefabName = "MaleRanger";
@@ -44,23 +47,18 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
         }
     }
 
-    #region Initialize
+    #region Prefab Name
 
-    public override void OnEnable()
+    public string GetWeaponPrefabName(GameObject weaponPrefab)
     {
-        base.OnEnable();
-        InitializeGameRound();
-    }
-    public override void OnDisable()
-    {
-        base.OnDisable();
+        return Path.Combine(PhotonPrefabsFolderName, WeaponsFolderName, weaponPrefab.name);
     }
 
     private string GetCharacterPrefabNameOfPlayer(Player player)
     {
         var fightingStyle = (CharacterFightingStyle)player.CustomProperties[Globals.PlayerFightingStyleCustomPropertyKey];
         var classs = (CharacterClass)player.CustomProperties[Globals.PlayerClassCustomPropertyKey];
-        var path = Path.Combine(PhotonPrefabsFolder, CharactersFolder);
+        var path = Path.Combine(PhotonPrefabsFolderName, CharactersFolderName);
         if (fightingStyle == CharacterFightingStyle.Heavy && classs == CharacterClass.Barbarian)
         {
             return Path.Combine(path, MaleWarriorPrefabName);
@@ -82,6 +80,20 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
             Debug.LogError("Unable to get character prefab name.");
             return "";
         }
+    }
+
+    #endregion
+
+    #region Initialize
+
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        InitializeGameRound();
+    }
+    public override void OnDisable()
+    {
+        base.OnDisable();
     }
 
     private void InitializeGameRound()
@@ -221,6 +233,12 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
     private void StartRound()
     {
         Debug.Log("Game round started.");
+        LocalCharacterReferenceDictionary = new Dictionary<int, Character>();
+        var characters = FindObjectsOfType<Character>();
+        foreach (var c in characters)
+        {
+            LocalCharacterReferenceDictionary.Add(c.PhotonView.ViewID, c);
+        }
         RoundStarted = true;
         characterUI.SetUIVisiblity(true);
         blackScreenUI.FadeOutAndDisable();
@@ -312,9 +330,16 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("Starting a rematch...");
         RematchStarted = true;
+        StartCoroutine(FadeInBlackScreenAndReloadScene());
+    }
+
+    private IEnumerator FadeInBlackScreenAndReloadScene()
+    {
         blackScreenUI.EnableAndFadeIn();
+        yield return new WaitForSeconds(blackScreenUI.fadeSeconds*2);
         PhotonNetwork.LoadLevel(Globals.GameScene);
     }
+
 
     #endregion
 

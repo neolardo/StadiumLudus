@@ -72,7 +72,7 @@ public class CharacterSelectionUI : MonoBehaviour
         if (playerNameText != null)
         {
             playerNames.Remove(playerNameText);
-            Destroy(playerNameText);
+            Destroy(playerNameText.gameObject);
         }
     }
 

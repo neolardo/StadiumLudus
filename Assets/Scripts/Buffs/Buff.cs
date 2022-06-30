@@ -128,6 +128,8 @@ public class Buff : MonoBehaviour
         {
             Initialize();
         }
+        audioSource.loop = true;
+        AudioManager.Instance.PlaySFX(audioSource, SFX.BuffIdle);
         orbVFX.SetInt(orbVFXSpawnRateName, orbVFXSpawnRateValue);
         StartCoroutine(FadeInOrbLight());
     }
@@ -142,8 +144,6 @@ public class Buff : MonoBehaviour
         orbVFXSizeInitialValue = orbVFX.GetFloat(orbVFXSizeValueName);
         orbVFXAttractionSpeedInitialValue = orbVFX.GetFloat(orbVFXAttractionSpeedName);
         orbVFXSpawnRateValue = orbVFX.GetInt(orbVFXSpawnRateName);
-        audioSource.loop = true;
-        AudioManager.Instance.PlaySFX(audioSource, SFX.BuffIdle);
         hasInitialized = true;
     }
 
@@ -226,7 +226,6 @@ public class Buff : MonoBehaviour
         }
     }
 
-
     public void ForceDeactivate()
     {
         StartCoroutine(ForceDeactivateAfterDelay());
@@ -234,8 +233,11 @@ public class Buff : MonoBehaviour
 
     private  IEnumerator ForceDeactivateAfterDelay()
     {
-        characterEffectVFX.SetInt(characterVFXSpawnRateName, 0);
-        yield return new WaitForSeconds(characterVFXSpawnRateDelay);
+        if (IsActive)
+        {
+            characterEffectVFX.SetInt(characterVFXSpawnRateName, 0);
+            yield return new WaitForSeconds(characterVFXSpawnRateDelay);
+        }
         IsActive = false;
     }
 
@@ -249,8 +251,6 @@ public class Buff : MonoBehaviour
         orbVFX.SetFloat(orbVFXSizeValueName, orbVFXSizeInitialValue);
         orbVFX.SetFloat(orbVFXAttractionSpeedName, orbVFXAttractionSpeedInitialValue);
         target.RemoveBuffs();
-        audioSource.loop = true;
-        AudioManager.Instance.PlaySFX(audioSource, SFX.BuffIdle);
     }
 
     #endregion

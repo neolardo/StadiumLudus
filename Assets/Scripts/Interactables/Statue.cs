@@ -92,7 +92,7 @@ public class Statue : Interactable
         if (IsBuffAvailable)
         {
             IsBuffAvailable = false;
-            var character = PhotonView.Find(characterPhotonViewID).gameObject.GetComponent<Character>();
+            var character = GameRoundManager.Instance.LocalCharacterReferenceDictionary[characterPhotonViewID];
             character.KneelBeforeStatue(transform.position);
             currentBuff.UseOn(character);
             StartCoroutine(WaitUntilCurrentBuffDeactivatedAndSpawnNewOne());

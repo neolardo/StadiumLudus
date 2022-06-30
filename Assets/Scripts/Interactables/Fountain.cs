@@ -104,7 +104,7 @@ public class Fountain :  Interactable
         if (IsFilled)
         {
             IsFilled = false;
-            var character = PhotonView.Find(characterPhotonViewID).gameObject.GetComponent<Character>();
+            var character = GameRoundManager.Instance.LocalCharacterReferenceDictionary[characterPhotonViewID];
             character.DrinkFromFountain(transform.position);
             return true;
         }

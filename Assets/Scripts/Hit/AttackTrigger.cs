@@ -2,10 +2,11 @@ using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(PhotonView))]
 /// <summary>
 /// An attack trigger for any kind object which deals damage.
 /// </summary>
-public class AttackTrigger : MonoBehaviour
+public class AttackTrigger : MonoBehaviourPun
 {
     #region Properties and Fields
 
@@ -26,7 +27,12 @@ public class AttackTrigger : MonoBehaviour
     public float MaximumDamage { get; set; }
 
     /// <summary>
-    /// A list of gameobjects representing the previously damaged character.
+    /// A list of gameobjects representing the previously attacked characters.
+    /// </summary>
+    private List<Character> AttackedCharacters { get; } = new List<Character>();
+
+    /// <summary>
+    /// A list of gameobjects representing the previously damaged characters.
     /// </summary>
     private List<Character> DamagedCharacters { get; } = new List<Character>();
 
@@ -60,6 +66,7 @@ public class AttackTrigger : MonoBehaviour
             {
                 AnyObjectHit = false;
                 DamagedCharacters.Clear();
+                AttackedCharacters.Clear();
             }
         }
     }
@@ -155,13 +162,19 @@ public class AttackTrigger : MonoBehaviour
         if (character.PhotonView.IsMine)
         {
             var hitBox = other.GetComponent<HitBox>();
-            if (!DamagedCharacters.Contains(hitBox.character))
+            if (!AttackedCharacters.Contains(hitBox.character))
             {
                 var info = CalculateColliderInfo(collider);
-                hitBox.character.PhotonView.RPC(TryTakeDamageFunctionName, hitBox.character.PhotonView.Controller, Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(hitBox.character.transform.forward), info.point0, info.point1, info.radius);
-                DamagedCharacters.Add(hitBox.character); // might refactor later
+                hitBox.character.PhotonView.RPC(TryTakeDamageFunctionName, hitBox.character.PhotonView.Controller, Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(hitBox.character.transform.forward), info.point0, info.point1, info.radius, photonView.ViewID);
+                AttackedCharacters.Add(hitBox.character);
             }
         }
+    }
+
+    [PunRPC]
+    public void OnCharacterDamaged(int characterPhotonViewID)
+    {
+        DamagedCharacters.Add(GameRoundManager.Instance.LocalCharacterReferenceDictionary[characterPhotonViewID]);
     }
 
     #endregion

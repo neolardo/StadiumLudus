@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(PhotonView))]
 /// <summary>
 /// Represents a playable character of the game.
 /// </summary>
@@ -274,9 +275,9 @@ public abstract class Character : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
-        if (AllowUpdate)
+        if (IsAlive)
         {
-            if (PhotonView.IsMine)
+            if (AllowUpdate && PhotonView.IsMine)
             {
                 UpdateInteractionCheck();
                 UpdateChase();
@@ -358,7 +359,7 @@ public abstract class Character : MonoBehaviour
             foreach (var t in hitBoxTransforms)
             {
                 var copy = Instantiate(t.GetComponent<Collider>(), hitValidationColliderContainer);
-                copy.gameObject.SetActive(false);
+                copy.gameObject.SetActive(true);
                 Destroy(copy.GetComponent<HitBox>());
                 copy.gameObject.layer = Globals.ValidationLayer;
                 validationColliderTransforms.Add(copy.transform);
@@ -403,13 +404,8 @@ public abstract class Character : MonoBehaviour
                 {
                     validationColliderTransforms[i].position = info.ColliderTransformArray[i].position;
                     validationColliderTransforms[i].rotation = info.ColliderTransformArray[i].rotation;
-                    validationColliderTransforms[i].gameObject.SetActive(true);
                 }
                 var result = Physics.CheckCapsule(colliderPoint2, colliderPoint1, colliderRadius, 1 << Globals.ValidationLayer);
-                foreach (var c in validationColliderTransforms)
-                {
-                    c.gameObject.SetActive(false);
-                }
                 return result;
             }
         }
@@ -421,11 +417,12 @@ public abstract class Character : MonoBehaviour
     #region Take Damage
 
     [PunRPC]
-    public void TryTakeDamage(float amount, HitDirection direction, Vector3 attackColliderPoint0, Vector3 attackColliderPoint1, float attackColliderRadius, PhotonMessageInfo info)
+    public void TryTakeDamage(float amount, HitDirection direction, Vector3 attackColliderPoint0, Vector3 attackColliderPoint1, float attackColliderRadius, int senderAttackTriggerPhotonViewID, PhotonMessageInfo info)
     {
-        if (IsAlive && animationManager.CanBeInterrupted && PhotonView.IsMine && IsHitValid(attackColliderPoint0,  attackColliderPoint1,  attackColliderRadius, info.SentServerTimestamp)) 
-        {
+        if (IsAlive && animationManager.CanBeInterrupted && PhotonView.IsMine && IsHitValid(attackColliderPoint0,  attackColliderPoint1,  attackColliderRadius, info.SentServerTimestamp))
+        { 
             PhotonView.RPC(nameof(TakeDamage), RpcTarget.All, amount, direction);
+            PhotonView.Find(senderAttackTriggerPhotonViewID).RPC(nameof(AttackTrigger.OnCharacterDamaged), RpcTarget.All, PhotonView.ViewID);
         }
     }
 
@@ -526,6 +523,7 @@ public abstract class Character : MonoBehaviour
         {
             PhotonView.RPC(nameof(OnWin), RpcTarget.Others);
         }
+        ClearDestination();
         rb.constraints = RigidbodyConstraints.FreezeAll;
         if (characterUI != null)
         {
