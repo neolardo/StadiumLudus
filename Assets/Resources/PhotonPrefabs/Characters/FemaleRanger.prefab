@@ -472,6 +472,7 @@ MonoBehaviour:
   characterTransform: {fileID: 1937259002399550370}
   spawnZone: {fileID: 893508741}
   projectileContainer: {fileID: 1342359483}
+  projectileSFX: 30
 --- !u!1001 &1937259000883120899
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3771,6 +3772,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8461755427741342183, guid: 7d1f5a07406fcb14da27e697633c8450, type: 3}
+      propertyPath: sceneViewId
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d1f5a07406fcb14da27e697633c8450, type: 3}
 --- !u!4 &4754201860689978927 stripped
@@ -3903,6 +3908,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8461755427741342183, guid: 7d1f5a07406fcb14da27e697633c8450, type: 3}
+      propertyPath: sceneViewId
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d1f5a07406fcb14da27e697633c8450, type: 3}
 --- !u!4 &4754201861452456400 stripped
@@ -3967,6 +3976,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6564233587726543122, guid: 7d1f5a07406fcb14da27e697633c8450, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8461755427741342183, guid: 7d1f5a07406fcb14da27e697633c8450, type: 3}
+      propertyPath: sceneViewId
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -4101,6 +4114,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8461755427741342183, guid: 7d1f5a07406fcb14da27e697633c8450, type: 3}
+      propertyPath: sceneViewId
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d1f5a07406fcb14da27e697633c8450, type: 3}
 --- !u!4 &4754201859938765004 stripped
@@ -4165,6 +4182,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6564233587726543122, guid: 7d1f5a07406fcb14da27e697633c8450, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8461755427741342183, guid: 7d1f5a07406fcb14da27e697633c8450, type: 3}
+      propertyPath: sceneViewId
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -9,6 +9,10 @@ public enum SFX
     HitOnStone = 2,
     GuardHit = 3,
 
+    // death
+    MaleDeath = 5,
+    FemaleDeath = 6,
+
     // step
     StepOnDirt = 10,
     StepOnStone = 11,
@@ -18,7 +22,7 @@ public enum SFX
     Slash = 20,
 
     // projectile
-    Projectile = 30,
+    ShortbowFire = 30,
     CrossbowFire = 31,
     CrossbowReload = 32,
 
@@ -42,4 +46,6 @@ public enum SFX
     GroundSlamStart = 61,
     GroundSlamEnd = 62,
     GroundSlamCracking = 63,
+    TrapActivate = 64,
+    TrapDeactivate = 65,
 }

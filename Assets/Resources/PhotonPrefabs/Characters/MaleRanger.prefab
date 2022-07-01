@@ -442,6 +442,7 @@ MonoBehaviour:
   characterTransform: {fileID: 1131998773343001477}
   spawnZone: {fileID: 1131998773516273877}
   projectileContainer: {fileID: 301585923}
+  projectileSFX: 31
 --- !u!1 &544548009649800666
 GameObject:
   m_ObjectHideFlags: 0
@@ -1691,7 +1692,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2659852190326881788}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.0005
@@ -3446,7 +3447,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6089914265818635385}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.0005
@@ -5131,6 +5132,10 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8769509869809513628, guid: 0b4fe5c15bc11fb449df158a87aa27da, type: 3}
+      propertyPath: sceneViewId
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b4fe5c15bc11fb449df158a87aa27da, type: 3}
 --- !u!4 &328216040709018367 stripped
@@ -5329,6 +5334,10 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8769509869809513628, guid: 0b4fe5c15bc11fb449df158a87aa27da, type: 3}
+      propertyPath: sceneViewId
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b4fe5c15bc11fb449df158a87aa27da, type: 3}
 --- !u!4 &328216041700886769 stripped
@@ -5392,6 +5401,10 @@ PrefabInstance:
       value: FiredBolt
       objectReference: {fileID: 0}
     - target: {fileID: 4830686949838872979, guid: 0b4fe5c15bc11fb449df158a87aa27da, type: 3}
+      propertyPath: sceneViewId
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8769509869809513628, guid: 0b4fe5c15bc11fb449df158a87aa27da, type: 3}
       propertyPath: sceneViewId
       value: 0
       objectReference: {fileID: 0}
@@ -5527,6 +5540,10 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8769509869809513628, guid: 0b4fe5c15bc11fb449df158a87aa27da, type: 3}
+      propertyPath: sceneViewId
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b4fe5c15bc11fb449df158a87aa27da, type: 3}
 --- !u!4 &328216042079286556 stripped
@@ -5590,6 +5607,10 @@ PrefabInstance:
       value: FiredBolt (2)
       objectReference: {fileID: 0}
     - target: {fileID: 4830686949838872979, guid: 0b4fe5c15bc11fb449df158a87aa27da, type: 3}
+      propertyPath: sceneViewId
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8769509869809513628, guid: 0b4fe5c15bc11fb449df158a87aa27da, type: 3}
       propertyPath: sceneViewId
       value: 0
       objectReference: {fileID: 0}

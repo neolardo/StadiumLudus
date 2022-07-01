@@ -54,6 +54,10 @@ public class RoomsUI : MonoBehaviour
                     rb.ChangeSelectionColor(true);
                 }
             }
+            else
+            {
+                joinRoomPopUpUI.gameObject.SetActive(false);
+            }
             joinRoomButton.interactable = _selectedRoom != null;
         }
     }

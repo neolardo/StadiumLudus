@@ -856,6 +856,7 @@ GameObject:
   - component: {fileID: 2507296828708173996}
   - component: {fileID: 2507296828708173997}
   - component: {fileID: 2507296828708173994}
+  - component: {fileID: 1645716584}
   m_Layer: 3
   m_Name: CharacterUI
   m_TagString: Untagged
@@ -941,6 +942,19 @@ MonoBehaviour:
   - {fileID: 6725435648642116234}
   - {fileID: 6476307809450457647}
   - {fileID: 3542534898524440449}
+  canvasGroup: {fileID: 1645716584}
+--- !u!225 &1645716584
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2507296828708173985}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2507296828808949329
 GameObject:
   m_ObjectHideFlags: 0

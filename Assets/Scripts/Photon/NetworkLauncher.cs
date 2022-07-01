@@ -28,6 +28,7 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
     public event Action<string> Disconnected;
     public event Action<Player> PlayerEnteredRoom;
     public event Action<Player> PlayerLeftRoom;
+    public event Action<Player> PlayerPropertiesChanged;
     public event Action StartingGame;
 
     #endregion
@@ -212,7 +213,7 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
-        Debug.Log($"{targetPlayer.NickName}'s properties has changed.");
+        PlayerPropertiesChanged?.Invoke(targetPlayer);
         StartGameIfEveryPlayerIsReady();
     }
 

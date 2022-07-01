@@ -2,11 +2,10 @@ using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(PhotonView))]
 /// <summary>
 /// An attack trigger for any kind object which deals damage.
 /// </summary>
-public class AttackTrigger : MonoBehaviourPun
+public class AttackTrigger : MonoBehaviour
 {
     #region Properties and Fields
 
@@ -15,6 +14,8 @@ public class AttackTrigger : MonoBehaviourPun
 
     [Tooltip("The audio source of the attack dealing object for playing impact audio.")]
     public AudioSource audioSource;
+
+    public PhotonView photonView;
 
     /// <summary>
     /// The minimum possible damage of this attack trigger.

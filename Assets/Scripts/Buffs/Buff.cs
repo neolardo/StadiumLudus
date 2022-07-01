@@ -228,7 +228,10 @@ public class Buff : MonoBehaviour
 
     public void ForceDeactivate()
     {
-        StartCoroutine(ForceDeactivateAfterDelay());
+        if (IsActive)
+        {
+            StartCoroutine(ForceDeactivateAfterDelay());
+        }
     }
 
     private  IEnumerator ForceDeactivateAfterDelay()

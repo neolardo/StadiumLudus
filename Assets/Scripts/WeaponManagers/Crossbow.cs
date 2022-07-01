@@ -87,7 +87,6 @@ public class Crossbow : MonoBehaviour
     {
         crossbowBolt.SetActive(false);
         boltPool.Fire();
-        AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.CrossbowFire, doNotRepeat: true);
     }
 
     #endregion

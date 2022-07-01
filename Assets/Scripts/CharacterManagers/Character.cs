@@ -458,6 +458,8 @@ public abstract class Character : MonoBehaviour
         }
         else
         {
+            AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
+            AudioManager.Instance.PlayOneShotSFX(characterAudioSource, FightingStyle == CharacterFightingStyle.Heavy ? SFX.MaleDeath : SFX.FemaleDeath);
             if (PhotonView.IsMine)
             {
                 OnDie(direction);
@@ -504,15 +506,14 @@ public abstract class Character : MonoBehaviour
             PhotonView.RPC(nameof(OnDie), RpcTarget.Others, direction);
         }
         animationManager.Die(direction);
+        ClearDestination();
+        animationManager.SetMovementSpeed(0);
         rb.constraints = RigidbodyConstraints.FreezeAll;
         if (characterUI != null)
         {
             characterUI.ShowEndScreen(false);
         }
-        if (PhotonView.IsMine)
-        {
-            GameRoundManager.Instance.OnLocalCharacterDied();
-        }
+        GameRoundManager.Instance.OnCharacterDied();
         AllowUpdate = false;
     }
 

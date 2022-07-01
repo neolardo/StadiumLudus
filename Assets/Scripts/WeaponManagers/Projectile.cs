@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -50,6 +51,10 @@ public class Projectile : MonoBehaviour
             rb = GetComponent<Rigidbody>();
             collider = GetComponent<CapsuleCollider>();
             rb.isKinematic = true;
+            if (!projectileTrigger.photonView.IsMine)
+            {
+                Destroy(rb);
+            }
             hasInitialized = true;
         }
         Fire();
@@ -57,11 +62,11 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.transform.IsChildOf(ProjectilePool.characterTransform) || other.CompareTag(Globals.CharacterTag) || other.CompareTag(Globals.IgnoreBoxTag))
+        if (!projectileTrigger.photonView.IsMine || other.gameObject.transform.IsChildOf(ProjectilePool.characterTransform) || other.CompareTag(Globals.CharacterTag) || other.CompareTag(Globals.IgnoreBoxTag))
         {
             return;
         }
-        else if(!IsStopped)
+        else if (!IsStopped)
         {
             Stop();
             if (doesRaycastTargetExists)
@@ -74,9 +79,27 @@ public class Projectile : MonoBehaviour
                 rb.position = transform.position;
             }
             transform.parent = other.transform;
+            projectileTrigger.photonView.RPC(nameof(SetParentTransform), RpcTarget.Others, other.transform.GetFullPath());
             StartCoroutine(DelayAttackTriggerAfterHit());
         }
     }
+
+    [PunRPC]
+    public void SetParentTransform(string parentFullPath)
+    {
+        var newParent = Globals.FindTransformByFullPath(parentFullPath);
+        if (newParent != null)
+        {
+            transform.parent = newParent;
+        }
+    }
+
+    [PunRPC]
+    public void OnCharacterDamaged(int characterPhotonViewID)
+    {
+        //TODO
+    }
+
 
     private IEnumerator DelayAttackTriggerAfterHit()
     {
@@ -86,39 +109,52 @@ public class Projectile : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (rb.isKinematic == false && (rb.position - ProjectilePool.characterTransform.position).magnitude > distanceMaximum)
+        if (projectileTrigger.photonView.IsMine && rb.isKinematic == false && (rb.position - ProjectilePool.characterTransform.position).magnitude > distanceMaximum)
         {
-            Debug.Log("Projectile went too far, it's been deactivated.");
-            Stop();
-            ProjectilePool.OnProjectileDisappeared(this);
-            gameObject.SetActive(false);
+            projectileTrigger.photonView.RPC(nameof(OnProjectileWentTooFar), RpcTarget.All);
         }
     }
+
+    [PunRPC]
+    public void OnProjectileWentTooFar()
+    {
+        Debug.Log("Projectile went too far, it's been deactivated.");
+        if (projectileTrigger.photonView.IsMine)
+        {
+            Stop();
+        }
+        ProjectilePool.OnProjectileDisappeared(this);
+        gameObject.SetActive(false);
+    }    
+
     private void Fire()
     {
-        projectileTrigger.IsActive = false;
         gameObject.transform.parent = ProjectilePool.gameObject.transform;
-        rb.constraints = RigidbodyConstraints.None;
-        rb.position = ProjectilePool.spawnZone.transform.position;
-        rb.rotation = ProjectilePool.spawnZone.transform.rotation;
-        transform.position = ProjectilePool.spawnZone.transform.position;
-        transform.rotation = ProjectilePool.spawnZone.transform.rotation;
-        rb.isKinematic = false;
-        RaycastHit hit;
-        int layerMask = ~ ((1 << Globals.CharacterLayer) | (1 << Globals.IgnoreRaycastLayer)); //  ignore character rb and arrows
-        var dir = (ProjectilePool.characterTransform.forward * distanceMaximum + 0.5f * Vector3.down).normalized;
-        if (Physics.Raycast(rb.position, dir, out hit, distanceMaximum, layerMask))
+        if(projectileTrigger.photonView.IsMine)
         {
-            doesRaycastTargetExists = true;
-            potetentialHit = hit.point;
+            projectileTrigger.IsActive = false;
+            gameObject.transform.parent = ProjectilePool.gameObject.transform;
+            rb.constraints = RigidbodyConstraints.None;
+            rb.position = ProjectilePool.spawnZone.transform.position;
+            rb.rotation = ProjectilePool.spawnZone.transform.rotation;
+            transform.position = ProjectilePool.spawnZone.transform.position;
+            transform.rotation = ProjectilePool.spawnZone.transform.rotation;
+            rb.isKinematic = false;
+            RaycastHit hit;
+            int layerMask = ~((1 << Globals.CharacterLayer) | (1 << Globals.IgnoreRaycastLayer)); //  ignore character rb and arrows
+            var dir = (ProjectilePool.characterTransform.forward * distanceMaximum + 0.5f * Vector3.down).normalized;
+            if (Physics.Raycast(rb.position, dir, out hit, distanceMaximum, layerMask))
+            {
+                doesRaycastTargetExists = true;
+                potetentialHit = hit.point;
+            }
+            else
+            {
+                doesRaycastTargetExists = false;
+            }
+            projectileTrigger.IsActive = true;
+            rb.AddForce(ProjectilePool.characterTransform.forward * ProjectilePool.Force, ForceMode.Impulse);
         }
-        else
-        {
-            doesRaycastTargetExists = false;
-        }
-        projectileTrigger.IsActive = true;
-        AudioManager.Instance.PlayOneShotSFX(projectileTrigger.audioSource, SFX.Projectile);
-        rb.AddForce(ProjectilePool.characterTransform.forward * ProjectilePool.Force, ForceMode.Impulse);
     }
 
     private void Stop()

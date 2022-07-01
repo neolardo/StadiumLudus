@@ -17,6 +17,9 @@ public class ProjectilePoolManager : MonoBehaviour
     [Tooltip("The transform of the projectile container.")]
     public Transform projectileContainer;
 
+    [Tooltip("The sound effect of the projectile.")]
+    public SFX projectileSFX;
+
     /// <summary>
     /// Indicates the starting force of the projectiles.
     /// </summary>
@@ -78,7 +81,10 @@ public class ProjectilePoolManager : MonoBehaviour
     /// </summary>
     public void Fire()
     {
-        GetNextAvailableProjectile().gameObject.SetActive(true);
+        //TODO sync
+        var proj = GetNextAvailableProjectile();
+        proj.gameObject.SetActive(true);
+        AudioManager.Instance.PlayOneShotSFX(proj.projectileTrigger.audioSource, projectileSFX, doNotRepeat: true);
     }
 
     /// <summary>

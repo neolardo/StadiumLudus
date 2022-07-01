@@ -39,6 +39,7 @@ public class Trap : MonoBehaviour
     private void ActivateTrap()
     {
         animator.SetTrigger(AnimatorOpen);
+        AudioManager.Instance.PlayOneShotSFX(trapTrigger.audioSource, SFX.TrapActivate);
         StartCoroutine(ActivateAttackTriggerAfterDelay());
     }
 
@@ -46,6 +47,7 @@ public class Trap : MonoBehaviour
     {
         trapTrigger.IsActive = false;
         animator.SetTrigger(AnimatorClose);
+        AudioManager.Instance.PlayOneShotSFX(trapTrigger.audioSource, SFX.TrapDeactivate);
         StartCoroutine(WaitForDeactivationAndHide(notifyTrapPool));
     }
 

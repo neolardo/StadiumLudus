@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 1369728629281420253}
   - component: {fileID: 1369728629281420252}
   - component: {fileID: 1369728629281420255}
-  m_Layer: 0
+  - component: {fileID: 3202354366110180506}
+  m_Layer: 2
   m_Name: RangerTrap
-  m_TagString: Untagged
+  m_TagString: IgnoreBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -63,6 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterTransform: {fileID: 0}
   audioSource: {fileID: 1369728629281420252}
+  photonView: {fileID: 3202354366110180506}
 --- !u!82 &1369728629281420252
 AudioSource:
   m_ObjectHideFlags: 0
@@ -72,7 +74,7 @@ AudioSource:
   m_GameObject: {fileID: 1369728629281420250}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300002, guid: b7bb259e1bd1e8943a3ca1626686032e, type: 2}
+  OutputAudioMixerGroup: {fileID: 1311341109146075860, guid: b7bb259e1bd1e8943a3ca1626686032e, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -175,6 +177,28 @@ MonoBehaviour:
   trapTrigger: {fileID: 1369728629281420253}
   trapPool: {fileID: 0}
   activeDuration: 5
+--- !u!114 &3202354366110180506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369728629281420250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1001 &1369728629691777108
 PrefabInstance:
   m_ObjectHideFlags: 0

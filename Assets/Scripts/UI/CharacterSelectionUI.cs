@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Manages the UI of the character selection scene.
@@ -21,20 +22,21 @@ public class CharacterSelectionUI : MonoBehaviour
     public GameObject maleWarriorGameObject;
     public GameObject femaleRangerGameObject;
     public GameObject maleRangerGameObject;
-    public TextMeshProUGUI playerNamePrefab;
+    public PlayerNameUI playerNamePrefab;
     public Transform playerNameContainer;
     public TextMeshProUGUI fightingStyleValueText;
     public TextMeshProUGUI classValueText;
     public TextMeshProUGUI descriptionText;
-    private List<TextMeshProUGUI> playerNames;
+    private List<PlayerNameUI> playerNames;
     public GameObject confirmButton;
     public TextMeshProUGUI confirmedText;
     public GameObject loadingPopUp;
+    public List<Button> arrowButtons;
 
     private const string femaleBarbarianDescription = "Female barbarians militate quickly wielding a pair of axes and are able to perform combo attacks with them.";
     private const string maleBarbarianDescription = "Male barbarians strike slow but strong with their large battle-axe.";
     private const string femaleRangerDescription = "Female rangers use a shortbow to quickly damage their enemies from the distance.";
-    private const string maleRangerDescription = "Male rangers fight with a heavy crossbow to deal decent damage but the additional reloading time makes them somewhat delayed.";
+    private const string maleRangerDescription = "Male rangers fight with a heavy crossbow to deal decent damage but the additional reloading time makes them somewhat sluggish.";
 
     #endregion
 
@@ -42,9 +44,10 @@ public class CharacterSelectionUI : MonoBehaviour
 
     private void Start()
     {
-        playerNames = new List<TextMeshProUGUI>();
+        playerNames = new List<PlayerNameUI>();
         NetworkLauncher.Instance.PlayerEnteredRoom += OnPlayerEnteredRoom;
         NetworkLauncher.Instance.PlayerLeftRoom += OnPlayerLeftRoom;
+        NetworkLauncher.Instance.PlayerPropertiesChanged += OnPlayerCharacterIsConfirmedChanged;
         NetworkLauncher.Instance.StartingGame += OnGameStarting;
         RefreshCharacterGameObject();
         LoadPlayerNames();
@@ -62,17 +65,26 @@ public class CharacterSelectionUI : MonoBehaviour
     }
     private void AddPlayerName(Player player)
     {
-        var playerNameText = Instantiate(playerNamePrefab, playerNameContainer);
-        playerNameText.text = player.NickName;
-        playerNames.Add(playerNameText);
+        var playerName = Instantiate(playerNamePrefab, playerNameContainer);
+        playerName.SetPlayerText(player.NickName);
+        playerName.SetIsCharacterConfirmed(player.CustomProperties.ContainsKey(Globals.PlayerIsCharacterConfirmedKey) && (bool)player.CustomProperties[Globals.PlayerIsCharacterConfirmedKey]);
+        playerNames.Add(playerName);
     }
     private void RemovePlayerName(Player player)
     {
-        var playerNameText = playerNames.FirstOrDefault(_ => _.text == player.NickName);
-        if (playerNameText != null)
+        var playerName = playerNames.FirstOrDefault(_ => _.PlayerName == player.NickName);
+        if (playerName != null)
         {
-            playerNames.Remove(playerNameText);
-            Destroy(playerNameText.gameObject);
+            playerNames.Remove(playerName);
+            Destroy(playerName.gameObject);
+        }
+    }
+    private void OnPlayerCharacterIsConfirmedChanged(Player player)
+    {
+        var playerName = playerNames.FirstOrDefault(_ => _.PlayerName == player.NickName);
+        if (playerName != null)
+        {
+            playerName.SetIsCharacterConfirmed(player.CustomProperties.ContainsKey(Globals.PlayerIsCharacterConfirmedKey) && (bool)player.CustomProperties[Globals.PlayerIsCharacterConfirmedKey]);
         }
     }
 
@@ -168,6 +180,13 @@ public class CharacterSelectionUI : MonoBehaviour
     {
         confirmButton.SetActive(false);
         confirmedText.gameObject.SetActive(true);
+        Color disabledColor = arrowButtons[0].colors.disabledColor;
+        foreach (var b in arrowButtons)
+        {
+            b.interactable = false;
+        }
+        classValueText.color = disabledColor;
+        fightingStyleValueText.color = disabledColor;
         NetworkLauncher.Instance.OnCharacterConfirmed(PhotonNetwork.LocalPlayer, currentFightingStyle, currentClass);
     }
 
@@ -181,6 +200,8 @@ public class CharacterSelectionUI : MonoBehaviour
         {
             NetworkLauncher.Instance.PlayerEnteredRoom -= OnPlayerEnteredRoom;
             NetworkLauncher.Instance.PlayerLeftRoom -= OnPlayerLeftRoom;
+            NetworkLauncher.Instance.PlayerPropertiesChanged -= OnPlayerCharacterIsConfirmedChanged;
+            NetworkLauncher.Instance.StartingGame -= OnGameStarting;
         }
     }
 

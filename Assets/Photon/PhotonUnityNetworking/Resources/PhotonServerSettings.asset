@@ -69,6 +69,8 @@ MonoBehaviour:
   - TakeDamage
   - TryTakeDamage
   - OnCharacterDamaged
+  - OnProjectileWentTooFar
+  - SetParentTransform
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

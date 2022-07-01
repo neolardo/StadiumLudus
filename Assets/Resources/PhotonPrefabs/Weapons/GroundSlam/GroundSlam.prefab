@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterTransform: {fileID: 0}
   audioSource: {fileID: 1133617231}
+  photonView: {fileID: 4395712158062470571}
 --- !u!136 &985622858
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -5147,7 +5148,7 @@ GameObject:
   - component: {fileID: 278143843885817613}
   m_Layer: 0
   m_Name: Rock
-  m_TagString: Untagged
+  m_TagString: Stone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

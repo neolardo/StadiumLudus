@@ -488,7 +488,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
     m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
     m_SelectedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.70980394, g: 0.70980394, b: 0.70980394, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -1026,8 +1026,8 @@ RectTransform:
   m_Father: {fileID: 2213584688776406924}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.45, y: 0.1}
-  m_AnchorMax: {x: 1, y: 0.8}
+  m_AnchorMin: {x: 0.4, y: 0.1}
+  m_AnchorMax: {x: 0.92, y: 0.8}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1645,7 +1645,7 @@ MonoBehaviour:
   maleWarriorGameObject: {fileID: 0}
   femaleRangerGameObject: {fileID: 0}
   maleRangerGameObject: {fileID: 0}
-  playerNamePrefab: {fileID: 9219236126373109734, guid: 2dbdeab6490412d44b55264d6b964b9d, type: 3}
+  playerNamePrefab: {fileID: 7118380713690427597, guid: a1e2dcea3a05e0147862477aaac14d78, type: 3}
   playerNameContainer: {fileID: 2213584688379086292}
   fightingStyleValueText: {fileID: 3128580770267063993}
   classValueText: {fileID: 1842779546618227223}
@@ -1653,6 +1653,11 @@ MonoBehaviour:
   confirmButton: {fileID: 321117477}
   confirmedText: {fileID: 5535463832298078013}
   loadingPopUp: {fileID: 7760846667788051007}
+  arrowButtons:
+  - {fileID: 1418911345349746341}
+  - {fileID: 5965157474425401239}
+  - {fileID: 5488996887914596457}
+  - {fileID: 5382222843808361858}
 --- !u!82 &2213584688050494624
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1957,7 +1962,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
     m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
     m_SelectedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.70980394, g: 0.70980394, b: 0.70980394, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -2293,7 +2298,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
     m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
     m_SelectedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.70980394, g: 0.70980394, b: 0.70980394, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -2588,7 +2593,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
     m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
     m_SelectedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.70980394, g: 0.70980394, b: 0.70980394, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:

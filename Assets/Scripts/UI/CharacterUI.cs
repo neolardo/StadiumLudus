@@ -12,6 +12,7 @@ public class CharacterUI : MonoBehaviour
     public Material healthBarMaterial;
     public Material staminaBarMaterial;
     public List<SkillSlotUI> skillSlots;
+    public CanvasGroup canvasGroup;
     private Character character;
     public bool IsUIVisible { get; private set; } = false;
 
@@ -59,7 +60,7 @@ public class CharacterUI : MonoBehaviour
     public void SetUIVisiblity(bool value)
     {
         IsUIVisible = value;
-        gameObject.SetActive(IsUIVisible);
+        canvasGroup.alpha = IsUIVisible ? 1 : 0;
     }
 
     #region Skills
@@ -91,7 +92,7 @@ public class CharacterUI : MonoBehaviour
     public void ShowHidePauseMenu()
     {
         IsUIVisible = !IsUIVisible;
-        gameObject.SetActive(IsUIVisible);
+        canvasGroup.alpha = IsUIVisible ? 1 : 0;
         pauseMenuUI.gameObject.SetActive(!IsUIVisible);
     }
 
@@ -107,10 +108,10 @@ public class CharacterUI : MonoBehaviour
     private IEnumerator ShowEndScreenAfterDelay(bool win, float delaySeconds)
     {
         yield return new WaitForSeconds(delaySeconds);
-        IsUIVisible = !IsUIVisible;
-        gameObject.SetActive(IsUIVisible);
+        IsUIVisible = false;
+        canvasGroup.alpha = 0;
         endGameUI.SetMainText(win);
-        endGameUI.gameObject.SetActive(!IsUIVisible);
+        endGameUI.gameObject.SetActive(true);
     }
 
     #endregion

@@ -407,6 +407,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GroundSlam
       objectReference: {fileID: 0}
+    - target: {fileID: 7639145199818862843, guid: 7ace1fd8e9b3f464fb7e7f6a5719e5d0, type: 3}
+      propertyPath: m_TagString
+      value: Stone
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ace1fd8e9b3f464fb7e7f6a5719e5d0, type: 3}
 --- !u!114 &2126130498751598616 stripped
@@ -1767,6 +1771,14 @@ PrefabInstance:
       propertyPath: m_TagString
       value: HitBox
       objectReference: {fileID: 0}
+    - target: {fileID: 3015024999740590596, guid: 03bb52135c7c77d48b784c3d7e4033e2, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3015024999740590596, guid: 03bb52135c7c77d48b784c3d7e4033e2, type: 3}
+      propertyPath: m_TagString
+      value: IgnoreBox
+      objectReference: {fileID: 0}
     - target: {fileID: 3088318229253161275, guid: 03bb52135c7c77d48b784c3d7e4033e2, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.80916303
@@ -1910,6 +1922,14 @@ PrefabInstance:
     - target: {fileID: 3693987165729647957, guid: 03bb52135c7c77d48b784c3d7e4033e2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 9.969176
+      objectReference: {fileID: 0}
+    - target: {fileID: 3862234376659152719, guid: 03bb52135c7c77d48b784c3d7e4033e2, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3862234376659152719, guid: 03bb52135c7c77d48b784c3d7e4033e2, type: 3}
+      propertyPath: m_TagString
+      value: IgnoreBox
       objectReference: {fileID: 0}
     - target: {fileID: 3884424721260275586, guid: 03bb52135c7c77d48b784c3d7e4033e2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3016,6 +3036,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterTransform: {fileID: 8882034873407279615}
   audioSource: {fileID: 2138755041}
+  photonView: {fileID: 6179464534141051989}
 --- !u!114 &6179464534141051989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3167,6 +3188,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterTransform: {fileID: 8882034873407279615}
   audioSource: {fileID: 622713652}
+  photonView: {fileID: 2009572409343458825}
 --- !u!114 &2009572409343458825
 MonoBehaviour:
   m_ObjectHideFlags: 0
