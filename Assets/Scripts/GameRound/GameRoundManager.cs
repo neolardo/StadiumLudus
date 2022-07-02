@@ -33,6 +33,8 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
     private const string MaleRangerPrefabName = "MaleRanger";
     private const string FemaleRangerPrefabName = "FemaleRanger";
 
+    private const string EnvironmentRootGameObjectName = "Environment";
+
     #endregion
 
     #region Methods
@@ -82,6 +84,59 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
             Debug.LogError("Unable to get character prefab name.");
             return "";
         }
+    }
+
+    #endregion
+
+    #region Transform Search
+
+    public string GetTransformFullPath(Transform transform)
+    {
+        string path = transform.name;
+        while (transform.parent != null)
+        {
+            transform = transform.parent;
+            path = $"{transform.name}{Globals.TransformHierarchySeparator}{path}";
+        }
+        var c = transform.GetComponent<Character>();
+        if (c != null)
+        {
+            path = c.PhotonView.ViewID.ToString() + path.Substring(transform.name.Length);
+        }
+        return path;
+    }
+
+    public Transform FindTransformByFullPath(string fullPath)
+    {
+        var transformNames = fullPath.Split(Globals.TransformHierarchySeparator).ToList();
+        var rootTransforms = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects().Select(_ => _.transform).ToList();
+        Transform currentParent = null;
+        if (transformNames[0] == EnvironmentRootGameObjectName)
+        {
+            currentParent = rootTransforms.FirstOrDefault(_ => _.name == transformNames[0]);
+        }
+        else
+        {
+            int photonViewID;
+            if (int.TryParse(transformNames[0], out photonViewID))
+            {
+                if (LocalCharacterReferenceDictionary.ContainsKey(photonViewID))
+                {
+                    currentParent = LocalCharacterReferenceDictionary[photonViewID].transform;
+                }
+            }
+        }
+        transformNames.RemoveAt(0);
+        while (currentParent != null && transformNames.Count > 0)
+        {
+            currentParent = currentParent.Find(transformNames[0]);
+            transformNames.RemoveAt(0);
+        }
+        if (currentParent == null)
+        {
+            Debug.LogWarning($"Transform not found: {fullPath}");
+        }
+        return currentParent;
     }
 
     #endregion

@@ -40,6 +40,7 @@ public enum SFX
     MenuBack = 52,
     MenuButtonClick = 53,
     MenuButtonClickAlt = 54,
+    CannotPerformSkillOrAttack = 55,
 
     // skills
     Smoke = 60,
@@ -48,4 +49,5 @@ public enum SFX
     GroundSlamCracking = 63,
     TrapActivate = 64,
     TrapDeactivate = 65,
+    Whirlwind = 66,
 }

@@ -265,6 +265,10 @@ public abstract class RangerCharacter : Character
             StartCoroutine(ResetDestinationAfterDash());
             stamina -= dashStaminaCost;
         }
+        else if (PhotonView.IsMine && characterUI != null)
+        {
+            characterUI.OnCannotPerformSkillOrAttack(stamina < dashStaminaCost, !IsDashAvailable, DashSkillNumber);
+        }
     }
 
     private void UpdateDash()
@@ -313,6 +317,10 @@ public abstract class RangerCharacter : Character
             StartCoroutine(ManageCooldown(SmokeSkillNumber));
             stamina -= smokeStaminaCost;
         }
+        else if (PhotonView.IsMine && characterUI != null)
+        {
+            characterUI.OnCannotPerformSkillOrAttack(stamina < smokeStaminaCost, !IsSmokeAvailable, SmokeSkillNumber);
+        }
     }
 
     #endregion
@@ -335,6 +343,10 @@ public abstract class RangerCharacter : Character
             {
                 characterUI.RemoveSkillCharge(TrapSkillNumber);
             }
+        }
+        else if (PhotonView.IsMine && characterUI != null)
+        {
+            characterUI.OnCannotPerformSkillOrAttack(false, trapChargeCount == 0, TrapSkillNumber);
         }
     }
 

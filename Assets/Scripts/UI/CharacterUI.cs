@@ -13,6 +13,7 @@ public class CharacterUI : MonoBehaviour
     public Material staminaBarMaterial;
     public List<SkillSlotUI> skillSlots;
     public CanvasGroup canvasGroup;
+    public AudioSource audioSource;
     private Character character;
     public bool IsUIVisible { get; private set; } = false;
 
@@ -83,6 +84,19 @@ public class CharacterUI : MonoBehaviour
     public void RemoveSkillCharge(int skillNumber)
     {
         skillSlots[skillNumber - 1].RemoveCharge();
+    }
+
+    public void OnCannotPerformSkillOrAttack(bool notEnoughStamina, bool stillOnCooldown, int skillNumber = -1)
+    {
+        AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.CannotPerformSkillOrAttack);
+        if (notEnoughStamina)
+        {
+            //TODO make the stamina bar flash
+        }
+        if (stillOnCooldown)
+        {
+            // TODO make the skill bar flash
+        }
     }
 
     #endregion

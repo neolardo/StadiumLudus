@@ -51,8 +51,7 @@ public static class Globals
     public const string PlayerIsRematchRequestedKey = "IsRematchRequested";
 
     // transform
-    private const char TransformHierarchySeparator = '/';
-
+    public const char TransformHierarchySeparator = '/';
 
     #endregion
 
@@ -143,40 +142,6 @@ public static class Globals
         }
         return hashtable;
     }
-
-    #endregion
-
-    #region Transform Extensions
-
-    public static string GetFullPath(this Transform transform)
-    {
-        string path = transform.name;
-        while (transform.parent != null)
-        {
-            transform = transform.parent;
-            path = $"{transform.name}{TransformHierarchySeparator}{path}";
-        }
-        return path;
-    }
-
-    public static Transform FindTransformByFullPath(string fullPath)
-    {
-        var transformNames = fullPath.Split(TransformHierarchySeparator).ToList();
-        var currentTransforms = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects().Select(_=>_.transform).ToList();
-        Transform currentParent = currentTransforms.FirstOrDefault(_ => _.name == transformNames[0]);
-        transformNames.RemoveAt(0);
-        while (currentParent!= null && transformNames.Count > 0)
-        {
-            currentParent = currentParent.Find(transformNames[0]);
-            transformNames.RemoveAt(0);
-        }
-        if (currentParent == null)
-        {
-            Debug.LogWarning($"Transform not found: {fullPath}");
-        }
-        return currentParent;
-    }
-
 
     #endregion
 

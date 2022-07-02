@@ -7,7 +7,7 @@ using UnityEngine.Audio;
 /// <summary>
 /// Manages the UI of the main menu.
 /// </summary>
-public class MainMenuUI : MonoBehaviour
+public class MainMenuUI : MonoBehaviour, IDropReceiver, IPointerEnterReceiver
 {
     #region Fields and Properties
 
@@ -159,6 +159,15 @@ public class MainMenuUI : MonoBehaviour
 
     #region Button Sounds
 
+    public void OnDrop()
+    {
+        OnMenuButtonClick();
+    }
+
+    public void OnPointerEnter()
+    {
+        OnMenuButtonHover();
+    }
     public void OnMenuButtonHover()
     {
         AudioManager.Instance.PlayOneShotSFX(menuAudioSource, SFX.MenuButtonHover);

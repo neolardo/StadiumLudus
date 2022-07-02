@@ -17,9 +17,6 @@ public class ProjectilePoolManager : MonoBehaviour
     [Tooltip("The transform of the projectile container.")]
     public Transform projectileContainer;
 
-    [Tooltip("The sound effect of the projectile.")]
-    public SFX projectileSFX;
-
     /// <summary>
     /// Indicates the starting force of the projectiles.
     /// </summary>
@@ -45,6 +42,8 @@ public class ProjectilePoolManager : MonoBehaviour
     /// </summary>
     private List<Projectile> activeProjectiles;
 
+    private bool isPhotonViewMine;
+
     #endregion
 
     #region Methods
@@ -57,6 +56,7 @@ public class ProjectilePoolManager : MonoBehaviour
         {
             Debug.LogWarning($"The number of projectiles of a {characterTransform.name} is 0.");
         }
+        isPhotonViewMine = characterTransform.GetComponent<Character>().PhotonView.IsMine;
         InitializeProjectiles();
     }
 
@@ -81,10 +81,11 @@ public class ProjectilePoolManager : MonoBehaviour
     /// </summary>
     public void Fire()
     {
-        //TODO sync
-        var proj = GetNextAvailableProjectile();
-        proj.gameObject.SetActive(true);
-        AudioManager.Instance.PlayOneShotSFX(proj.projectileTrigger.audioSource, projectileSFX, doNotRepeat: true);
+        if (isPhotonViewMine)
+        {
+            var proj = GetNextAvailableProjectile();
+            proj.photonView.RPC(nameof(Projectile.EnableProjectile), Photon.Pun.RpcTarget.All);
+        }
     }
 
     /// <summary>
@@ -97,7 +98,7 @@ public class ProjectilePoolManager : MonoBehaviour
         {
             var projectile = activeProjectiles[0];
             activeProjectiles.Remove(projectile);
-            projectile.gameObject.SetActive(false);
+            projectile.photonView.RPC(nameof(Projectile.DisableProjectile), Photon.Pun.RpcTarget.All);
             activeProjectiles.Add(projectile);
             return projectile;
         }
@@ -116,8 +117,11 @@ public class ProjectilePoolManager : MonoBehaviour
     /// <param name="projectile">The <see cref="Projectile"/>.</param>
     public void OnProjectileDisappeared(Projectile projectile)
     {
-        activeProjectiles.Remove(projectile);
-        inactiveProjectiles.Add(projectile);
+        if (isPhotonViewMine)
+        {
+            activeProjectiles.Remove(projectile);
+            inactiveProjectiles.Add(projectile);
+        }
     }
 
     #endregion

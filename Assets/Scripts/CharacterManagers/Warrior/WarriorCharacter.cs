@@ -208,7 +208,7 @@ public abstract class WarriorCharacter : Character
         {
             if (PhotonView.IsMine)
             {
-                PhotonView.RPC(nameof(LeapAttack), RpcTarget.Others, attackTarget);     
+                PhotonView.RPC(nameof(LeapAttack), RpcTarget.Others, attackTarget);
             }
             attackTarget = ClampPointInsideRange(attackTarget, leapAttackMaximumDistance);
             IsLeapAttackFirstFrame = true;
@@ -222,6 +222,10 @@ public abstract class WarriorCharacter : Character
             StartCoroutine(ResetDestinationAfterLeap());
             stamina -= leapAttackStaminaCost;
             OnLeapAttack(attackTarget);
+        }
+        else if (PhotonView.IsMine && characterUI != null)
+        {
+            characterUI.OnCannotPerformSkillOrAttack(stamina < leapAttackStaminaCost, !IsLeapAttackAvailable, LeapAttackSkillNumber);
         }
     }
 
@@ -267,6 +271,8 @@ public abstract class WarriorCharacter : Character
                 PhotonView.RPC(nameof(StartWhirlwind), RpcTarget.Others);
             }
             warriorAnimationManager.StartWhirlwind();
+            AudioManager.Instance.PlaySFX(characterAudioSource, SFX.Whirlwind);
+            characterAudioSource.loop = true;
             StartCoroutine(ManageWhirlwindStaminaDrain());
             StartCoroutine(ManageWhirlwindRotation());
             OnWhirlwind();
@@ -282,6 +288,8 @@ public abstract class WarriorCharacter : Character
             {
                 PhotonView.RPC(nameof(EndWhirlwind), RpcTarget.Others);
             }
+            AudioManager.Instance.Stop(characterAudioSource);
+            characterAudioSource.loop = false;
             warriorAnimationManager.EndWhirlwind();
         }
     }
@@ -343,6 +351,10 @@ public abstract class WarriorCharacter : Character
             stamina -= groundSlamStaminaCost;
             OnGroundSlam(attackTarget);
             StartCoroutine(EndForceRotateAfterUsingSkill());
+        }
+        else if (PhotonView.IsMine && characterUI!=null)
+        {
+            characterUI.OnCannotPerformSkillOrAttack(stamina < groundSlamStaminaCost, !IsGroundSlamAvailable, GroundSlamSkillNumber);
         }
     }
 

@@ -167,6 +167,9 @@ public abstract class Character : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// The cached transform of this <see cref="Character"/>.
+    /// </summary>
     [HideInInspector]
     public new Transform transform;
     public CharacterAnimationManager animationManager;
@@ -225,6 +228,7 @@ public abstract class Character : MonoBehaviour
     private Interactable interactionTarget;
     private Vector3 interactionPoint;
     protected const float interactionRange = 0.1f;
+    protected const float fountainHealDelay = 0.5f;
     protected Buff currentBuff;
 
 
@@ -294,7 +298,7 @@ public abstract class Character : MonoBehaviour
     public virtual void EndSkill(int skillNumber) { }
     public virtual bool IsSkillChargeable(int skillNumber) => false;
     public virtual int InitialChargeCountOfSkill(int skillNumber) => 0;
-   
+
     /// <summary>
     /// Clamps a point inside a given distance from the <see cref="Character"/>.
     /// </summary>
@@ -333,6 +337,10 @@ public abstract class Character : MonoBehaviour
             }
             OnAttack(attackTarget);
             return true;
+        }
+        else if (PhotonView.IsMine && characterUI != null && stamina < attackStaminaCost)
+        {
+            characterUI.OnCannotPerformSkillOrAttack(stamina < attackStaminaCost, false);
         }
         return false;
     }
@@ -574,11 +582,20 @@ public abstract class Character : MonoBehaviour
 
     #region Drink
 
-    public void DrinkFromFountain(Vector3 fountainPosition)
+    public void DrinkFromFountain(Vector3 fountainPosition, float healAmount)
     {
         SetRotationTarget(fountainPosition);
         animationManager.Drink();
-         //TODO restore hp
+        StartCoroutine(TryHealAfterDelay(healAmount));
+    }
+
+    private IEnumerator TryHealAfterDelay(float healAmount)
+    {
+        yield return new WaitForSeconds(fountainHealDelay);
+        if (!animationManager.IsInterrupted)
+        {
+            health = Mathf.Min(health + healAmount, healthMaximum);
+        }
     }
 
     #endregion

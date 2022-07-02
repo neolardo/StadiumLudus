@@ -18,6 +18,9 @@ public class Projectile : MonoBehaviour
     [Tooltip("The attack trigger of the projectile.")]
     public AttackTrigger projectileTrigger;
 
+    [Tooltip("The sound effect of the projectile.")]
+    public SFX projectileSFX;
+
     /// <summary>
     /// The projectile pool.
     /// </summary>
@@ -28,6 +31,8 @@ public class Projectile : MonoBehaviour
     /// After that the arrow will be deactivated.
     /// </summary>
     private const float distanceMaximum = 20;
+
+    public PhotonView photonView;
 
     private bool hasInitialized = false;
 
@@ -43,6 +48,18 @@ public class Projectile : MonoBehaviour
 
     #region Methods
 
+    [PunRPC]
+    public void EnableProjectile()
+    {
+        gameObject.SetActive(true);
+    }
+
+    [PunRPC]
+    public void DisableProjectile()
+    {
+        gameObject.SetActive(false);
+    }
+
     private void OnEnable()
     {
         if (!hasInitialized)
@@ -51,7 +68,7 @@ public class Projectile : MonoBehaviour
             rb = GetComponent<Rigidbody>();
             collider = GetComponent<CapsuleCollider>();
             rb.isKinematic = true;
-            if (!projectileTrigger.photonView.IsMine)
+            if (!photonView.IsMine)
             {
                 Destroy(rb);
             }
@@ -62,7 +79,7 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!projectileTrigger.photonView.IsMine || other.gameObject.transform.IsChildOf(ProjectilePool.characterTransform) || other.CompareTag(Globals.CharacterTag) || other.CompareTag(Globals.IgnoreBoxTag))
+        if (!photonView.IsMine || other.gameObject.transform.IsChildOf(ProjectilePool.characterTransform) || other.CompareTag(Globals.CharacterTag) || other.CompareTag(Globals.IgnoreBoxTag))
         {
             return;
         }
@@ -79,7 +96,9 @@ public class Projectile : MonoBehaviour
                 rb.position = transform.position;
             }
             transform.parent = other.transform;
-            projectileTrigger.photonView.RPC(nameof(SetParentTransform), RpcTarget.Others, other.transform.GetFullPath());
+            string fullPath = GameRoundManager.Instance.GetTransformFullPath(other.transform);
+            Debug.Log($"Projectile hit target: {fullPath}");
+            photonView.RPC(nameof(SetParentTransform), RpcTarget.Others, fullPath);
             StartCoroutine(DelayAttackTriggerAfterHit());
         }
     }
@@ -87,7 +106,7 @@ public class Projectile : MonoBehaviour
     [PunRPC]
     public void SetParentTransform(string parentFullPath)
     {
-        var newParent = Globals.FindTransformByFullPath(parentFullPath);
+        var newParent = GameRoundManager.Instance.FindTransformByFullPath(parentFullPath);
         if (newParent != null)
         {
             transform.parent = newParent;
@@ -97,9 +116,8 @@ public class Projectile : MonoBehaviour
     [PunRPC]
     public void OnCharacterDamaged(int characterPhotonViewID)
     {
-        //TODO
+        projectileTrigger.OnCharacterDamaged(characterPhotonViewID);
     }
-
 
     private IEnumerator DelayAttackTriggerAfterHit()
     {
@@ -109,9 +127,9 @@ public class Projectile : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (projectileTrigger.photonView.IsMine && rb.isKinematic == false && (rb.position - ProjectilePool.characterTransform.position).magnitude > distanceMaximum)
+        if (photonView.IsMine && rb.isKinematic == false && (rb.position - ProjectilePool.characterTransform.position).magnitude > distanceMaximum)
         {
-            projectileTrigger.photonView.RPC(nameof(OnProjectileWentTooFar), RpcTarget.All);
+            photonView.RPC(nameof(OnProjectileWentTooFar), RpcTarget.All);
         }
     }
 
@@ -119,18 +137,19 @@ public class Projectile : MonoBehaviour
     public void OnProjectileWentTooFar()
     {
         Debug.Log("Projectile went too far, it's been deactivated.");
-        if (projectileTrigger.photonView.IsMine)
+        if (photonView.IsMine)
         {
             Stop();
+            ProjectilePool.OnProjectileDisappeared(this);
         }
-        ProjectilePool.OnProjectileDisappeared(this);
         gameObject.SetActive(false);
     }    
 
     private void Fire()
     {
+        AudioManager.Instance.PlayOneShotSFX(projectileTrigger.audioSource, projectileSFX, doNotRepeat:true);
         gameObject.transform.parent = ProjectilePool.gameObject.transform;
-        if(projectileTrigger.photonView.IsMine)
+        if(photonView.IsMine)
         {
             projectileTrigger.IsActive = false;
             gameObject.transform.parent = ProjectilePool.gameObject.transform;

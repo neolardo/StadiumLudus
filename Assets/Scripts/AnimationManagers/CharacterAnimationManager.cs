@@ -76,8 +76,8 @@ public class CharacterAnimationManager : MonoBehaviour
     #region Animator Constants
 
     protected const string AnimatorIsMoving = "IsMoving";
+    protected const string AnimatorIsGuarding = "IsGuarding";
     protected const string AnimatorStartGuard = "StartGuard";
-    protected const string AnimatorEndGuard = "EndGuard";
     protected const string AnimatorAttack = "Attack";
     protected const string AnimatorImpactFrontLeft = "ImpactFrontLeft";
     protected const string AnimatorImpactFrontRight = "ImpactFrontRight";
@@ -201,13 +201,15 @@ public class CharacterAnimationManager : MonoBehaviour
         if (!IsGuarding)
         {
             IsGuarding = true;
+            animator.SetBool(AnimatorIsGuarding, true);
             animator.SetTrigger(AnimatorStartGuard);
         }
     }
 
     public void EndGuarding()
     {
-        animator.SetTrigger(AnimatorEndGuard);
+        IsGuarding = false; 
+        animator.SetBool(AnimatorIsGuarding, false);
     }
 
     public void OnGuardFinished()

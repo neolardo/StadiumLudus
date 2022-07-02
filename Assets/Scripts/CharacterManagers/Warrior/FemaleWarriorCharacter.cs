@@ -103,6 +103,10 @@ public class FemaleWarriorCharacter : WarriorCharacter
             ContinueComboAttack();
             return true;
         }
+        else if (PhotonView.IsMine && characterUI!=null && stamina < attackStaminaCost)
+        {
+            characterUI.OnCannotPerformSkillOrAttack(stamina < attackStaminaCost, false);
+        }
         return false;
     }
 
