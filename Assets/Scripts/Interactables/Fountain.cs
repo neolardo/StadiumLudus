@@ -14,6 +14,10 @@ public class Fountain :  Interactable
     [SerializeField]
     private GameObject interactionPointContainer;
 
+    [Tooltip("The amount of healing is done by drinking from this fountain.")]
+    [SerializeField]
+    private float healAmount;
+
     private List<Vector3> interactionPoints;
 
     private bool _isFilled;
@@ -77,6 +81,10 @@ public class Fountain :  Interactable
         {
             interactionPoints.Add(interactionPointContainer.transform.GetChild(i).position);
         }
+        if (healAmount <= 0)
+        {
+            Debug.LogWarning("A fountain's heal amount is set to a non-positive value.");
+        }
         IsFilled = true;
     }
 
@@ -105,7 +113,7 @@ public class Fountain :  Interactable
         {
             IsFilled = false;
             var character = GameRoundManager.Instance.LocalCharacterReferenceDictionary[characterPhotonViewID];
-            character.DrinkFromFountain(transform.position);
+            character.DrinkFromFountain(transform.position, healAmount);
             return true;
         }
         return false;
