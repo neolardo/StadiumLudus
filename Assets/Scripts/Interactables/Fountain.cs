@@ -143,6 +143,7 @@ public class Fountain :  Interactable
         if (!IsFilled)
         {
             largeWater.transform.localScale = new Vector3(scale.x, scale.y, waterSizeEmpty);
+            smallWaterMaterial.SetFloat(waterShaderAlphaReference, 0);
         }
     }
 
@@ -162,6 +163,7 @@ public class Fountain :  Interactable
         if (IsFilled)
         {
             largeWater.transform.localScale = new Vector3(scale.x, scale.y, waterSizeFilled);
+            smallWaterMaterial.SetFloat(waterShaderAlphaReference, waterAlphaFilled);
         }
     }
 }

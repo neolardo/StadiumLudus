@@ -66,9 +66,14 @@ public class CharacterAnimationManager : MonoBehaviour
     public bool IsInteracting { get; protected set; }
 
     /// <summary>
-    /// The threshold of the movement speed. If the movement speed is bigger than this value than the character should be animatated as moving.
+    /// If the movement speed is bigger than this value than the character should be animatated as moving.
     /// </summary>
     protected const float MovementSpeedThreshold = 0.1f;
+
+    /// <summary>
+    /// If the movement speed is bigger than this value than the character should be animatated as sprinting.
+    /// </summary>
+    protected const float SprintingThreshold = 1f;
 
     private bool canPlayStepSound = true;
     private const float stepSoundCooldown = .15f;
@@ -76,6 +81,7 @@ public class CharacterAnimationManager : MonoBehaviour
     #region Animator Constants
 
     protected const string AnimatorIsMoving = "IsMoving";
+    protected const string AnimatorIsSprinting = "IsSprinting";
     protected const string AnimatorIsGuarding = "IsGuarding";
     protected const string AnimatorStartGuard = "StartGuard";
     protected const string AnimatorAttack = "Attack";
@@ -110,10 +116,11 @@ public class CharacterAnimationManager : MonoBehaviour
 
     #region Movement
 
-    public void SetMovementSpeed(float normalizedSpeed)
+    public void Move(float speed)
     {
-        animator.SetLayerWeight(animatorMovementLayerIndex, normalizedSpeed);
-        animator.SetBool(AnimatorIsMoving, normalizedSpeed > MovementSpeedThreshold);
+        animator.SetLayerWeight(animatorMovementLayerIndex, Mathf.Min(1.0f, speed));
+        animator.SetBool(AnimatorIsMoving, speed > MovementSpeedThreshold);
+        animator.SetBool(AnimatorIsSprinting, speed > SprintingThreshold);
     }
 
     public void OnLockMovement()

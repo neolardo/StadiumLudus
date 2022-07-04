@@ -115,7 +115,13 @@ public abstract class Character : MonoBehaviour
     [SerializeField]
     private float movementSpeedInitialMaximum = 3.5f;
 
+    [Tooltip("Represents the maximum sprinting speed of the character.")]
+    [SerializeField]
+    private float sprintingSpeedInitialMaximum = 5f;
+
     private float movementSpeedMaximum;
+
+    private float sprintingSpeedMaximum;
 
     [Tooltip("Represents the acceleration of the character.")]
     [SerializeField]
@@ -179,7 +185,8 @@ public abstract class Character : MonoBehaviour
     private Vector3 rotationTarget;
     private NavMeshPath helperPath;
     protected bool forceRotation = false;
-
+    protected bool isSprintingRequested = false;
+    private const float sprintStaminaCostPerFixedUpdateFrame = 20f/50f;
     #endregion
 
     #region Attack
@@ -193,7 +200,7 @@ public abstract class Character : MonoBehaviour
     [SerializeField]
     protected Transform hitValidationColliderContainer;
 
-    protected virtual bool CanAttack => IsAlive && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill && stamina > attackStaminaCost;
+    protected virtual bool CanAttack => IsAlive && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill && !animationManager.IsInteracting && stamina > attackStaminaCost;
 
     /// <summary>
     /// A list of <see cref="Transform"/>s of the character's hitbox <see cref="Collider"/>s.
@@ -249,16 +256,15 @@ public abstract class Character : MonoBehaviour
         stamina = staminaMaximum;
         staminaRecoveryAmount = staminaRecoveryInitialAmount;
         movementSpeedMaximum = movementSpeedInitialMaximum;
+        sprintingSpeedMaximum = sprintingSpeedInitialMaximum;
         transform = GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         PhotonView = GetComponent<PhotonView>();
         agent.updatePosition = false;
         agent.updateRotation = false;
-        agent.speed = movementSpeedInitialMaximum * agentSpeedMultiplier;
+        agent.speed = sprintingSpeedMaximum * agentSpeedMultiplier;
         helperPath = new NavMeshPath();
-        var characterScreenPosition = Camera.main.WorldToScreenPoint(transform.position);
-        characterPositionRatioOnScreen = new Vector2(0.5f, characterScreenPosition.y / Screen.height);
         if (attackStaminaCost < Globals.CompareDelta)
         {
             Debug.LogWarning($"Basic attack stamina cost for a {gameObject.name} is set to a non-positive value.");
@@ -271,6 +277,8 @@ public abstract class Character : MonoBehaviour
     public void InitializeAsLocalCharacter(CharacterUI characterUI)
     {
         this.characterUI = characterUI;
+        var characterScreenPosition = Camera.main.WorldToScreenPoint(transform.position);
+        characterPositionRatioOnScreen = new Vector2(0.5f, characterScreenPosition.y / Screen.height);
     }
 
     #endregion
@@ -515,7 +523,7 @@ public abstract class Character : MonoBehaviour
         }
         animationManager.Die(direction);
         ClearDestination();
-        animationManager.SetMovementSpeed(0);
+        animationManager.Move(0);
         rb.constraints = RigidbodyConstraints.FreezeAll;
         if (characterUI != null)
         {
@@ -662,6 +670,16 @@ public abstract class Character : MonoBehaviour
         this.rotationTarget = rotationTarget;
     }
 
+    [PunRPC]
+    public void SetIsSprintingRequested(bool isSprintingRequested)
+    {
+        if (PhotonView.IsMine)
+        {
+            PhotonView.RPC(nameof(SetIsSprintingRequested), RpcTarget.Others, isSprintingRequested);
+        }
+        this.isSprintingRequested = isSprintingRequested;
+    }
+
     public void MoveTo(Vector3 position)
     {
         agent.CalculatePath(position, helperPath);
@@ -689,7 +707,7 @@ public abstract class Character : MonoBehaviour
         if (distanceToDestination > destinationThreshold && CanMove)
         {
             var targetRotation = Quaternion.LookRotation(new Vector3(nextDestination.x, rb.position.y, nextDestination.z) - rb.position);
-            movementSpeed = Mathf.Min(movementSpeed + Time.fixedDeltaTime * acceleration, movementSpeedMaximum);
+            movementSpeed = Mathf.Min(movementSpeed + Time.fixedDeltaTime * acceleration, TrySprint() ? sprintingSpeedMaximum : movementSpeedMaximum);
             var moveDirection = (nextDestination - rb.position).normalized;
             var rotationSpeed = Mathf.Lerp(rotationSpeedMinimum, rotationSpeedMaximum, Quaternion.Angle(targetRotation, rb.rotation) / 180f);
             rb.transform.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
@@ -708,7 +726,17 @@ public abstract class Character : MonoBehaviour
             }
             movementSpeed = Mathf.Max(movementSpeed - Time.fixedDeltaTime * deceleration, 0);
         }
-        animationManager.SetMovementSpeed(movementSpeed / movementSpeedMaximum);
+        animationManager.Move(movementSpeed / movementSpeedMaximum);
+    }
+
+    private bool TrySprint()
+    {
+        if (isSprintingRequested && stamina > sprintStaminaCostPerFixedUpdateFrame)
+        {
+            stamina -= sprintStaminaCostPerFixedUpdateFrame;
+            return true;
+        }
+        return false;
     }
 
     protected void ClearDestination()
@@ -776,7 +804,8 @@ public abstract class Character : MonoBehaviour
                 break;
             case BuffType.MovementSpeed:
                 movementSpeedMaximum = buff.applimentMode == BuffApplimentMode.Additive ? movementSpeedInitialMaximum + buff.effectValue : movementSpeedInitialMaximum * buff.effectValue;
-                agent.speed = movementSpeedMaximum * agentSpeedMultiplier;
+                sprintingSpeedMaximum = buff.applimentMode == BuffApplimentMode.Additive ? sprintingSpeedInitialMaximum + buff.effectValue : sprintingSpeedInitialMaximum * buff.effectValue;
+                agent.speed = sprintingSpeedMaximum * agentSpeedMultiplier;
                 break;
             default:
                 Debug.LogWarning($"Invalid buff type: { buff.type}");
@@ -794,7 +823,8 @@ public abstract class Character : MonoBehaviour
         healthRecoveryAmount = healthRecoveryInitialAmount;
         staminaRecoveryAmount = staminaRecoveryInitialAmount;
         movementSpeedMaximum = movementSpeedInitialMaximum;
-        agent.speed = movementSpeedMaximum * agentSpeedMultiplier;
+        sprintingSpeedMaximum = sprintingSpeedInitialMaximum;
+        agent.speed = sprintingSpeedMaximum * agentSpeedMultiplier;
     }
 
     #endregion

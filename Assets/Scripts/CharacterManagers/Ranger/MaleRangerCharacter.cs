@@ -33,7 +33,9 @@ public class MaleRangerCharacter : RangerCharacter
 
     private bool IsArrowLoaded { get; set; }
 
-    protected override bool CanAttack => base.CanAttack && !crossbow.IsReloading;
+    protected override bool CanAttack => base.CanAttack && !crossbow.IsReloading && IsArrowLoaded;
+    
+    private bool CanReload => IsAlive && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill && !animationManager.IsInteracting && !crossbow.IsReloading && !IsArrowLoaded;
 
     #region Skills
 
@@ -88,7 +90,12 @@ public class MaleRangerCharacter : RangerCharacter
             OnAttack(attackTarget);
             return true;
         }
-        else if (PhotonView.IsMine && characterUI != null && stamina < attackStaminaCost)
+        else if (CanReload)
+        {
+            Reload();
+            return true;
+        }
+        else if (PhotonView.IsMine && characterUI != null && stamina < attackStaminaCost && IsArrowLoaded)
         {
             characterUI.OnCannotPerformSkillOrAttack(stamina < attackStaminaCost, false);
         }
@@ -97,14 +104,7 @@ public class MaleRangerCharacter : RangerCharacter
 
     protected override void OnAttack(Vector3 attackTarget)
     {
-        if (IsArrowLoaded)
-        {
-            FireBolt(attackTarget);
-        }
-        else
-        {
-            Reload();
-        }
+        FireBolt(attackTarget);
     }
 
     [PunRPC]

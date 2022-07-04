@@ -18,6 +18,9 @@ public class Projectile : MonoBehaviour
     [Tooltip("The attack trigger of the projectile.")]
     public AttackTrigger projectileTrigger;
 
+    [Tooltip("The projectile trail particle system.")]
+    public ParticleSystem projectileTrailParticleSystem;
+
     [Tooltip("The sound effect of the projectile.")]
     public SFX projectileSFX;
 
@@ -40,8 +43,9 @@ public class Projectile : MonoBehaviour
 
     private Vector3 potetentialHit;
 
-    private const float triggerDelaySecondsAfterHit = 0.2f;
+    private const float triggerDelaySecondsAfterHit = 0.7f;
 
+    private const float particleSystemStoppingDelaySeconds = 0.5f;
     private bool IsStopped => rb.isKinematic;
 
     #endregion
@@ -99,7 +103,8 @@ public class Projectile : MonoBehaviour
             string fullPath = GameRoundManager.Instance.GetTransformFullPath(other.transform);
             Debug.Log($"Projectile hit target: {fullPath}");
             photonView.RPC(nameof(SetParentTransform), RpcTarget.Others, fullPath);
-            StartCoroutine(DelayAttackTriggerAfterHit());
+            StartCoroutine(DisableAttackTriggerAfterDelay());
+            StartCoroutine(StopParticleSystemAfterDelay());
         }
     }
 
@@ -119,10 +124,25 @@ public class Projectile : MonoBehaviour
         projectileTrigger.OnCharacterDamaged(characterPhotonViewID);
     }
 
-    private IEnumerator DelayAttackTriggerAfterHit()
+    private IEnumerator DisableAttackTriggerAfterDelay()
     {
         yield return new WaitForSeconds(triggerDelaySecondsAfterHit);
         projectileTrigger.IsActive = false;
+    }
+    private IEnumerator StopParticleSystemAfterDelay()
+    {
+        yield return new WaitForSeconds(particleSystemStoppingDelaySeconds);
+        StopTrailParticleSystem();
+    }
+
+    [PunRPC]
+    public void StopTrailParticleSystem()
+    {
+        if (photonView.IsMine)
+        {
+            photonView.RPC(nameof(StopTrailParticleSystem), RpcTarget.Others);
+        }
+        projectileTrailParticleSystem.Stop();
     }
 
     private void FixedUpdate()
@@ -141,6 +161,7 @@ public class Projectile : MonoBehaviour
         {
             Stop();
             ProjectilePool.OnProjectileDisappeared(this);
+            StopTrailParticleSystem();
         }
         gameObject.SetActive(false);
     }    
@@ -149,7 +170,8 @@ public class Projectile : MonoBehaviour
     {
         AudioManager.Instance.PlayOneShotSFX(projectileTrigger.audioSource, projectileSFX, doNotRepeat:true);
         gameObject.transform.parent = ProjectilePool.gameObject.transform;
-        if(photonView.IsMine)
+        projectileTrailParticleSystem.Play();
+        if (photonView.IsMine)
         {
             projectileTrigger.IsActive = false;
             gameObject.transform.parent = ProjectilePool.gameObject.transform;

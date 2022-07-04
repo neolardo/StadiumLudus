@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Manages the in-game pause menu UI.
 /// </summary>
-public class PauseMenuUI : MonoBehaviour
+public class PauseMenuUI : MonoBehaviour, IDropReceiver, IPointerEnterReceiver
 {
     #region Fields and Properties
 
@@ -104,6 +104,16 @@ public class PauseMenuUI : MonoBehaviour
     public void OnButtonClick()
     {
         AudioManager.Instance.PlayOneShotSFX(pauseMenuAudioSource, SFX.MenuButtonClick);
+    }
+
+    public void OnDrop()
+    {
+        OnButtonClick();
+    }
+
+    public void OnPointerEnter()
+    {
+        OnButtonHover();
     }
 
     #endregion

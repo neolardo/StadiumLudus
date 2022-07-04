@@ -28,6 +28,14 @@ public class CharacterController : MonoBehaviour
     [SerializeField]
     private KeyCode thirdSkillKeyCode = KeyCode.E;
 
+    [Tooltip("The key which should be held to make the character sprint.")]
+    [SerializeField]
+    private KeyCode sprintKeyCode = KeyCode.Space;
+
+    [Tooltip("The key which should be held to make the character guard.")]
+    [SerializeField]
+    private KeyCode guardKeyCode = KeyCode.LeftShift;
+
     private bool hasInitialized = false;
 
     #endregion
@@ -184,6 +192,15 @@ public class CharacterController : MonoBehaviour
         {
             character.EndSkill(3);
             characterUI.ChangeSkillButtonPress(3, false);
+        }
+        //sprint
+        if (AreInputsEnabled && Input.GetKeyDown(sprintKeyCode))
+        {
+            character.SetIsSprintingRequested(true);
+        }
+        else if(Input.GetKeyUp(sprintKeyCode))
+        {
+            character.SetIsSprintingRequested(false);
         }
         // pause menu
         if (character.IsAlive && !GameRoundManager.Instance.RoundEnded && Input.GetKeyDown(KeyCode.Escape))

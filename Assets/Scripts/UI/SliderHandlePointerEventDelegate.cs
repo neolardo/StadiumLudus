@@ -6,20 +6,35 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class SliderHandlePointerEventDelegate : MonoBehaviour, IPointerEnterHandler, IDropHandler
 {
-    [SerializeField]  private MainMenuUI eventReceiver;
+    [SerializeField]  private GameObject eventReceiver;
+    private IPointerEnterReceiver pointerEnterReceiver;
+    private IDropReceiver dropHandler;
 
+    private void Start()
+    {
+        pointerEnterReceiver = eventReceiver.GetComponent<IPointerEnterReceiver>();
+        if(pointerEnterReceiver == null)
+        {
+            Debug.LogWarning($"{eventReceiver.name} does not implement the {nameof(IPointerEnterReceiver)} interface. {nameof(IPointerEnterHandler)} event won't be handled.");
+        }
+        dropHandler = eventReceiver.GetComponent<IDropReceiver>();
+        if (dropHandler == null)
+        {
+            Debug.LogWarning($"{eventReceiver.name} does not implement the {nameof(IDropReceiver)} interface. {nameof(IDropHandler)} event won't be handled.");
+        }
+    }
     public void OnDrop(PointerEventData eventData)
     {
         if (eventReceiver != null)
         {
-            eventReceiver.OnDrop();
+            dropHandler.OnDrop();
         }
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (eventReceiver != null)
         {
-            eventReceiver.OnPointerEnter();
+            pointerEnterReceiver.OnPointerEnter();
         }
     }
 }

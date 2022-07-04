@@ -186,12 +186,12 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
         var characterPrefab = PhotonNetwork.Instantiate(GetCharacterPrefabNameOfPlayer(PhotonNetwork.LocalPlayer), spawnPoints[spawnIndex].position, spawnPoints[spawnIndex].rotation);
         localCharacter = characterPrefab.GetComponent<Character>();
         var characterController = characterPrefab.AddComponent<CharacterController>();
-        localCharacter.InitializeAsLocalCharacter(characterUI);
         characterUI.Initialize(localCharacter);
         characterController.Initialize(characterUI);
         cameraController.Initialize(localCharacter);
         var characterAudioListener = Instantiate(characterAudioListenerPrefab, null);
         characterAudioListener.SetTarget(localCharacter.transform);
+        localCharacter.InitializeAsLocalCharacter(characterUI);
         SetPlayerIsCharacterConfirmed(PhotonNetwork.LocalPlayer, false);
         SetPlayerIsInitialized(PhotonNetwork.LocalPlayer, true);
         SetPlayerIsRematchRequested(PhotonNetwork.LocalPlayer, false);
