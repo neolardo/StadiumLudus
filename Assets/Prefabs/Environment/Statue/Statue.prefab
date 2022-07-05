@@ -1,5 +1,51 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &55993271
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 55993272}
+  - component: {fileID: 55993273}
+  m_Layer: 8
+  m_Name: interactionArea
+  m_TagString: IgnoreBox
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &55993272
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 55993271}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3436836726040681813}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &55993273
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 55993271}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.62405014
+  m_Height: 3.0241241
+  m_Direction: 1
+  m_Center: {x: 0.024187565, y: 0.78706217, z: 0.06129241}
 --- !u!1 &642770852
 GameObject:
   m_ObjectHideFlags: 0
@@ -45,6 +91,7 @@ GameObject:
   - component: {fileID: 3436836726040681813}
   - component: {fileID: 1528141149}
   - component: {fileID: 5358047535861060521}
+  - component: {fileID: 8235820965921257201}
   m_Layer: 0
   m_Name: Statue
   m_TagString: Interactable
@@ -67,6 +114,7 @@ Transform:
   - {fileID: 3436836727453402846}
   - {fileID: 3436836727497845381}
   - {fileID: 642770853}
+  - {fileID: 55993272}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
@@ -82,6 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66739aa93620aca489a2864173b69602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  outline: {fileID: 8235820965921257201}
   interactionRangeDistance: 2
   firstBuffSpawnDelay: 5
   buffSpawnDelay: 5
@@ -111,6 +160,24 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &8235820965921257201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3436836726040681810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 0.10509073, g: 0.28619748, b: 0.6792453, a: 1}
+  outlineWidth: 3
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &3436836727453402847
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,7 +190,7 @@ GameObject:
   - component: {fileID: 3436836727453402835}
   - component: {fileID: 3436836727453402832}
   - component: {fileID: 3436836727453402833}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: statue
   m_TagString: Stone
   m_Icon: {fileID: 0}
@@ -220,10 +287,10 @@ GameObject:
   - component: {fileID: 3436836727497845381}
   - component: {fileID: 3436836727497845382}
   - component: {fileID: 3436836727497845383}
-  - component: {fileID: 3436836727497845380}
-  m_Layer: 8
+  - component: {fileID: 1263226785368433140}
+  m_Layer: 0
   m_Name: plinth
-  m_TagString: Untagged
+  m_TagString: Stone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -293,8 +360,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &3436836727497845380
-BoxCollider:
+--- !u!64 &1263226785368433140
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -303,9 +370,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.85462874, y: 0.854629, z: 0.5049424}
-  m_Center: {x: 0, y: -0.07343748, z: 0.24027137}
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 149e254906465814cafe855d2f90ab5d, type: 2}
 --- !u!1001 &1508014428775046970
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -361,9 +429,17 @@ PrefabInstance:
       propertyPath: type
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5854545998728995561, guid: d7457d723cf3f3c47ac7a2e783e9c3e8, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 3436836725991958059}
     - target: {fileID: 7365105617132978259, guid: d7457d723cf3f3c47ac7a2e783e9c3e8, type: 3}
       propertyPath: m_Name
       value: HealthRecoveryBuff
+      objectReference: {fileID: 0}
+    - target: {fileID: 8390268982609831713, guid: d7457d723cf3f3c47ac7a2e783e9c3e8, type: 3}
+      propertyPath: sceneViewId
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d7457d723cf3f3c47ac7a2e783e9c3e8, type: 3}
@@ -377,12 +453,113 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5854545998728995561, guid: d7457d723cf3f3c47ac7a2e783e9c3e8, type: 3}
   m_PrefabInstance: {fileID: 1508014428775046970}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 8276375503019892585}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8efafe2dec280b149bf24eace9fa567e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &8276375503019892585 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7365105617132978259, guid: d7457d723cf3f3c47ac7a2e783e9c3e8, type: 3}
+  m_PrefabInstance: {fileID: 1508014428775046970}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &3436836725991958059
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8276375503019892585}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 1311341109146075860, guid: b7bb259e1bd1e8943a3ca1626686032e, type: 2}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &2023650193205779063
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -434,6 +611,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1486387178655579891, guid: f4c841e66084e94408ac52aefe7b480c, type: 3}
+      propertyPath: sceneViewId
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4702857782831426422, guid: f4c841e66084e94408ac52aefe7b480c, type: 3}
       propertyPath: m_Name
       value: MovementSpeedBuff
@@ -466,6 +647,10 @@ PrefabInstance:
     - target: {fileID: 3958103647567119669, guid: 550ab148f85e0664f8d8ab2a812ce7d8, type: 3}
       propertyPath: m_Name
       value: StaminaRecoveryBuff
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995278475273825441, guid: 550ab148f85e0664f8d8ab2a812ce7d8, type: 3}
+      propertyPath: sceneViewId
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8575552315139205573, guid: 550ab148f85e0664f8d8ab2a812ce7d8, type: 3}
       propertyPath: m_RootOrder

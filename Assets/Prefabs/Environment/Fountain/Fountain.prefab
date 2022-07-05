@@ -1,5 +1,51 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &922132933
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 922132934}
+  - component: {fileID: 922132935}
+  m_Layer: 8
+  m_Name: interactionArea
+  m_TagString: IgnoreBox
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &922132934
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 922132933}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7607558169003297258}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &922132935
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 922132933}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 2.0399435
+  m_Height: 4.770715
+  m_Direction: 1
+  m_Center: {x: -0.032408, y: -0.17111564, z: 0}
 --- !u!1 &4056425761698168649
 GameObject:
   m_ObjectHideFlags: 0
@@ -12,7 +58,8 @@ GameObject:
   - component: {fileID: 8610369302044090604}
   - component: {fileID: 5019900676634897145}
   - component: {fileID: 1372260005574964102}
-  m_Layer: 8
+  - component: {fileID: 885455632}
+  m_Layer: 0
   m_Name: fountain
   m_TagString: Stone
   m_Icon: {fileID: 0}
@@ -98,6 +145,24 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 6a585886a5f9093438398e34917a6c4b, type: 2}
+--- !u!114 &885455632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4056425761698168649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 0.10509073, g: 0.28619748, b: 0.6792453, a: 1}
+  outlineWidth: 4
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &5141378229857843213
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,6 +312,7 @@ Transform:
   - {fileID: 5128449978470999370}
   - {fileID: 7624311874798411283}
   - {fileID: 7607558169687886699}
+  - {fileID: 922132934}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -262,6 +328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cb8442ec0c9e764bb203fc2db1bf0c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  outline: {fileID: 885455632}
   interactionPointContainer: {fileID: 7607558169687886698}
   healAmount: 30
   refillTime: 30

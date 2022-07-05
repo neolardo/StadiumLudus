@@ -3655,10 +3655,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24c432cfaa1d9b24389c844144c8e497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  angleFromCharacter: 50
-  distanceFromCharacter: 7
+  minimumAngleFromCharacter: 40
+  maximumAngleFromCharacter: 50
+  minimumDistanceFromCharacter: 4
+  maximumDistanceFromCharacter: 7
   lookAtHeight: 1
   angularSpeed: 10
+  zoomMultiplier: 5
 --- !u!1001 &1508421006
 PrefabInstance:
   m_ObjectHideFlags: 0

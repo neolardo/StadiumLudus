@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Manages the in-game UI of a character.
@@ -9,17 +10,15 @@ public class CharacterUI : MonoBehaviour
 {
     public PauseMenuUI pauseMenuUI;
     public EndGameUI endGameUI;
-    public Material healthBarMaterial;
-    public Material staminaBarMaterial;
     public List<SkillSlotUI> skillSlots;
+    public ValueBarUI healthBarUI;
+    public ValueBarUI staminaBarUI;
     public CanvasGroup canvasGroup;
     public AudioSource audioSource;
     private Character character;
     public bool IsUIVisible { get; private set; } = false;
 
     private const float endScreenDelay = 0.5f;
-
-    private const string valueShaderPropertyReference = "Vector1_0ae9bdea3f184704b6c11dd6513db5a4";
 
     private bool hasInitialized = false;
 
@@ -55,8 +54,8 @@ public class CharacterUI : MonoBehaviour
 
     private void UpdateShaders()
     {
-        healthBarMaterial.SetFloat(valueShaderPropertyReference, character.HealthRatio);
-        staminaBarMaterial.SetFloat(valueShaderPropertyReference, character.StaminaRatio);
+        healthBarUI.UpdateValue(character.HealthRatio);
+        staminaBarUI.UpdateValue(character.StaminaRatio);
     }
     public void SetUIVisiblity(bool value)
     {
@@ -91,11 +90,11 @@ public class CharacterUI : MonoBehaviour
         AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.CannotPerformSkillOrAttack);
         if (notEnoughStamina)
         {
-            //TODO make the stamina bar flash
+            staminaBarUI.ShowHideHighlight();
         }
         if (stillOnCooldown)
         {
-            // TODO make the skill bar flash
+            skillSlots[skillNumber - 1].ShowHideHighlight();
         }
     }
 

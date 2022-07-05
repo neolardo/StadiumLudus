@@ -21,5 +21,6 @@ public class TestGameRoundManager : MonoBehaviour
         var characterAudioListener = Instantiate(characterAudioListenerPrefab, null);
         characterAudioListener.SetTarget(localCharacter.transform);
         localCharacter.InitializeAsLocalCharacter(characterUI);
+        characterUI.SetUIVisiblity(true);
     }
 }

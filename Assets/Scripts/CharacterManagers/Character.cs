@@ -32,6 +32,9 @@ public abstract class Character : MonoBehaviour
     protected CharacterUI characterUI;
     public PhotonView PhotonView { get; private set; }
 
+    private Outline outline;
+    private float lastOutlineTriggerElapsedSeconds = Globals.OutlineDelay * 2;
+
     #endregion
 
     #region Health
@@ -261,6 +264,7 @@ public abstract class Character : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         PhotonView = GetComponent<PhotonView>();
+        outline = GetComponent<Outline>();
         agent.updatePosition = false;
         agent.updateRotation = false;
         agent.speed = sprintingSpeedMaximum * agentSpeedMultiplier;
@@ -273,10 +277,16 @@ public abstract class Character : MonoBehaviour
         ClearDestination();
         StartCoroutine(RecoverHealth()); 
         StartCoroutine(RecoverStamina());
+        StartCoroutine(HighlightOnTriggered());
     }
     public void InitializeAsLocalCharacter(CharacterUI characterUI)
     {
         this.characterUI = characterUI;
+    }
+
+    public void SetCharacterPositionOnScreen(Vector2 value)
+    {
+
         var characterScreenPosition = Camera.main.WorldToScreenPoint(transform.position);
         characterPositionRatioOnScreen = new Vector2(0.5f, characterScreenPosition.y / Screen.height);
     }
@@ -825,6 +835,31 @@ public abstract class Character : MonoBehaviour
         movementSpeedMaximum = movementSpeedInitialMaximum;
         sprintingSpeedMaximum = sprintingSpeedInitialMaximum;
         agent.speed = sprintingSpeedMaximum * agentSpeedMultiplier;
+    }
+
+    #endregion
+
+    #region Outline
+
+    public void ShowOutLine()
+    {
+        lastOutlineTriggerElapsedSeconds = 0;
+    }
+
+    private IEnumerator HighlightOnTriggered()
+    {
+        outline.enabled = false;
+        while (true)
+        {
+            yield return new WaitUntil(() => lastOutlineTriggerElapsedSeconds < Globals.OutlineDelay);
+            while (lastOutlineTriggerElapsedSeconds < Globals.OutlineDelay)
+            {
+                outline.enabled = true;
+                lastOutlineTriggerElapsedSeconds += Time.deltaTime;
+                yield return null;
+            }
+            outline.enabled = false;
+        }
     }
 
     #endregion

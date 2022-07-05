@@ -3,6 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Manages the UI of the main menu.
@@ -27,7 +28,7 @@ public class MainMenuUI : MonoBehaviour, IDropReceiver, IPointerEnterReceiver
     private bool IsNavigating { get; set; }
     private bool IsFading { get; set; }
 
-    public const  string NetworkErrorMessage = "Network error.\nPlease check your internet connection and try again.";
+    public const string NetworkErrorMessage = "Network error.\nPlease check your internet connection and try again.";
 
     #endregion
 
@@ -48,7 +49,7 @@ public class MainMenuUI : MonoBehaviour, IDropReceiver, IPointerEnterReceiver
             StartCoroutine(FadeInTitleAndLoadingText());
             StartCoroutine(FadeInExitButton());
         }
-        else 
+        else
         {
             StartCoroutine(FadeInTitleAndLoadingText());
         }

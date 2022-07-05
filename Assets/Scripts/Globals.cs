@@ -22,6 +22,7 @@ public static class Globals
     public const float CompareDelta = 0.001f;
     public const float PositionThreshold = 0.1f;
     public const float LoadingDelay = 0.2f;
+    public const float OutlineDelay = 0.05f;
 
     // layers
     public const int IgnoreRaycastLayer = 2;
@@ -40,6 +41,7 @@ public static class Globals
     public const string MainMenuScene = "MainMenuScene";
     public const string CharacterSelectionScene = "CharacterSelectionScene";
     public const string GameScene = "GameScene";
+    public const string TestScene = "TestScene";
 
     // network
     public const int MaximumPlayerCountPerRoom = 4;

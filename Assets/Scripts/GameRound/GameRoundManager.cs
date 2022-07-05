@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Manages an in-game round.
@@ -155,7 +156,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
 
     private void InitializeGameRound()
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().name == Globals.GameScene) // debug only
         {
             Debug.Log("Game loaded.");
             PhotonNetwork.CurrentRoom.IsOpen = false;

@@ -87,14 +87,6 @@ public class CharacterController : MonoBehaviour
     {
         if (AreInputsEnabled)
         {
-            if (Input.GetMouseButtonDown(1))
-            {
-                character.StartGuarding();
-            }
-            else if (Input.GetMouseButtonUp(1))
-            {
-                character.EndGuarding();
-            }
             if (Input.GetMouseButtonUp(0))
             {
                 ignoreUntilRelease = false;
@@ -102,18 +94,26 @@ public class CharacterController : MonoBehaviour
             bool isLeftMouseButtonDown = Input.GetMouseButtonDown(0);
             bool isLeftMouseButton = Input.GetMouseButton(0);
             bool isRightMouseButton = Input.GetMouseButton(1);
-            if (isLeftMouseButtonDown || isLeftMouseButton || isRightMouseButton)
+            RaycastHit hit;
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            var layerMask = (1 << Globals.GroundLayer) | (1 << Globals.CharacterLayer) | (1 << Globals.InteractableLayer);
+            if (Physics.Raycast(ray, out hit, 20, layerMask, QueryTriggerInteraction.Collide))
             {
-                RaycastHit hit;
-                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-                var layerMask = isLeftMouseButtonDown ? (1 << Globals.GroundLayer) | (1 << Globals.CharacterLayer) | (1 << Globals.InteractableLayer) : (1 << Globals.GroundLayer);
-                if (Physics.Raycast(ray, out hit, 20, layerMask, QueryTriggerInteraction.Collide))
+                bool interactableAtHit = hit.transform.gameObject.layer == Globals.InteractableLayer;
+                bool enemyAtHit = hit.transform.gameObject.layer == Globals.CharacterLayer && character.gameObject != hit.transform.gameObject;
+                if (interactableAtHit)
                 {
-                    bool interactableAtHit = hit.transform.gameObject.layer == Globals.InteractableLayer;
-                    bool enemyAtHit = hit.transform.gameObject.layer == Globals.CharacterLayer && character.gameObject != hit.transform.gameObject;
+                    hit.transform.parent.GetComponent<Interactable>().ShowOutLine();
+                }
+                if (enemyAtHit)
+                {
+                    hit.transform.GetComponent<Character>().ShowOutLine();
+                }
+                if (isLeftMouseButtonDown || isLeftMouseButton || isRightMouseButton)
+                {
                     if (!ignoreUntilRelease)
                     {
-                        if ((isLeftMouseButtonDown || isLeftMouseButton) && Input.GetKey(KeyCode.LeftShift))
+                        if ((isLeftMouseButtonDown || isLeftMouseButton) && Input.GetKey(KeyCode.LeftShift) || isRightMouseButton)
                         {
                             character.TryAttack(hit.point);
                         }
@@ -137,10 +137,6 @@ public class CharacterController : MonoBehaviour
                         else if ((isLeftMouseButtonDown || isLeftMouseButton) && character.gameObject != hit.transform.gameObject)
                         {
                             character.MoveTo(hit.point);
-                        }
-                        else if (isRightMouseButton && !isLeftMouseButton && !isLeftMouseButtonDown)
-                        {
-                            character.SetRotationTarget(hit.point);
                         }
                     }
                 }
@@ -201,6 +197,15 @@ public class CharacterController : MonoBehaviour
         else if(Input.GetKeyUp(sprintKeyCode))
         {
             character.SetIsSprintingRequested(false);
+        }
+        //guard
+        if (AreInputsEnabled && Input.GetKeyDown(guardKeyCode))
+        {
+            character.StartGuarding();
+        }
+        else if (Input.GetKeyUp(guardKeyCode))
+        {
+            character.EndGuarding();
         }
         // pause menu
         if (character.IsAlive && !GameRoundManager.Instance.RoundEnded && Input.GetKeyDown(KeyCode.Escape))
