@@ -71,6 +71,7 @@ public class Fountain :  Interactable
     private const float waterSizeFilled = .8f;
     private const float waterSizeEmpty = .05f;
     private const float waterAlphaFilled = .3f;
+    private const float delayBeforeHeal = .9f;
 
 
     #endregion
@@ -113,10 +114,17 @@ public class Fountain :  Interactable
         {
             IsFilled = false;
             var character = GameRoundManager.Instance.LocalCharacterReferenceDictionary[characterPhotonViewID];
-            character.DrinkFromFountain(transform.position, healAmount);
+            character.DrinkFromFountain(transform.position);
+            StartCoroutine(HealCharacterAfterDelay(character));
             return true;
         }
         return false;
+    }
+
+    private IEnumerator HealCharacterAfterDelay(Character character)
+    {
+        yield return new WaitForSeconds(delayBeforeHeal);
+        character.TryHeal(healAmount);
     }
 
     private IEnumerator WaitAndRefill()

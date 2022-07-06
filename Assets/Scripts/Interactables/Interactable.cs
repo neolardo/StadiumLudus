@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// An abstract class for any object that is interactable for the player.
 /// </summary>
-public abstract class Interactable : MonoBehaviour
+public abstract class Interactable : MonoBehaviour, IHighlightable
 {
     #region Fields And Properties
     public PhotonView PhotonView { get; private set; }
@@ -22,7 +22,7 @@ public abstract class Interactable : MonoBehaviour
 
     #region Outline
 
-    public void ShowOutLine()
+    public void Highlight()
     {
         lastOutlineTriggerElapsedSeconds = 0;
     }

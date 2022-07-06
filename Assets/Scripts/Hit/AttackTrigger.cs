@@ -1,20 +1,19 @@
 using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// An attack trigger for any kind object which deals damage.
+/// An attack trigger for any kind object that deals damage.
 /// </summary>
 public class AttackTrigger : MonoBehaviour
 {
     #region Properties and Fields
 
-    [Tooltip("The transform of the character which uses this attack trigger. Required to calculate hit directions and to prevent self harm.")]
-    public Transform characterTransform;
-
     [Tooltip("The audio source of the attack dealing object for playing impact audio.")]
     public AudioSource audioSource;
 
+    [Tooltip("The photon view of the object with this attack trigger.")]
     public PhotonView photonView;
 
     /// <summary>
@@ -71,7 +70,7 @@ public class AttackTrigger : MonoBehaviour
             }
         }
     }
-    private Character character;
+    private new Transform transform;
     private new Collider collider;
     private bool IsColliderCapsule;
 
@@ -79,43 +78,28 @@ public class AttackTrigger : MonoBehaviour
 
     #region Methods
 
+    #region Initialize
+
     private void Start()
     {
-        if (characterTransform == null)
-        {
-            Debug.LogWarning("An attack trigger's character field is null.");
-        }
-        character = characterTransform.GetComponent<Character>();
         collider = GetComponent<Collider>();
+        transform = GetComponent<Transform>();
         IsColliderCapsule = collider is CapsuleCollider;
     }
 
-    private HitDirection CalculateHitDirection(Vector3 otherForward)
-    {
-        float angle = Vector3.SignedAngle(characterTransform.forward, otherForward, Vector3.up);
-        if (Mathf.Abs(angle) < 90)
-        {
-            return HitDirection.Back;
-        }
-        else if (angle > 0)
-        {
-            return HitDirection.FrontRight;
-        }
-        else
-        {
-            return HitDirection.FrontLeft;
-        }
-    }
+    #endregion
+
+    #region Regular Attack
 
     private void OnTriggerEnter(Collider other)
     {
         if (IsActive)
         {
-            if (other.tag.Contains(Globals.HitBoxTag) && !other.gameObject.transform.IsChildOf(characterTransform))
+            if (other.tag.Contains(Globals.HitBoxTag))
             {
                 DealDamage(other);
             }
-            else if (!AnyObjectHit && !other.CompareTag(Globals.CharacterTag))
+            else if (!AnyObjectHit)
             {
                 if (other.tag == Globals.WoodTag)
                 {
@@ -131,10 +115,53 @@ public class AttackTrigger : MonoBehaviour
         }
     }
 
+    private void DealDamage(Collider other)
+    {
+        if (photonView.IsMine)
+        {
+            var hitBox = other.GetComponent<HitBox>();
+            if (!AttackedCharacters.Contains(hitBox.character))
+            {
+                var info = CalculateColliderInfo(collider);
+                hitBox.character.PhotonView.RPC(TryTakeDamageFunctionName, hitBox.character.PhotonView.Controller, Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(hitBox.character.transform.forward), info.point0, info.point1, info.radius, photonView.ViewID, false);
+                AttackedCharacters.Add(hitBox.character);
+                Debug.LogWarning($"Trying regular attack...");
+            }
+        }
+    }
+
+    #endregion
+
+    #region Force Attack
+
+    public void ForceAttackAfterDelay(Character target, float delaySeconds)
+    {
+        StartCoroutine(WaitUntilDelayThenForceAttack(target, delaySeconds));
+    }
+
+    private IEnumerator WaitUntilDelayThenForceAttack(Character target, float delaySeconds)
+    {
+        yield return new WaitForSeconds(delaySeconds);
+        if (IsActive && !AttackedCharacters.Contains(target))
+        {
+            target.PhotonView.RPC(TryTakeDamageFunctionName, target.PhotonView.Controller, Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(target.transform.forward), Vector3.zero, Vector3.zero, 0f, photonView.ViewID, true);
+            AttackedCharacters.Add(target);
+            Debug.LogWarning($"Force attack successful.");
+        }
+        else
+        {
+            Debug.LogWarning($"Could not force attack: isActive: {IsActive}, already attacked:{AttackedCharacters.Contains(target)}");
+        }
+    }
+
+    #endregion
+
+    #region Calculate Infos
+
     private (Vector3 point0, Vector3 point1, float radius) CalculateColliderInfo(Collider col)
     {
-        Vector3 point0 = Vector3.zero, point1 = Vector3.zero;
-        float radius = 0f;
+        Vector3 point0, point1;
+        float radius;
         if (IsColliderCapsule)
         {
             var capsule = col as CapsuleCollider;
@@ -146,7 +173,7 @@ public class AttackTrigger : MonoBehaviour
             point1 = transform.TransformPoint(localPoint1);
             radius = capsule.radius;
         }
-        else 
+        else
         {
             var sphere = col as SphereCollider;
             var localPoint0 = sphere.center - Vector3.up * sphere.radius;
@@ -158,25 +185,34 @@ public class AttackTrigger : MonoBehaviour
         return (point0, point1, radius);
     }
 
-    private void DealDamage(Collider other)
+    private HitDirection CalculateHitDirection(Vector3 otherForward)
     {
-        if (character.PhotonView.IsMine)
+        float angle = Vector3.SignedAngle(transform.forward, otherForward, Vector3.up);
+        if (Mathf.Abs(angle) < 90)
         {
-            var hitBox = other.GetComponent<HitBox>();
-            if (!AttackedCharacters.Contains(hitBox.character))
-            {
-                var info = CalculateColliderInfo(collider);
-                hitBox.character.PhotonView.RPC(TryTakeDamageFunctionName, hitBox.character.PhotonView.Controller, Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(hitBox.character.transform.forward), info.point0, info.point1, info.radius, photonView.ViewID);
-                AttackedCharacters.Add(hitBox.character);
-            }
+            return HitDirection.Back;
+        }
+        else if (angle > 0)
+        {
+            return HitDirection.FrontRight;
+        }
+        else
+        {
+            return HitDirection.FrontLeft;
         }
     }
+
+    #endregion
+
+    #region Character Damaged
 
     [PunRPC]
     public void OnCharacterDamaged(int characterPhotonViewID)
     {
         DamagedCharacters.Add(GameRoundManager.Instance.LocalCharacterReferenceDictionary[characterPhotonViewID]);
     }
+
+    #endregion
 
     #endregion
 }

@@ -14,6 +14,7 @@ public static class Globals
     public const string CharacterTag = "Character";
     public const string HitBoxTag = "HitBox";
     public const string IgnoreBoxTag = "IgnoreBox";
+    public const string AttackTriggerTag = "AttackTrigger";
     public const string WoodTag = "Wood";
     public const string StoneTag = "Stone";
     public const string MetalTag = "Metal";
@@ -23,13 +24,17 @@ public static class Globals
     public const float PositionThreshold = 0.1f;
     public const float LoadingDelay = 0.2f;
     public const float OutlineDelay = 0.05f;
+    public const float RaycastDistance = 30f;
 
     // layers
     public const int IgnoreRaycastLayer = 2;
     public const int CharacterLayer = 6;
     public const int GroundLayer = 7;
     public const int InteractableLayer = 8;
+    public const int HitBoxLayer = 10;
     public const int ValidationLayer = 11;
+    public const int AttackTriggerLayer = 12;
+    public const int RigidbodyLayer = 13;
 
     // audio mixer 
     public const string AudioMixerSFXVolume = "SFXVolume";

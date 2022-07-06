@@ -9,6 +9,8 @@ public class MaleWarriorCharacter : WarriorCharacter
     #region Properties and Fields
     public override CharacterFightingStyle FightingStyle => CharacterFightingStyle.Heavy;
 
+    #region Attack
+
     [Header("BattleAxe")]
     [Tooltip("Represents the attack trigger of the battle axe weapon.")]
     public AttackTrigger battleAxeTrigger;
@@ -24,6 +26,10 @@ public class MaleWarriorCharacter : WarriorCharacter
     [Tooltip("Represents audio source of the battle axe.")]
     [SerializeField]
     private AudioSource battleAxeAudioSource;
+
+    private const float forceAttackDelay = 0.3f;
+
+    #endregion
 
     #region Skills
 
@@ -88,17 +94,33 @@ public class MaleWarriorCharacter : WarriorCharacter
         battleAxeTrigger.IsActive = false;
     }
 
+    protected override void OnAttackChaseTarget()
+    {
+        base.OnAttackChaseTarget();
+        StartCoroutine(ManageAttackTrigger());
+        StartCoroutine(ManageForceAttack());
+    }
+
+    private IEnumerator ManageForceAttack()
+    {
+        yield return new WaitUntil(() => (battleAxeTrigger.IsActive && warriorAnimationManager.CanDealDamage) || !warriorAnimationManager.IsAttacking );
+        var target = chaseTarget == null ? null : chaseTarget.GetComponent<Character>();
+        if (target != null && battleAxeTrigger.IsActive && warriorAnimationManager.CanDealDamage)
+        {
+            battleAxeTrigger.ForceAttackAfterDelay(target, forceAttackDelay);
+        }
+    }
+
     #endregion
 
     #region Skills
 
     #region Leap Attack
 
-    protected override void OnLeapAttack(Vector3 attackTarget)
+    protected override void OnLeapAttack()
     {
         StartCoroutine(ManageLeapAttackAttackTrigger());
     }
-
 
     private IEnumerator ManageLeapAttackAttackTrigger()
     {

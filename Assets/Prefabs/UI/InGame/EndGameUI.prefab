@@ -158,6 +158,7 @@ GameObject:
   - component: {fileID: 1367466508201776775}
   - component: {fileID: 4778365908327770904}
   - component: {fileID: 4778365908327770907}
+  - component: {fileID: 293391450}
   m_Layer: 0
   m_Name: EndGameUI
   m_TagString: Untagged
@@ -336,6 +337,20 @@ MonoBehaviour:
   rematchTextGameObject: {fileID: 5969257148426506440}
   rematchButton: {fileID: 5818699431110058497}
   audioSource: {fileID: 4778365908327770904}
+  titleCanvasGroup: {fileID: 293391450}
+  buttonsCanvasGroup: {fileID: 293391449}
+--- !u!225 &293391450
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1781242925805135475}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1806526585225142667
 GameObject:
   m_ObjectHideFlags: 0
@@ -346,13 +361,14 @@ GameObject:
   m_Component:
   - component: {fileID: 6221500554059942487}
   - component: {fileID: 5910844033673186011}
+  - component: {fileID: 293391449}
   m_Layer: 0
   m_Name: ButtonContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6221500554059942487
 RectTransform:
   m_ObjectHideFlags: 0
@@ -370,8 +386,8 @@ RectTransform:
   m_Father: {fileID: 9167278818871218310}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.4, y: 0.35}
-  m_AnchorMax: {x: 0.6, y: 0.65}
+  m_AnchorMin: {x: 0.4, y: 0.2}
+  m_AnchorMax: {x: 0.6, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -401,6 +417,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!225 &293391449
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1806526585225142667}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &3558887240950052238
 GameObject:
   m_ObjectHideFlags: 0
@@ -434,8 +462,8 @@ RectTransform:
   m_Father: {fileID: 9167278818871218310}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.55}
-  m_AnchorMax: {x: 1, y: 0.65}
+  m_AnchorMin: {x: 0, y: 0.4}
+  m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -572,8 +600,8 @@ RectTransform:
   m_Father: {fileID: 9167278818871218310}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.1, y: 0.7}
-  m_AnchorMax: {x: 0.9, y: 0.9}
+  m_AnchorMin: {x: 0.1, y: 0.5}
+  m_AnchorMax: {x: 0.9, y: 0.7}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -901,8 +929,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4778365908327770907}
-        m_TargetAssemblyTypeName: EndGameUI, Assembly-CSharp
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: PauseMenuUI, Assembly-CSharp
         m_MethodName: OnExit
         m_Mode: 1
         m_Arguments:

@@ -95,10 +95,6 @@ public class MaleRangerCharacter : RangerCharacter
             Reload();
             return true;
         }
-        else if (PhotonView.IsMine && characterUI != null && stamina < attackStaminaCost && IsArrowLoaded)
-        {
-            characterUI.OnCannotPerformSkillOrAttack(stamina < attackStaminaCost, false);
-        }
         return false;
     }
 

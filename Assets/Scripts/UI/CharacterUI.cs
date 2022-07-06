@@ -85,7 +85,7 @@ public class CharacterUI : MonoBehaviour
         skillSlots[skillNumber - 1].RemoveCharge();
     }
 
-    public void OnCannotPerformSkillOrAttack(bool notEnoughStamina, bool stillOnCooldown, int skillNumber = -1)
+    public void OnCannotPerformSkill(bool notEnoughStamina, bool stillOnCooldown, int skillNumber)
     {
         AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.CannotPerformSkillOrAttack);
         if (notEnoughStamina)

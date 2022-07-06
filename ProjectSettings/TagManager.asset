@@ -11,6 +11,7 @@ TagManager:
   - Stone
   - Metal
   - Interactable
+  - AttackTrigger
   layers:
   - Default
   - TransparentFX
@@ -24,8 +25,8 @@ TagManager:
   - Mask
   - HitBox
   - Validation
-  - 
-  - 
+  - AttackTrigger
+  - Rigidbody
   - 
   - 
   - 

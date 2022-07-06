@@ -173,7 +173,7 @@ public abstract class RangerCharacter : Character
 
     #region Skills
 
-    public override void StartSkill(int skillNumber, Vector3 clickPosition)
+    public override void StartSkill(int skillNumber, Vector3 clickPosition, Character target)
     {
         switch (skillNumber)
         {
@@ -250,7 +250,7 @@ public abstract class RangerCharacter : Character
             var raycastPoint = edgePoint + Vector3.up * 5;
             Ray ray = new Ray(raycastPoint, Vector3.down);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 20, 1 << Globals.GroundLayer))
+            if (Physics.Raycast(ray, out hit, Globals.RaycastDistance, 1 << Globals.GroundLayer))
             {
                 target = hit.point;
             }
@@ -267,7 +267,7 @@ public abstract class RangerCharacter : Character
         }
         else if (PhotonView.IsMine && characterUI != null)
         {
-            characterUI.OnCannotPerformSkillOrAttack(stamina < dashStaminaCost, !IsDashAvailable, DashSkillNumber);
+            characterUI.OnCannotPerformSkill(stamina < dashStaminaCost, !IsDashAvailable, DashSkillNumber);
         }
     }
 
@@ -319,7 +319,7 @@ public abstract class RangerCharacter : Character
         }
         else if (PhotonView.IsMine && characterUI != null)
         {
-            characterUI.OnCannotPerformSkillOrAttack(stamina < smokeStaminaCost, !IsSmokeAvailable, SmokeSkillNumber);
+            characterUI.OnCannotPerformSkill(stamina < smokeStaminaCost, !IsSmokeAvailable, SmokeSkillNumber);
         }
     }
 
@@ -346,7 +346,7 @@ public abstract class RangerCharacter : Character
         }
         else if (PhotonView.IsMine && characterUI != null)
         {
-            characterUI.OnCannotPerformSkillOrAttack(false, trapChargeCount == 0, TrapSkillNumber);
+            characterUI.OnCannotPerformSkill(false, trapChargeCount == 0, TrapSkillNumber);
         }
     }
 

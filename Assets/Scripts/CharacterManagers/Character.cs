@@ -9,7 +9,7 @@ using UnityEngine.AI;
 /// <summary>
 /// Represents a playable character of the game.
 /// </summary>
-public abstract class Character : MonoBehaviour
+public abstract class Character : MonoBehaviour, IHighlightable
 {
     #region Properties and fields
 
@@ -32,6 +32,9 @@ public abstract class Character : MonoBehaviour
     protected CharacterUI characterUI;
     public PhotonView PhotonView { get; private set; }
 
+    [Header("UI")]
+    [Tooltip("Represents the character trigger outline.")]
+    [SerializeField]
     private Outline outline;
     private float lastOutlineTriggerElapsedSeconds = Globals.OutlineDelay * 2;
 
@@ -181,10 +184,14 @@ public abstract class Character : MonoBehaviour
     /// </summary>
     [HideInInspector]
     public new Transform transform;
+    [Tooltip("Represents the animation manager of this character.")]
     public CharacterAnimationManager animationManager;
+    [Tooltip("Represents the character trigger of this character.")]
+    [SerializeField]
+    protected GameObject characterTrigger;
     protected Rigidbody rb;
     private NavMeshAgent agent;
-    private Transform chaseTarget;
+    protected Transform chaseTarget;
     private Vector3 rotationTarget;
     private NavMeshPath helperPath;
     protected bool forceRotation = false;
@@ -194,31 +201,30 @@ public abstract class Character : MonoBehaviour
 
     #region Attack
 
-
     [Header("Basic Attack")]
     [Tooltip("Represents the stamina cost of a basic attack.")]
     [SerializeField]
     protected float attackStaminaCost;
+    protected virtual bool IsInAction => animationManager.IsInterrupted || animationManager.IsAttacking || animationManager.IsGuarding || animationManager.IsUsingSkill || animationManager.IsInteracting;
+    protected virtual bool CanAttack => IsAlive && !IsInAction && stamina > attackStaminaCost;
+    protected virtual bool CanSetChaseTarget => IsAlive && !IsInAction;
 
+    #region Validation
+
+    [Header("Validation")]
+    [Tooltip("The hitbox collider's transform.")]
     [SerializeField]
-    protected Transform hitValidationColliderContainer;
-
-    protected virtual bool CanAttack => IsAlive && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill && !animationManager.IsInteracting && stamina > attackStaminaCost;
+    private Transform hitBoxTransform;
 
     /// <summary>
-    /// A list of <see cref="Transform"/>s of the character's hitbox <see cref="Collider"/>s.
+    /// The validation <see cref="Collider"/>'s <see cref="Transform"/>.
     /// </summary>
-    private List<Transform> hitBoxTransforms;
+    private Transform validationBoxTransform;
 
     /// <summary>
-    /// A list of <see cref="Collider"/> <see cref="Transform"/>s used for validating a hit.
+    /// A <see cref="CircularBuffer"/> storing the recent <see cref="HitBoxInfo"/>s.
     /// </summary>
-    private List<Transform> validationColliderTransforms;
-
-    /// <summary>
-    /// A  <see cref="CachedCircularBuffer"/> storing the most recent info of the <see cref="hitBoxTransforms"/>.
-    /// </summary>
-    private CachedCircularBuffer<HitBoxInfoStorage> hitBoxInfoCircularBuffer;
+    private CircularBuffer<HitBoxInfo> hitBoxInfoCircularBuffer;
 
     /// <summary>
     /// The number of fixed update frames recorded for validating a hit info.
@@ -227,20 +233,22 @@ public abstract class Character : MonoBehaviour
 
     #endregion
 
+    #endregion
+
     #region Guard
 
-    protected virtual bool CanGuard => IsAlive && !animationManager.IsInterrupted && !animationManager.IsGuarding && !animationManager.IsAttacking && !animationManager.IsUsingSkill;
+    protected virtual bool CanGuard => IsAlive && !IsInAction;
 
     #endregion
 
     #region Interactions
+    protected virtual bool CanSetInteractionTarget => IsAlive && !IsInAction;
+    protected virtual bool CanInteract => IsAlive &&!IsInAction && (interactionPoint - rb.position).magnitude < interactionRange;
 
     private Interactable interactionTarget;
     private Vector3 interactionPoint;
     protected const float interactionRange = 0.1f;
-    protected const float fountainHealDelay = 0.5f;
     protected Buff currentBuff;
-
 
     #endregion
 
@@ -264,7 +272,6 @@ public abstract class Character : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         PhotonView = GetComponent<PhotonView>();
-        outline = GetComponent<Outline>();
         agent.updatePosition = false;
         agent.updateRotation = false;
         agent.speed = sprintingSpeedMaximum * agentSpeedMultiplier;
@@ -272,6 +279,11 @@ public abstract class Character : MonoBehaviour
         if (attackStaminaCost < Globals.CompareDelta)
         {
             Debug.LogWarning($"Basic attack stamina cost for a {gameObject.name} is set to a non-positive value.");
+        }
+        if (PhotonView.IsMine)
+        {
+            characterTrigger.layer = Globals.IgnoreRaycastLayer;
+            characterTrigger.tag = Globals.IgnoreBoxTag;
         }
         InitializeHitBoxRecording();
         ClearDestination();
@@ -286,14 +298,12 @@ public abstract class Character : MonoBehaviour
 
     public void SetCharacterPositionOnScreen(Vector2 value)
     {
-
-        var characterScreenPosition = Camera.main.WorldToScreenPoint(transform.position);
-        characterPositionRatioOnScreen = new Vector2(0.5f, characterScreenPosition.y / Screen.height);
+        characterPositionRatioOnScreen = value;
     }
 
     #endregion
 
-    #region Updates
+    #region Update
 
     protected virtual void FixedUpdate()
     {
@@ -312,7 +322,7 @@ public abstract class Character : MonoBehaviour
     #endregion
 
     #region Skills
-    public abstract void StartSkill(int skillNumber, Vector3 clickPosition);
+    public abstract void StartSkill(int skillNumber, Vector3 clickPosition, Character target);
     public virtual void EndSkill(int skillNumber) { }
     public virtual bool IsSkillChargeable(int skillNumber) => false;
     public virtual int InitialChargeCountOfSkill(int skillNumber) => 0;
@@ -356,19 +366,76 @@ public abstract class Character : MonoBehaviour
             OnAttack(attackTarget);
             return true;
         }
-        else if (PhotonView.IsMine && characterUI != null && stamina < attackStaminaCost)
-        {
-            characterUI.OnCannotPerformSkillOrAttack(stamina < attackStaminaCost, false);
-        }
         return false;
     }
 
     protected virtual void OnAttack(Vector3 attackTarget)
     {
+        chaseTarget = null;
+        interactionTarget = null;
+        ClearDestination();
         animationManager.Attack();
         rotationTarget = attackTarget;
         stamina -= attackStaminaCost;
     }
+
+    #region Chase
+
+    public void SetChaseTarget(Transform target)
+    {
+        if (CanSetChaseTarget)
+        {
+            chaseTarget = target;
+            interactionTarget = null;
+        }
+    }
+
+    private void UpdateChase()
+    {
+        if (chaseTarget != null)
+        {
+            SetDestination(chaseTarget.position);
+            TryAttackChaseTarget();
+        }
+    }
+
+    [PunRPC]
+    public void TryAttackChaseTarget()
+    {
+        if (!PhotonView.IsMine || (CanAttack && ((chaseTarget.position - rb.position).magnitude < attackRange)))
+        {
+            if (PhotonView.IsMine)
+            {
+                PhotonView.RPC(nameof(TryAttackChaseTarget), RpcTarget.Others);
+            }
+            OnAttackChaseTarget();
+        }
+    }
+
+    protected virtual void OnAttackChaseTarget()
+    {
+        ClearDestination();
+        animationManager.Attack();
+        stamina -= attackStaminaCost;
+        if (PhotonView.IsMine)
+        {
+            StartCoroutine(RotateToChaseTargetWhileAttacking());
+        }
+    }
+
+    protected IEnumerator RotateToChaseTargetWhileAttacking()
+    {
+        yield return new WaitUntil(() => animationManager.CanDealDamage || !animationManager.IsAttacking);
+        while (animationManager.CanDealDamage && chaseTarget != null)
+        {
+            SetRotationTarget(chaseTarget.position);
+            yield return null;
+        }
+        chaseTarget = null;
+        ClearDestination();
+    }
+
+    #endregion
 
     #endregion
 
@@ -378,59 +445,33 @@ public abstract class Character : MonoBehaviour
     {
         if (PhotonView.IsMine)
         {
-            hitBoxTransforms = new List<Transform>();
-            validationColliderTransforms = new List<Transform>();
-            hitBoxInfoCircularBuffer = new CachedCircularBuffer<HitBoxInfoStorage>(NumberOfRecordedHitBoxFrames);
-            FindAndAddHitBoxTransformsToList(transform);
-            foreach (var t in hitBoxTransforms)
-            {
-                var copy = Instantiate(t.GetComponent<Collider>(), hitValidationColliderContainer);
-                copy.gameObject.SetActive(true);
-                Destroy(copy.GetComponent<HitBox>());
-                copy.gameObject.layer = Globals.ValidationLayer;
-                validationColliderTransforms.Add(copy.transform);
-            }
-        }
-    }
-
-    private void FindAndAddHitBoxTransformsToList(Transform t)
-    {
-        for (int i = 0; i < t.childCount; i++)
-        {
-            FindAndAddHitBoxTransformsToList(t.GetChild(i));
-        }
-        if (t.CompareTag(Globals.HitBoxTag))
-        {
-            hitBoxTransforms.Add(t);
+            hitBoxInfoCircularBuffer = new CircularBuffer<HitBoxInfo>(NumberOfRecordedHitBoxFrames);
+            var copy = Instantiate(hitBoxTransform.GetComponent<Collider>(), transform);
+            Destroy(copy.GetComponent<HitBox>());
+            copy.gameObject.layer = Globals.ValidationLayer;
+            copy.gameObject.tag = Globals.IgnoreBoxTag;
+            copy.gameObject.name = "CharacterValidationBox";
+            validationBoxTransform = copy.transform;
+            copy.gameObject.SetActive(true);
         }
     }
 
     private void UpdateHitBoxInfo()
     {
-        var info = hitBoxInfoCircularBuffer.GetNext();
-        info.CanBeInterrupted = animationManager.CanBeInterrupted;
-        if (info.CanBeInterrupted)
-        {
-            for (int i = 0; i < hitBoxTransforms.Count; i++)
-            {
-                info.ColliderTransformArray[i] = (hitBoxTransforms[i].position, hitBoxTransforms[i].rotation);
-            }
-        }
+        var info = new HitBoxInfo(hitBoxTransform.position, hitBoxTransform.rotation, animationManager.CanBeInterrupted);
+        hitBoxInfoCircularBuffer.Push(info);
     }
 
     public bool IsHitValid(Vector3 colliderPoint1, Vector3 colliderPoint2, float colliderRadius, int oldTimeStamp)
     {
-        int deltaFixedUpdateFrames = Mathf.RoundToInt((PhotonNetwork.ServerTimestamp - oldTimeStamp) / 20f); // 1000/50 ms is one fixed update frame
+        int deltaFixedUpdateFrames = Mathf.RoundToInt((PhotonNetwork.ServerTimestamp - oldTimeStamp) / 20f); // 1000/50 ms is one fixed update frame delta
         if(deltaFixedUpdateFrames < NumberOfRecordedHitBoxFrames)
         {
             var info = hitBoxInfoCircularBuffer[deltaFixedUpdateFrames];
-            if (info.CanBeInterrupted)
+            if (info.canBeInterrupted)
             {
-                for (int i = 0; i < validationColliderTransforms.Count; i++)
-                {
-                    validationColliderTransforms[i].position = info.ColliderTransformArray[i].position;
-                    validationColliderTransforms[i].rotation = info.ColliderTransformArray[i].rotation;
-                }
+                validationBoxTransform.position = info.colliderPosition;
+                validationBoxTransform.rotation = info.colliderRotation;
                 var result = Physics.CheckCapsule(colliderPoint2, colliderPoint1, colliderRadius, 1 << Globals.ValidationLayer);
                 return result;
             }
@@ -443,9 +484,9 @@ public abstract class Character : MonoBehaviour
     #region Take Damage
 
     [PunRPC]
-    public void TryTakeDamage(float amount, HitDirection direction, Vector3 attackColliderPoint0, Vector3 attackColliderPoint1, float attackColliderRadius, int senderAttackTriggerPhotonViewID, PhotonMessageInfo info)
+    public void TryTakeDamage(float amount, HitDirection direction, Vector3 attackColliderPoint0, Vector3 attackColliderPoint1, float attackColliderRadius, int senderAttackTriggerPhotonViewID, bool isUnavoidable, PhotonMessageInfo info)
     {
-        if (IsAlive && animationManager.CanBeInterrupted && PhotonView.IsMine && IsHitValid(attackColliderPoint0,  attackColliderPoint1,  attackColliderRadius, info.SentServerTimestamp))
+        if (IsAlive && animationManager.CanBeInterrupted && PhotonView.IsMine && (isUnavoidable || IsHitValid(attackColliderPoint0,  attackColliderPoint1,  attackColliderRadius, info.SentServerTimestamp)))
         { 
             PhotonView.RPC(nameof(TakeDamage), RpcTarget.All, amount, direction);
             PhotonView.Find(senderAttackTriggerPhotonViewID).RPC(nameof(AttackTrigger.OnCharacterDamaged), RpcTarget.All, PhotonView.ViewID);
@@ -455,7 +496,7 @@ public abstract class Character : MonoBehaviour
     [PunRPC]
     public void TakeDamage(float amount, HitDirection direction)
     {
-        if (animationManager.IsGuarding)
+        if (animationManager.IsGuarding && direction != HitDirection.Back)
         {
             float guardedAmount = stamina - Mathf.Max(0, stamina - amount);
             stamina -= guardedAmount;
@@ -475,7 +516,14 @@ public abstract class Character : MonoBehaviour
             }
             else if (stamina > Globals.CompareDelta && animationManager.IsGuarding)
             {
-                AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.GuardHit);
+                if (direction == HitDirection.Back)
+                {
+                    AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.GuardHit);
+                }
+                else
+                {
+                    AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
+                }
             }
             else
             {
@@ -520,6 +568,14 @@ public abstract class Character : MonoBehaviour
         animationManager.EndGuarding();
     }
 
+    public void SetGuardTarget(Vector3 guardTarget)
+    {
+        if (animationManager.IsGuarding)
+        {
+            SetRotationTarget(guardTarget);
+        }
+    }
+
     #endregion
 
     #region Die and Win
@@ -531,9 +587,12 @@ public abstract class Character : MonoBehaviour
         {
             PhotonView.RPC(nameof(OnDie), RpcTarget.Others, direction);
         }
+        health = -1; // making sure the character is no longer alive
         animationManager.Die(direction);
         ClearDestination();
         animationManager.Move(0);
+        chaseTarget = null;
+        interactionTarget = null;
         rb.constraints = RigidbodyConstraints.FreezeAll;
         if (characterUI != null)
         {
@@ -551,7 +610,9 @@ public abstract class Character : MonoBehaviour
             PhotonView.RPC(nameof(OnWin), RpcTarget.Others);
         }
         ClearDestination();
-        rb.constraints = RigidbodyConstraints.FreezeAll;
+        animationManager.Move(0);
+        chaseTarget = null;
+        interactionTarget = null;
         if (characterUI != null)
         {
             characterUI.ShowEndScreen(true);
@@ -565,26 +626,29 @@ public abstract class Character : MonoBehaviour
 
     public void SetInteractionTarget(Interactable interactable)
     {
-        var point = interactable.GetClosestInteractionPoint(rb.position);
-        if ((point - rb.position).magnitude < interactionRange)
+        if (CanSetInteractionTarget)
         {
-            interactionTarget = interactable;
-            Interract();
+            interactionPoint = interactable.GetClosestInteractionPoint(rb.position);
+            if (CanInteract)
+            {
+                interactionTarget = interactable;
+                Interract();
+            }
+            else 
+            {
+                MoveTo(interactionPoint);
+                interactionTarget = interactable;
+                interactionPoint = Destination;
+            }
+            chaseTarget = null;
         }
-        else 
-        {
-            MoveTo(point); 
-            interactionTarget = interactable;
-            interactionPoint = Destination;
-        }
-        chaseTarget = null;
     }
 
     private void UpdateInteractionCheck()
     {
         if (interactionTarget != null)
         {
-            if ((interactionPoint - rb.position).magnitude < interactionRange)
+            if (CanInteract)
             {
                 Interract();
             }
@@ -600,17 +664,18 @@ public abstract class Character : MonoBehaviour
 
     #region Drink
 
-    public void DrinkFromFountain(Vector3 fountainPosition, float healAmount)
+    public void DrinkFromFountain(Vector3 fountainPosition)
     {
-        SetRotationTarget(fountainPosition);
-        animationManager.Drink();
-        StartCoroutine(TryHealAfterDelay(healAmount));
+        if (IsAlive && !IsInAction)
+        {
+            SetRotationTarget(fountainPosition);
+            animationManager.Drink();
+        }
     }
 
-    private IEnumerator TryHealAfterDelay(float healAmount)
+    public void TryHeal(float healAmount)
     {
-        yield return new WaitForSeconds(fountainHealDelay);
-        if (!animationManager.IsInterrupted)
+        if (IsAlive && animationManager.IsInteracting)
         {
             health = Mathf.Min(health + healAmount, healthMaximum);
         }
@@ -618,43 +683,63 @@ public abstract class Character : MonoBehaviour
 
     #endregion
 
-    #region Kneel
+    #region Buffs
 
     public void KneelBeforeStatue(Vector3 statuePosition)
     {
-        SetRotationTarget(statuePosition); 
-        animationManager.Kneel();
-    }
-
-    #endregion
-
-    #endregion
-
-    #region Chase
-
-    public void SetChaseTarget(Transform target)
-    {
-        chaseTarget = target;
-        interactionTarget = null;
-    }
-
-    private void UpdateChase()
-    {
-        if (chaseTarget != null)
+        if (IsAlive && !IsInAction)
         {
-            if ((chaseTarget.position - rb.position).magnitude < attackRange)
-            {
-                TryAttack(chaseTarget.position);
-                chaseTarget = null;
-                ClearDestination();
-            }
-            else
-            {
-                SetDestination(chaseTarget.position);
-            }
+            SetRotationTarget(statuePosition);
+            animationManager.Kneel();
         }
     }
 
+    public void AddBuff(Buff buff)
+    {
+        if (IsAlive && animationManager.IsInteracting)
+        {
+            RemoveBuffs();
+            currentBuff = buff;
+            switch (buff.type)
+            {
+                case BuffType.HealthRecovery:
+                    healthRecoveryAmount = buff.applimentMode == BuffApplimentMode.Additive ? healthRecoveryInitialAmount + buff.effectValue : healthRecoveryInitialAmount * buff.effectValue;
+                    break;
+                case BuffType.StaminaRecovery:
+                    staminaRecoveryAmount = buff.applimentMode == BuffApplimentMode.Additive ? staminaRecoveryInitialAmount + buff.effectValue : staminaRecoveryInitialAmount * buff.effectValue;
+                    break;
+                case BuffType.MovementSpeed:
+                    movementSpeedMaximum = buff.applimentMode == BuffApplimentMode.Additive ? movementSpeedInitialMaximum + buff.effectValue : movementSpeedInitialMaximum * buff.effectValue;
+                    sprintingSpeedMaximum = buff.applimentMode == BuffApplimentMode.Additive ? sprintingSpeedInitialMaximum + buff.effectValue : sprintingSpeedInitialMaximum * buff.effectValue;
+                    agent.speed = sprintingSpeedMaximum * agentSpeedMultiplier;
+                    break;
+                default:
+                    Debug.LogWarning($"Invalid buff type: { buff.type}");
+                    break;
+            }
+        }
+        else
+        {
+            buff.ForceDeactivate();
+        }
+    }
+
+    public void RemoveBuffs()
+    {
+        if (currentBuff != null)
+        {
+            currentBuff.ForceDeactivate();
+            currentBuff = null;
+        }
+        healthRecoveryAmount = healthRecoveryInitialAmount;
+        staminaRecoveryAmount = staminaRecoveryInitialAmount;
+        movementSpeedMaximum = movementSpeedInitialMaximum;
+        sprintingSpeedMaximum = sprintingSpeedInitialMaximum;
+        agent.speed = sprintingSpeedMaximum * agentSpeedMultiplier;
+
+    }
+
+    #endregion
 
     #endregion
 
@@ -798,50 +883,9 @@ public abstract class Character : MonoBehaviour
 
     #endregion
 
-    #region Buffs
+    #region Highlight
 
-    public void AddBuff(Buff buff)
-    {
-        RemoveBuffs();
-        currentBuff = buff;
-        switch (buff.type)
-        {
-            case BuffType.HealthRecovery:
-                healthRecoveryAmount = buff.applimentMode == BuffApplimentMode.Additive ? healthRecoveryInitialAmount + buff.effectValue : healthRecoveryInitialAmount * buff.effectValue;
-                break;
-            case BuffType.StaminaRecovery:
-                staminaRecoveryAmount = buff.applimentMode == BuffApplimentMode.Additive ? staminaRecoveryInitialAmount + buff.effectValue : staminaRecoveryInitialAmount * buff.effectValue;
-                break;
-            case BuffType.MovementSpeed:
-                movementSpeedMaximum = buff.applimentMode == BuffApplimentMode.Additive ? movementSpeedInitialMaximum + buff.effectValue : movementSpeedInitialMaximum * buff.effectValue;
-                sprintingSpeedMaximum = buff.applimentMode == BuffApplimentMode.Additive ? sprintingSpeedInitialMaximum + buff.effectValue : sprintingSpeedInitialMaximum * buff.effectValue;
-                agent.speed = sprintingSpeedMaximum * agentSpeedMultiplier;
-                break;
-            default:
-                Debug.LogWarning($"Invalid buff type: { buff.type}");
-                break;
-        }
-    }
-
-    public void RemoveBuffs()
-    {
-        if(currentBuff != null)
-        {
-            currentBuff.ForceDeactivate();
-            currentBuff = null;
-        }
-        healthRecoveryAmount = healthRecoveryInitialAmount;
-        staminaRecoveryAmount = staminaRecoveryInitialAmount;
-        movementSpeedMaximum = movementSpeedInitialMaximum;
-        sprintingSpeedMaximum = sprintingSpeedInitialMaximum;
-        agent.speed = sprintingSpeedMaximum * agentSpeedMultiplier;
-    }
-
-    #endregion
-
-    #region Outline
-
-    public void ShowOutLine()
+    public void Highlight()
     {
         lastOutlineTriggerElapsedSeconds = 0;
     }

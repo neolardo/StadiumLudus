@@ -38,8 +38,8 @@ public class FemaleWarriorCharacter : WarriorCharacter
     private bool canComboContinue = false;
     private const float comboDelaySeconds = .5f;
 
-    private bool CanRequestAnotherComboAttack => !animationManager.IsInterrupted && !animationManager.IsGuarding && !animationManager.IsUsingSkill && animationManager.IsAttacking
-            && !femaleWarriorAnimationManager.IsContinueAttackRequested && currentComboCount < 2 && canComboContinue && stamina > attackStaminaCost;
+    private bool CanRequestAnotherComboAttack => !animationManager.IsInterrupted && !animationManager.IsInteracting && !animationManager.IsGuarding && !animationManager.IsUsingSkill 
+        && animationManager.IsAttacking && !femaleWarriorAnimationManager.IsContinueAttackRequested && currentComboCount < 2 && canComboContinue && stamina > attackStaminaCost;
 
     #endregion
 
@@ -102,10 +102,6 @@ public class FemaleWarriorCharacter : WarriorCharacter
         {
             ContinueComboAttack();
             return true;
-        }
-        else if (PhotonView.IsMine && characterUI!=null && stamina < attackStaminaCost)
-        {
-            characterUI.OnCannotPerformSkillOrAttack(stamina < attackStaminaCost, false);
         }
         return false;
     }
@@ -172,7 +168,7 @@ public class FemaleWarriorCharacter : WarriorCharacter
 
     #region Leap Attack
 
-    protected override void OnLeapAttack(Vector3 attackTarget)
+    protected override void OnLeapAttack()
     {
         StartCoroutine(ManageLeapAttackAttackTrigger());
     }

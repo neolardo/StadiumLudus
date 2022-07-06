@@ -604,6 +604,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EndGameUI
       objectReference: {fileID: 0}
+    - target: {fileID: 4624316317516823510, guid: 2a0951fbaf84b674792be09974622874, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1429714798}
     - target: {fileID: 9167278818871218310, guid: 2a0951fbaf84b674792be09974622874, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

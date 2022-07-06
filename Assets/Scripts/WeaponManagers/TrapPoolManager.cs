@@ -66,7 +66,6 @@ public class TrapPoolManager : MonoBehaviour
             trap.trapTrigger.MinimumDamage = MinimumDamage;
             trap.trapTrigger.MaximumDamage = MaximumDamage;
             trap.activeDuration = Duration;
-            trap.trapTrigger.characterTransform = characterTransform;
             inactiveTraps.Add(trap);
         }
     }

@@ -19,11 +19,10 @@ public class CircularBuffer<T> :  IEnumerable<T>
 
     #region Methods
 
-    public T GetNext()
+    public void Push(T item)
     {
-        var item = this[0];
+        this[0] = item;
         HeadIndex = (HeadIndex + 1) % Size;
-        return item;
     }
 
     public virtual void Clear()

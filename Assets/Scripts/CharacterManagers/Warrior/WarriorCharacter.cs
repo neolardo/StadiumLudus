@@ -10,7 +10,6 @@ public abstract class WarriorCharacter : Character
     #region Properties and Fields
 
     protected WarriorAnimationManager warriorAnimationManager;
-
     public override CharacterClass Class => CharacterClass.Barbarian;
 
     #region Skills
@@ -38,13 +37,13 @@ public abstract class WarriorCharacter : Character
 
     private bool IsLeapAttackAvailable { get; set; } = true;
 
-    private bool IsLeapAttackFirstFrame { get; set; }
-
+    private float jumpingTimeDelta;
+    private Vector3 jumpOrigin;
     private Vector3 jumpTarget;
 
-    private Vector3 currentJumpDelta;
+    private Transform leapAttackTarget;
     private bool CanLeapAttack => IsAlive && IsLeapAttackAvailable && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill && stamina > leapAttackStaminaCost;
-    
+
     protected abstract float JumpingTime { get; }
 
     #endregion
@@ -138,12 +137,12 @@ public abstract class WarriorCharacter : Character
 
     #region Skills
 
-    public override void StartSkill(int skillNumber, Vector3 clickPosition)
+    public override void StartSkill(int skillNumber, Vector3 clickPosition, Character target)
     {
         switch (skillNumber)
         {
             case LeapAttackSkillNumber:
-                LeapAttack(clickPosition);
+                LeapAttack(clickPosition, target);
                 break;
             case WhirlwindSkillNumber:
                 StartWhirlwind();
@@ -202,58 +201,89 @@ public abstract class WarriorCharacter : Character
     #region Leap Attack
 
     [PunRPC]
-    public void LeapAttack(Vector3 attackTarget)
+    public void LeapAttack(Vector3 attackTarget, Character target)
     {
         if (CanLeapAttack || !PhotonView.IsMine)
         {
             if (PhotonView.IsMine)
             {
-                PhotonView.RPC(nameof(LeapAttack), RpcTarget.Others, attackTarget);
+                PhotonView.RPC(nameof(LeapAttack), RpcTarget.Others, attackTarget, null);
             }
-            attackTarget = ClampPointInsideRange(attackTarget, leapAttackMaximumDistance);
-            IsLeapAttackFirstFrame = true;
+            leapAttackTarget = target == null ?  null : target.transform;
+            jumpingTimeDelta = 0;
             IsLeapAttackAvailable = false;
-            jumpTarget = attackTarget;
-            SetRotationTarget(attackTarget);
+            jumpOrigin = rb.position;
+            stamina -= leapAttackStaminaCost;
             forceRotation = true;
+            jumpTarget = ClampPointInsideRange(attackTarget, leapAttackMaximumDistance);
+            SetRotationTarget(jumpTarget);
             MoveTo(jumpTarget);
             warriorAnimationManager.LeapAttack();
             StartCoroutine(ManageCooldown(LeapAttackSkillNumber));
+            StartCoroutine(AddJumpForce());
             StartCoroutine(ResetDestinationAfterLeap());
-            stamina -= leapAttackStaminaCost;
-            OnLeapAttack(attackTarget);
+            if (PhotonView.IsMine && leapAttackTarget != null)
+            {
+                StartCoroutine(ManageJumpAndRotationTarget());
+            }
+            OnLeapAttack();
         }
         else if (PhotonView.IsMine && characterUI != null)
         {
-            characterUI.OnCannotPerformSkillOrAttack(stamina < leapAttackStaminaCost, !IsLeapAttackAvailable, LeapAttackSkillNumber);
+            characterUI.OnCannotPerformSkill(stamina < leapAttackStaminaCost, !IsLeapAttackAvailable, LeapAttackSkillNumber);
         }
     }
 
-    protected abstract void OnLeapAttack(Vector3 attackTarget);
+    protected abstract void OnLeapAttack();
 
     private void UpdateLeapAttackJumping()
     {
-        if (warriorAnimationManager.IsJumping)
+        if (warriorAnimationManager.IsJumping && jumpingTimeDelta < JumpingTime)
         {
-            if (IsLeapAttackFirstFrame)
-            {
-                rb.AddForce(Vector3.up * leapAttackJumpForce, ForceMode.Impulse);
-                currentJumpDelta = (new Vector3(jumpTarget.x, rb.position.y, jumpTarget.z) - rb.position) / (JumpingTime * 50);
-                IsLeapAttackFirstFrame = false;
-            }
-            else
-            {
-                rb.MovePosition(rb.position + currentJumpDelta);
-            }
+            var tempPosition = Vector3.Lerp(jumpOrigin, jumpTarget, jumpingTimeDelta / JumpingTime);
+            rb.MovePosition(new Vector3(tempPosition.x, rb.position.y, tempPosition.z));
+            jumpingTimeDelta += Time.fixedDeltaTime;
         }
     }
 
+    private IEnumerator ManageJumpAndRotationTarget()
+    {
+        yield return new WaitUntil(() => warriorAnimationManager.IsJumping);
+        while (warriorAnimationManager.IsJumping)
+        {
+            var tempTarget = leapAttackTarget.transform.position;
+            if ((tempTarget - jumpOrigin).magnitude > leapAttackMaximumDistance)
+            {
+                tempTarget = jumpOrigin + (tempTarget - jumpOrigin).normalized * leapAttackMaximumDistance;
+            }
+            SetJumpTarget(tempTarget);
+            SetRotationTarget(leapAttackTarget.transform.position);
+            yield return null;
+        }
+    }
+
+    [PunRPC]
+    public void SetJumpTarget(Vector3 jumpTarget)
+    {
+        if (PhotonView.IsMine)
+        {
+            PhotonView.RPC(nameof(SetJumpTarget), RpcTarget.Others, jumpTarget);
+        }
+        this.jumpTarget = jumpTarget;
+    }
+
+    private IEnumerator AddJumpForce()
+    {
+        yield return new WaitUntil(() => warriorAnimationManager.IsJumping);
+        rb.AddForce(leapAttackJumpForce * Vector3.up, ForceMode.Impulse);
+    }
 
     private IEnumerator ResetDestinationAfterLeap()
     {
         yield return new WaitUntil(() => warriorAnimationManager.IsJumping);
         yield return new WaitWhile(() => warriorAnimationManager.IsJumping);
         forceRotation = false;
+        leapAttackTarget = null;
         ClearDestination();
     }
 
@@ -354,7 +384,7 @@ public abstract class WarriorCharacter : Character
         }
         else if (PhotonView.IsMine && characterUI!=null)
         {
-            characterUI.OnCannotPerformSkillOrAttack(stamina < groundSlamStaminaCost, !IsGroundSlamAvailable, GroundSlamSkillNumber);
+            characterUI.OnCannotPerformSkill(stamina < groundSlamStaminaCost, !IsGroundSlamAvailable, GroundSlamSkillNumber);
         }
     }
 

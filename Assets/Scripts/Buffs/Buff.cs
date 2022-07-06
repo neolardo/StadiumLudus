@@ -74,7 +74,7 @@ public class Buff : MonoBehaviour
                     StartCoroutine(MoveOrbToTarget());
                     StartCoroutine(FadeOutOrbLight());
                     StartCoroutine(DeactivateAfterDurationElapsed());
-                    target.AddBuff(this);
+                    StartCoroutine(TryAddBuffToTargetAfterDelay());
                 }
                 else
                 {
@@ -104,6 +104,7 @@ public class Buff : MonoBehaviour
     /// </summary>
     private Character target;
 
+    private const float delayBeforeActivation = 2f;
     private const float delayBeforeMove = 0.75f;
     private const float moveDuration = 1.5f;
     private Vector3 moveTargetDelta = 1.3f * Vector3.up;
@@ -121,6 +122,8 @@ public class Buff : MonoBehaviour
     #endregion
 
     #region Methods
+
+    #region Initialize
 
     private void OnEnable()
     {
@@ -147,6 +150,10 @@ public class Buff : MonoBehaviour
         hasInitialized = true;
     }
 
+    #endregion
+
+    #region Apply
+
     /// <summary>
     /// Starts to use this buff on the given <see cref="Character"/>.
     /// </summary>
@@ -156,6 +163,16 @@ public class Buff : MonoBehaviour
         target = character;
         IsActive = true;
     }
+
+    private IEnumerator TryAddBuffToTargetAfterDelay()
+    {
+        yield return new WaitForSeconds(delayBeforeActivation);
+        target.AddBuff(this);
+    }
+
+    #endregion
+
+    #region Orb
 
     private IEnumerator MoveOrbToTarget()
     {
@@ -200,6 +217,10 @@ public class Buff : MonoBehaviour
         orbLight.intensity = orbInitialIntesity;
     }
 
+    #endregion
+
+    #region Character Effect
+
     private IEnumerator StickCharacterEffectToTarget()
     {
         while (IsActive)
@@ -234,7 +255,7 @@ public class Buff : MonoBehaviour
         }
     }
 
-    private  IEnumerator ForceDeactivateAfterDelay()
+    private IEnumerator ForceDeactivateAfterDelay()
     {
         if (IsActive)
         {
@@ -244,6 +265,9 @@ public class Buff : MonoBehaviour
         IsActive = false;
     }
 
+    #endregion
+
+    #region Reset
 
     private void ResetToInitialState()
     {
@@ -255,6 +279,8 @@ public class Buff : MonoBehaviour
         orbVFX.SetFloat(orbVFXAttractionSpeedName, orbVFXAttractionSpeedInitialValue);
         target.RemoveBuffs();
     }
+
+    #endregion
 
     #endregion
 }

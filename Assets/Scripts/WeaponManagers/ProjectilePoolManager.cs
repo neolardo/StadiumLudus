@@ -71,7 +71,6 @@ public class ProjectilePoolManager : MonoBehaviour
             proj.ProjectilePool = this;
             proj.projectileTrigger.MinimumDamage = MinimumDamage;
             proj.projectileTrigger.MaximumDamage = MaximumDamage;
-            proj.projectileTrigger.characterTransform = characterTransform;
             inactiveProjectiles.Add(proj);
         }
     }
