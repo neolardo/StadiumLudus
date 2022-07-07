@@ -162,6 +162,10 @@ public class RoomsUI : MonoBehaviour
     public void OnRoomSelected(RoomInfo r)
     {
         SelectedRoom = r;
+        if(SelectedRoom != null)
+        {
+            OpenJoinRoomPopUp();
+        }
     }
 
     #endregion

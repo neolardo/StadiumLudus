@@ -41,7 +41,7 @@ public abstract class WarriorCharacter : Character
     private Vector3 jumpOrigin;
     private Vector3 jumpTarget;
 
-    private Transform leapAttackTarget;
+    protected Character leapAttackTarget;
     private bool CanLeapAttack => IsAlive && IsLeapAttackAvailable && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill && stamina > leapAttackStaminaCost;
 
     protected abstract float JumpingTime { get; }
@@ -61,7 +61,7 @@ public abstract class WarriorCharacter : Character
     [SerializeField]
     private float whirlwindStaminaCost = 35f;
 
-    private bool CanWhirlwind => IsAlive && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill;
+    private bool CanWhirlwind => IsAlive && !IsInAction && !warriorAnimationManager.IsWhirlwindOnGoing;
 
     protected abstract float WhirlwindStartAnimationDelay { get; }
     protected abstract float WhirlwindEndAnimationDelay { get; }
@@ -103,7 +103,7 @@ public abstract class WarriorCharacter : Character
     private bool CanGroundSlam => IsAlive && IsGroundSlamAvailable && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill && stamina > groundSlamStaminaCost;
     protected abstract float GroundSlamStartDelay { get; }
 
-    private const float groundSlamRockAttackTriggerDuration = .5f;
+    private const float groundSlamRockAttackTriggerDuration = 1.3f;
 
     #endregion  
 
@@ -134,6 +134,19 @@ public abstract class WarriorCharacter : Character
         base.FixedUpdate();
         UpdateLeapAttackJumping();
     }
+
+    #region Take Damage
+
+    protected override void OnTakeDamage()
+    {
+        base.OnTakeDamage();
+        if (PhotonView.IsMine)
+        {
+            EndWhirlwind();
+        }
+    }
+
+    #endregion
 
     #region Skills
 
@@ -209,7 +222,7 @@ public abstract class WarriorCharacter : Character
             {
                 PhotonView.RPC(nameof(LeapAttack), RpcTarget.Others, attackTarget, null);
             }
-            leapAttackTarget = target == null ?  null : target.transform;
+            leapAttackTarget = target == null ?  null : target;
             jumpingTimeDelta = 0;
             IsLeapAttackAvailable = false;
             jumpOrigin = rb.position;

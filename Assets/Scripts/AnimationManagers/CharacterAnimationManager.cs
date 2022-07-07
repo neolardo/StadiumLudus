@@ -260,7 +260,7 @@ public class CharacterAnimationManager : MonoBehaviour
                     Debug.LogWarning($"Invalid {nameof(HitDirection)} received when trying to trigger impact animation.");
                     break;
             }
-            IsGuarding = false;
+            EndGuarding();
         }
         IsAttacking = false;
         IsUsingSkill = false;

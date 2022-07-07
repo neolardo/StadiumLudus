@@ -16,6 +16,17 @@ public class AttackTrigger : MonoBehaviour
     [Tooltip("The photon view of the object with this attack trigger.")]
     public PhotonView photonView;
 
+    [Tooltip("The transform of the owner character used to determine the hit direction.")]
+    public Transform ownerTransform;
+
+    [Tooltip("True if the attack trigger transform's forward should be used as the attack direction, otherwise the direction between owner character and the target's center will be used.")]
+    [SerializeField]
+    private bool useForwardAsAttackDirection = false;
+
+    [Tooltip("Indicates whether this attack trigger can be guarded or not.")]
+    [SerializeField]
+    private bool canBeGuarded = true;
+
     /// <summary>
     /// The minimum possible damage of this attack trigger.
     /// </summary>
@@ -64,12 +75,19 @@ public class AttackTrigger : MonoBehaviour
             _isActive = value;
             if (!value)
             {
+                forceAttackTarget = null;
                 AnyObjectHit = false;
                 DamagedCharacters.Clear();
                 AttackedCharacters.Clear();
             }
         }
     }
+
+    /// <summary>
+    /// The temporary force attack target of this attack trigger.
+    /// </summary>
+    private Character forceAttackTarget;
+
     private new Transform transform;
     private new Collider collider;
     private bool IsColliderCapsule;
@@ -123,7 +141,7 @@ public class AttackTrigger : MonoBehaviour
             if (!AttackedCharacters.Contains(hitBox.character))
             {
                 var info = CalculateColliderInfo(collider);
-                hitBox.character.PhotonView.RPC(TryTakeDamageFunctionName, hitBox.character.PhotonView.Controller, Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(hitBox.character.transform.forward), info.point0, info.point1, info.radius, photonView.ViewID, false);
+                hitBox.character.PhotonView.RPC(TryTakeDamageFunctionName, hitBox.character.PhotonView.Controller, Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(hitBox.character.transform.forward, hitBox.character.transform.position), info.point0, info.point1, info.radius, photonView.ViewID, forceAttackTarget == hitBox.character, canBeGuarded);
                 AttackedCharacters.Add(hitBox.character);
                 Debug.LogWarning($"Trying regular attack...");
             }
@@ -141,10 +159,11 @@ public class AttackTrigger : MonoBehaviour
 
     private IEnumerator WaitUntilDelayThenForceAttack(Character target, float delaySeconds)
     {
+        forceAttackTarget = target;
         yield return new WaitForSeconds(delaySeconds);
         if (IsActive && !AttackedCharacters.Contains(target))
         {
-            target.PhotonView.RPC(TryTakeDamageFunctionName, target.PhotonView.Controller, Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(target.transform.forward), Vector3.zero, Vector3.zero, 0f, photonView.ViewID, true);
+            target.PhotonView.RPC(TryTakeDamageFunctionName, target.PhotonView.Controller, Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(target.transform.forward, target.transform.position), Vector3.zero, Vector3.zero, 0f, photonView.ViewID, true, canBeGuarded);
             AttackedCharacters.Add(target);
             Debug.LogWarning($"Force attack successful.");
         }
@@ -185,9 +204,10 @@ public class AttackTrigger : MonoBehaviour
         return (point0, point1, radius);
     }
 
-    private HitDirection CalculateHitDirection(Vector3 otherForward)
+    private HitDirection CalculateHitDirection(Vector3 otherForward, Vector3 otherPosition)
     {
-        float angle = Vector3.SignedAngle(transform.forward, otherForward, Vector3.up);
+        var attackDirection = useForwardAsAttackDirection ? transform.forward : (otherPosition - ownerTransform.position).normalized;
+        float angle = Vector3.SignedAngle(attackDirection, otherForward, Vector3.up);
         if (Mathf.Abs(angle) < 90)
         {
             return HitDirection.Back;

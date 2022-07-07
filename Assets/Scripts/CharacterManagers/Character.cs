@@ -29,6 +29,8 @@ public abstract class Character : MonoBehaviour, IHighlightable
 
     #region UI and Managers
 
+    //public Transform testObject;
+
     protected CharacterUI characterUI;
     public PhotonView PhotonView { get; private set; }
 
@@ -137,14 +139,6 @@ public abstract class Character : MonoBehaviour, IHighlightable
     [SerializeField]
     private float deceleration = 20f;
 
-    [Tooltip("Represents the maximum rotation speed for the character's movement in deg/sec.")]
-    [SerializeField]
-    private float rotationSpeedMaximum = 1500f;
-
-    [Tooltip("Represents the minimum rotation speed for the character's movement in deg/sec.")]
-    [SerializeField]
-    private float rotationSpeedMinimum = 400f;
-
     [Tooltip("Represents the radial attack range of this character.")]
     [SerializeField]
     protected float attackRange = 1f;
@@ -156,10 +150,15 @@ public abstract class Character : MonoBehaviour, IHighlightable
     private Vector2 characterPositionRatioOnScreen;
 
     protected float movementSpeed;
+    private float rotationVelocity;
     protected const float destinationThreshold = Globals.PositionThreshold;
     protected const float destinationMinimum = 0.7f;
     protected const float rotationThreshold = 2f;
     protected const float agentSpeedMultiplier = 4f/3.5f;
+    private const float rotationSmoothDelta = 0.1f;
+    private const float maximumRotationDelta = 120f;
+    private const float maximumAgentDestinationDelta = 2f;
+    private const float refreshDestinationDelta = 2f;
 
     private Vector3 _destination;
 
@@ -291,6 +290,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
         StartCoroutine(RecoverStamina());
         StartCoroutine(HighlightOnTriggered());
     }
+
     public void InitializeAsLocalCharacter(CharacterUI characterUI)
     {
         this.characterUI = characterUI;
@@ -462,7 +462,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
         hitBoxInfoCircularBuffer.Push(info);
     }
 
-    public bool IsHitValid(Vector3 colliderPoint1, Vector3 colliderPoint2, float colliderRadius, int oldTimeStamp)
+    public bool IsHitValid(Vector3 colliderPoint1, Vector3 colliderPoint2, float colliderRadius, int oldTimeStamp, bool isForced)
     {
         int deltaFixedUpdateFrames = Mathf.RoundToInt((PhotonNetwork.ServerTimestamp - oldTimeStamp) / 20f); // 1000/50 ms is one fixed update frame delta
         if(deltaFixedUpdateFrames < NumberOfRecordedHitBoxFrames)
@@ -470,10 +470,17 @@ public abstract class Character : MonoBehaviour, IHighlightable
             var info = hitBoxInfoCircularBuffer[deltaFixedUpdateFrames];
             if (info.canBeInterrupted)
             {
-                validationBoxTransform.position = info.colliderPosition;
-                validationBoxTransform.rotation = info.colliderRotation;
-                var result = Physics.CheckCapsule(colliderPoint2, colliderPoint1, colliderRadius, 1 << Globals.ValidationLayer);
-                return result;
+                if (isForced)
+                {
+                    return true;
+                }
+                else
+                {
+                    validationBoxTransform.position = info.colliderPosition;
+                    validationBoxTransform.rotation = info.colliderRotation;
+                    var result = Physics.CheckCapsule(colliderPoint2, colliderPoint1, colliderRadius, 1 << Globals.ValidationLayer);
+                    return result;
+                }
             }
         }
         return false;
@@ -484,19 +491,19 @@ public abstract class Character : MonoBehaviour, IHighlightable
     #region Take Damage
 
     [PunRPC]
-    public void TryTakeDamage(float amount, HitDirection direction, Vector3 attackColliderPoint0, Vector3 attackColliderPoint1, float attackColliderRadius, int senderAttackTriggerPhotonViewID, bool isUnavoidable, PhotonMessageInfo info)
+    public void TryTakeDamage(float amount, HitDirection direction, Vector3 attackColliderPoint0, Vector3 attackColliderPoint1, float attackColliderRadius, int senderAttackTriggerPhotonViewID, bool isForced, bool canBeGuarded, PhotonMessageInfo info)
     {
-        if (IsAlive && animationManager.CanBeInterrupted && PhotonView.IsMine && (isUnavoidable || IsHitValid(attackColliderPoint0,  attackColliderPoint1,  attackColliderRadius, info.SentServerTimestamp)))
+        if (IsAlive && animationManager.CanBeInterrupted && PhotonView.IsMine && IsHitValid(attackColliderPoint0,  attackColliderPoint1,  attackColliderRadius, info.SentServerTimestamp, isForced))
         { 
-            PhotonView.RPC(nameof(TakeDamage), RpcTarget.All, amount, direction);
+            PhotonView.RPC(nameof(TakeDamage), RpcTarget.All, amount, direction, canBeGuarded);
             PhotonView.Find(senderAttackTriggerPhotonViewID).RPC(nameof(AttackTrigger.OnCharacterDamaged), RpcTarget.All, PhotonView.ViewID);
         }
     }
 
     [PunRPC]
-    public void TakeDamage(float amount, HitDirection direction)
+    public void TakeDamage(float amount, HitDirection direction, bool canBeGuarded)
     {
-        if (animationManager.IsGuarding && direction != HitDirection.Back)
+        if (animationManager.IsGuarding && direction != HitDirection.Back && canBeGuarded)
         {
             float guardedAmount = stamina - Mathf.Max(0, stamina - amount);
             stamina -= guardedAmount;
@@ -505,8 +512,20 @@ public abstract class Character : MonoBehaviour, IHighlightable
         health -= amount;
         if (IsAlive)
         {
-            animationManager.Impact(stamina > 0 && animationManager.IsGuarding, direction);
-            if (stamina <= Globals.CompareDelta && animationManager.IsGuarding)
+            bool successfullyGuarded = stamina > 0 && animationManager.IsGuarding && canBeGuarded;
+            animationManager.Impact(successfullyGuarded, direction);
+            if (successfullyGuarded)
+            {
+                if (direction == HitDirection.Back)
+                {
+                    AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
+                }
+                else
+                {
+                    AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.GuardHit);
+                }
+            }
+            else
             {
                 if (PhotonView.IsMine)
                 {
@@ -514,21 +533,11 @@ public abstract class Character : MonoBehaviour, IHighlightable
                 }
                 AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
             }
-            else if (stamina > Globals.CompareDelta && animationManager.IsGuarding)
+            if (PhotonView.IsMine)
             {
-                if (direction == HitDirection.Back)
-                {
-                    AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.GuardHit);
-                }
-                else
-                {
-                    AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
-                }
+                ClearDestination();
             }
-            else
-            {
-                AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
-            }
+            OnTakeDamage();
         }
         else
         {
@@ -540,6 +549,8 @@ public abstract class Character : MonoBehaviour, IHighlightable
             }
         }
     }
+
+    protected virtual void OnTakeDamage() { }
 
     #endregion
 
@@ -752,6 +763,10 @@ public abstract class Character : MonoBehaviour, IHighlightable
         {
             PhotonView.RPC(nameof(SetDestination), RpcTarget.Others, destination);
         }
+        if ((Destination - destination).magnitude > refreshDestinationDelta)
+        {
+            agent.nextPosition = rb.position + transform.forward * destinationMinimum * 1.5f;
+        }
         Destination = destination;
     }
 
@@ -799,13 +814,19 @@ public abstract class Character : MonoBehaviour, IHighlightable
     {
         var nextDestination = agent.path.corners[0];
         float distanceToDestination = (rb.position - nextDestination).magnitude;
+        //testObject.position = nextDestination;
         if (distanceToDestination > destinationThreshold && CanMove)
         {
+            // prevent slow rotation on big directional change
+            if ((nextDestination - Destination).magnitude > maximumAgentDestinationDelta && Vector3.Angle(transform.forward, (Destination - nextDestination).normalized) > maximumRotationDelta)
+            {
+                agent.nextPosition = rb.position + (Destination - nextDestination).normalized * destinationMinimum * 1.5f;
+            } 
             var targetRotation = Quaternion.LookRotation(new Vector3(nextDestination.x, rb.position.y, nextDestination.z) - rb.position);
             movementSpeed = Mathf.Min(movementSpeed + Time.fixedDeltaTime * acceleration, TrySprint() ? sprintingSpeedMaximum : movementSpeedMaximum);
             var moveDirection = (nextDestination - rb.position).normalized;
-            var rotationSpeed = Mathf.Lerp(rotationSpeedMinimum, rotationSpeedMaximum, Quaternion.Angle(targetRotation, rb.rotation) / 180f);
-            rb.transform.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+            var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation.eulerAngles.y, ref rotationVelocity, rotationSmoothDelta);
+            rb.rotation = Quaternion.Euler(0, angle, 0);
             rb.MovePosition(rb.transform.position + movementSpeed * Time.fixedDeltaTime * moveDirection);
         }
         else
@@ -815,8 +836,8 @@ public abstract class Character : MonoBehaviour, IHighlightable
                 var targetRotation = Quaternion.LookRotation(new Vector3(rotationTarget.x, rb.position.y, rotationTarget.z) - rb.position);
                 if (Quaternion.Angle(targetRotation, rb.rotation) > rotationThreshold && (rotationTarget - rb.position).magnitude > destinationThreshold)
                 {
-                    var rotationSpeed = Mathf.Lerp(rotationSpeedMinimum, rotationSpeedMaximum, Quaternion.Angle(targetRotation, rb.rotation) / 180f);
-                    rb.transform.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+                    var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation.eulerAngles.y, ref rotationVelocity, rotationSmoothDelta);
+                    rb.rotation = Quaternion.Euler(0, angle, 0);
                 }
             }
             movementSpeed = Mathf.Max(movementSpeed - Time.fixedDeltaTime * deceleration, 0);

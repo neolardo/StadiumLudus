@@ -27,7 +27,7 @@ public class MaleWarriorCharacter : WarriorCharacter
     [SerializeField]
     private AudioSource battleAxeAudioSource;
 
-    private const float forceAttackDelay = 0.3f;
+    private const float basicAttackForceDelay = 0.3f;
 
     #endregion
 
@@ -35,13 +35,16 @@ public class MaleWarriorCharacter : WarriorCharacter
 
     #region Leap Attack
 
-    protected override float JumpingTime => .5f;
+    protected override float JumpingTime => .45f;
+
+    private const float leapAttackForceDelay = 0.5f;
+
 
     #endregion
 
     #region Whirlwind
 
-    protected override float WhirlwindStartAnimationDelay => .5f;
+    protected override float WhirlwindStartAnimationDelay => .3f;
     protected override float WhirlwindEndAnimationDelay => .3f;
     protected override float WhirlwindAttackTriggerPeriod => .5f;
 
@@ -49,7 +52,8 @@ public class MaleWarriorCharacter : WarriorCharacter
 
     #region Ground Slam
 
-    protected override float GroundSlamStartDelay => 0.9f;
+    protected override float GroundSlamStartDelay => 0.5f;
+
 
     #endregion
 
@@ -107,7 +111,7 @@ public class MaleWarriorCharacter : WarriorCharacter
         var target = chaseTarget == null ? null : chaseTarget.GetComponent<Character>();
         if (target != null && battleAxeTrigger.IsActive && warriorAnimationManager.CanDealDamage)
         {
-            battleAxeTrigger.ForceAttackAfterDelay(target, forceAttackDelay);
+            battleAxeTrigger.ForceAttackAfterDelay(target, basicAttackForceDelay);
         }
     }
 
@@ -128,6 +132,10 @@ public class MaleWarriorCharacter : WarriorCharacter
         if (animationManager.CanDealDamage)
         {
             battleAxeTrigger.IsActive = true;
+            if (leapAttackTarget != null)
+            {
+                battleAxeTrigger.ForceAttackAfterDelay(leapAttackTarget, leapAttackForceDelay);
+            }
             AudioManager.Instance.PlayOneShotSFX(battleAxeAudioSource, SFX.Slash);
         }
         yield return new WaitWhile(() => animationManager.CanDealDamage);

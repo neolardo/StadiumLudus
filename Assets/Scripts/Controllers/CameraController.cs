@@ -62,11 +62,11 @@ public class CameraController : MonoBehaviour
 
     private void UpdateCameraPosition()
     {
-        if (Input.mouseScrollDelta.y > Globals.CompareDelta && zoomTarget < 1)
+        if (Input.mouseScrollDelta.y < -Globals.CompareDelta && zoomTarget < 1)
         {
             zoomTarget = Mathf.Min(1, zoomTarget + zoomMultiplier * Time.deltaTime);
         }
-        else if (Input.mouseScrollDelta.y < -Globals.CompareDelta && zoomTarget > 0)
+        else if (Input.mouseScrollDelta.y > Globals.CompareDelta && zoomTarget > 0)
         {
             zoomTarget = Mathf.Max(0, zoomTarget - zoomMultiplier * Time.deltaTime);
         }

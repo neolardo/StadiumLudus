@@ -19,9 +19,9 @@ public class GroundSlamManager: MonoBehaviour
     [SerializeField] private ParticleSystem startSmoke;
     [SerializeField] private ParticleSystem endSmoke;
     [SerializeField] private Crack crackPrefab;
-    [SerializeField] private float spreadSpeed;
-    [SerializeField] private float closeSpeed;
-    [SerializeField] private float duration;
+    [SerializeField] private float spreadDuration;
+    [SerializeField] private float closeDuration;
+    [SerializeField] private float openDuration;
     [SerializeField] private float openThreshold;
     [SerializeField] private float maximumRange;
     [SerializeField] private int maximumSideCrackCount;
@@ -103,7 +103,7 @@ public class GroundSlamManager: MonoBehaviour
     private IEnumerator SignalWhenCracksShouldClose()
     {
         ShouldCloseCracks = false;
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(openDuration);
         ShouldCloseCracks = true;
     }
 
@@ -185,7 +185,7 @@ public class GroundSlamManager: MonoBehaviour
                     while (lerp < 1)
                     {
                         localCracks[i].SetBlendShape(j, openThreshold * lerp);
-                        lerp += Time.deltaTime * spreadSpeed;
+                        lerp += Time.deltaTime / (spreadDuration / (unitPerCrack * crackCount));
                         yield return null;
                     }
                     localCracks[i].SetBlendShape(j, openThreshold);
@@ -223,7 +223,7 @@ public class GroundSlamManager: MonoBehaviour
                 }
             }
             yield return null;
-            lerp -= Time.deltaTime * closeSpeed;
+            lerp -= Time.deltaTime / (closeDuration * localCracks.Count * crackPrefab.blendShapeCount);
         }
         foreach (var c in localCracks)
         {

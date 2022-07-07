@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 985622859}
   - component: {fileID: 985622858}
   - component: {fileID: 4395712158062470571}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: AttackTrigger
-  m_TagString: IgnoreBox
+  m_TagString: AttackTrigger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -48,6 +48,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioSource: {fileID: 1133617231}
   photonView: {fileID: 4395712158062470571}
+  ownerTransform: {fileID: 0}
+  useForwardAsAttackDirection: 1
+  canBeGuarded: 0
 --- !u!136 &985622858
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -15144,9 +15147,9 @@ MonoBehaviour:
   startSmoke: {fileID: 7404722372923378796}
   endSmoke: {fileID: 1512859980931772386}
   crackPrefab: {fileID: 4910973441161796904, guid: ec2c2a59067c24845b514406046169cb, type: 3}
-  spreadSpeed: 20
-  closeSpeed: 2
-  duration: 2
+  spreadDuration: 0.5
+  closeDuration: 0.5
+  openDuration: 2
   openThreshold: 0.15
   maximumRange: 10
   maximumSideCrackCount: 5

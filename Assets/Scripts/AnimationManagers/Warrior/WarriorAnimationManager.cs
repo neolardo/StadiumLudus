@@ -14,7 +14,7 @@ public class WarriorAnimationManager : CharacterAnimationManager
 
     protected const string AnimatorLeapAttack = "LeapAttack";
     protected const string AnimatorStartWhirlwind = "StartWhirlwind";
-    protected const string AnimatorEndWhirlwind = "EndWhirlwind";
+    protected const string AnimatorIsWhirlwindOnGoing = "IsWhirlwindOnGoing";
     protected const string AnimatorGroundSlam = "GroundSlam";
 
     #endregion
@@ -49,12 +49,14 @@ public class WarriorAnimationManager : CharacterAnimationManager
         IsUsingSkill = true;
         IsWhirlwindOnGoing = true;
         animator.SetTrigger(AnimatorStartWhirlwind);
+        animator.SetBool(AnimatorIsWhirlwindOnGoing, true);
     }
 
 
     public void EndWhirlwind()
     {
-        animator.SetTrigger(AnimatorEndWhirlwind);
+        animator.SetBool(AnimatorIsWhirlwindOnGoing, false);
+        IsUsingSkill = false;
         IsWhirlwindOnGoing = false;
     }
 

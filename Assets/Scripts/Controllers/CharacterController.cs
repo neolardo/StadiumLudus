@@ -14,7 +14,8 @@ public class CharacterController : MonoBehaviour
     private CharacterUI characterUI;
     private PhotonView photonView;
     private bool AreInputsEnabled => characterUI.IsUIVisible;
-    private bool ignoreUntilRelease = false;
+    private bool ignoreEverythingUntilRelease = false;
+    private bool ignoreActionsExceptAttackUntilRelease = false;
 
     [Tooltip("The key which should be pressed to trigger the first skill of the character.")]
     [SerializeField]
@@ -93,7 +94,8 @@ public class CharacterController : MonoBehaviour
         {
             if (Input.GetMouseButtonUp(0))
             {
-                ignoreUntilRelease = false;
+                ignoreEverythingUntilRelease = false;
+                ignoreActionsExceptAttackUntilRelease = false;
             }
             bool isLeftMouseButton = Input.GetMouseButton(0);
             bool isRightMouseButton = Input.GetMouseButton(1);
@@ -109,25 +111,38 @@ public class CharacterController : MonoBehaviour
                 {
                     hit.transform.GetComponent<IHighlightable>().Highlight();
                 }
-                if ((isLeftMouseButton || isRightMouseButton) && !ignoreUntilRelease)
+                if ((isLeftMouseButton || isRightMouseButton) && !ignoreEverythingUntilRelease)
                 {
-                    if (enemyAtHit && (isRightMouseButton || isLeftMouseButton))
+                    if (!ignoreActionsExceptAttackUntilRelease)
                     {
-                        character.SetChaseTarget(hit.transform);
-                        ignoreUntilRelease = true;
+                        if (enemyAtHit && (isRightMouseButton || isLeftMouseButton))
+                        {
+                            character.SetChaseTarget(hit.transform);
+                            ignoreEverythingUntilRelease = true;
+                        }
+                        else if (isRightMouseButton)
+                        {
+                            character.TryAttack(hit.point);
+                        }
+                        else if (isLeftMouseButton && interactableAtHit)
+                        {
+                            character.SetInteractionTarget(hit.transform.parent.GetComponent<Interactable>());
+                            ignoreEverythingUntilRelease = true;
+                        }
+                        else if (isLeftMouseButton)
+                        {
+                            character.MoveTo(hit.point);
+                            ignoreActionsExceptAttackUntilRelease = true;
+                        }
                     }
                     else if (isRightMouseButton)
                     {
                         character.TryAttack(hit.point);
                     }
-                    else if (isLeftMouseButton && interactableAtHit)
-                    {
-                        character.SetInteractionTarget(hit.transform.parent.GetComponent<Interactable>());
-                        ignoreUntilRelease = true;
-                    }
                     else if (isLeftMouseButton)
                     {
                         character.MoveTo(hit.point);
+                        ignoreActionsExceptAttackUntilRelease = true;
                     }
                 }
             }

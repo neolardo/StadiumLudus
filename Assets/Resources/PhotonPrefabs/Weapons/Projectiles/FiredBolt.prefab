@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 1715907280}
   - component: {fileID: 1715907281}
   - component: {fileID: 1715907282}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: attackTrigger
-  m_TagString: IgnoreBox
+  m_TagString: AttackTrigger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -59,9 +59,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e5427545b46bac4c88d9995a338bd2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterTransform: {fileID: 0}
   audioSource: {fileID: 806241040}
   photonView: {fileID: 8769509869809513628}
+  useForwardAsAttackDirection: 1
 --- !u!1 &538939659893703077
 GameObject:
   m_ObjectHideFlags: 0

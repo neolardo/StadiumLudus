@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 1287756300}
   - component: {fileID: 1287756299}
   - component: {fileID: 1287756298}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: attackTrigger
-  m_TagString: IgnoreBox
+  m_TagString: AttackTrigger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -44,9 +44,9 @@ CapsuleCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.02
-  m_Height: 0.5199876
+  m_Height: 0.67
   m_Direction: 2
-  m_Center: {x: 0, y: 0, z: -0.029853582}
+  m_Center: {x: 0, y: 0, z: 0.06}
 --- !u!114 &1287756298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,9 +59,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e5427545b46bac4c88d9995a338bd2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterTransform: {fileID: 0}
   audioSource: {fileID: 7817592897377292643}
   photonView: {fileID: 8461755427741342183}
+  useForwardAsAttackDirection: 1
 --- !u!1 &6564233587726543120
 GameObject:
   m_ObjectHideFlags: 0
@@ -113,9 +113,9 @@ CapsuleCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.019763112
-  m_Height: 0.8637152
+  m_Height: 0.53
   m_Direction: 2
-  m_Center: {x: -0.00011599064, y: -0.0019437671, z: -0.19188166}
+  m_Center: {x: -0.00011599064, y: -0.0019437671, z: -0.01}
 --- !u!54 &2994844274290300800
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -308,14 +308,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6564233587731390147}
-  m_LocalRotation: {x: 0.0060491906, y: 0.1391705, z: -0.0008501582, w: 0.99024963}
+  m_LocalRotation: {x: -0.0008501582, y: 0.99024963, z: -0.0060491906, w: -0.1391705}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6564233587726543122}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0.7, y: 16, z: 0}
+  m_LocalEulerAnglesHint: {x: 0.7, y: 196, z: 0}
 --- !u!33 &6564233587731390150
 MeshFilter:
   m_ObjectHideFlags: 0
