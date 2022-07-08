@@ -78,6 +78,10 @@ MonoBehaviour:
   - StopTrailParticleSystem
   - TryAttackChaseTarget
   - SetJumpTarget
+  - ClearDestination
+  - OnDamagingFailed
+  - OnOnDamagingSucceeded
+  - OnDamagingSucceeded
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

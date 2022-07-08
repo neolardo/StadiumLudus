@@ -32,14 +32,18 @@ public class FemaleWarriorCharacter : WarriorCharacter
     [SerializeField]
     private AudioSource rightBattleAxeAudioSource;
 
+    protected override float BasicAttackForceDelay => 0.3f;
+
     #region Combo Attack
 
     private int currentComboCount = 0;
-    private bool canComboContinue = false;
-    private const float comboDelaySeconds = .5f;
+    private int requestedComboCount = 0;
+    private const int maximumComboCount = 2;
+    private const float comboDelaySeconds = .1f;
+    private bool comboDelayElapsed;
 
-    private bool CanRequestAnotherComboAttack => !animationManager.IsInterrupted && !animationManager.IsInteracting && !animationManager.IsGuarding && !animationManager.IsUsingSkill 
-        && animationManager.IsAttacking && !femaleWarriorAnimationManager.IsContinueAttackRequested && currentComboCount < 2 && canComboContinue && stamina > attackStaminaCost;
+    private bool CanRequestAnotherComboAttack => !animationManager.IsInterrupted && !animationManager.IsInteracting && !animationManager.IsGuarding && !animationManager.IsUsingSkill
+        && animationManager.IsAttacking && !femaleWarriorAnimationManager.IsContinueAttackRequested && currentComboCount < 2 && stamina > attackStaminaCost && comboDelayElapsed;
 
     #endregion
 
@@ -47,7 +51,10 @@ public class FemaleWarriorCharacter : WarriorCharacter
 
     #region Leap Attack
 
-    protected override float JumpingTime => .5f;
+    protected override float JumpingTime => .65f;
+
+    protected override float LeapAttackForceDelay => 0.5f;
+
 
     #endregion
 
@@ -61,11 +68,11 @@ public class FemaleWarriorCharacter : WarriorCharacter
 
     #region Ground Slam
 
-    protected override float GroundSlamStartDelay => .9f; 
+    protected override float GroundSlamStartDelay => .7f;
 
-    #endregion  
+    #endregion
 
-    #endregion  
+    #endregion
 
     #endregion
 
@@ -98,9 +105,10 @@ public class FemaleWarriorCharacter : WarriorCharacter
             StartComboAttack(attackTarget);
             return true;
         }
-        else if (CanRequestAnotherComboAttack)
+        else if (animationManager.IsAttacking && comboDelayElapsed && requestedComboCount < maximumComboCount)
         {
-            ContinueComboAttack();
+            StartCoroutine(WaitForComboDelay());
+            requestedComboCount += 1;
             return true;
         }
         return false;
@@ -115,28 +123,33 @@ public class FemaleWarriorCharacter : WarriorCharacter
         }
         OnAttack(attackTarget);
         currentComboCount = 0;
-        canComboContinue = false;
+        requestedComboCount = 0;
+        StartCoroutine(ManageComboRequests());
+        StartCoroutine(WaitForComboDelay());
+    }
+
+    private IEnumerator WaitForComboDelay()
+    {
+        comboDelayElapsed = false;
+        yield return new WaitForSeconds(comboDelaySeconds);
+        comboDelayElapsed = true;
+    }
+
+    private IEnumerator ManageComboRequests()
+    {
+        //TODO
+        femaleWarriorAnimationManager.SetContinueComboAttack(true);
+        yield return new WaitWhile(() => animationManager.CanDealDamage);
+        stamina -= attackStaminaCost;
+        yield return new WaitUntil(() => animationManager.CanDealDamage || !animationManager.IsAttacking);
         femaleWarriorAnimationManager.SetContinueComboAttack(false);
     }
 
-    [PunRPC]
-    public void ContinueComboAttack()
-    {
-        if (PhotonView.IsMine)
-        {
-            PhotonView.RPC(nameof(ContinueComboAttack), RpcTarget.Others);
-        }
-        StartCoroutine(ComboDelay());
-        femaleWarriorAnimationManager.SetContinueComboAttack(true);
-        currentComboCount++;
-        stamina -= attackStaminaCost;
-    }
 
     protected override void OnAttack(Vector3 attackTarget)
     {
         base.OnAttack(attackTarget);
         StartCoroutine(ManageAttackTrigger());
-        StartCoroutine(ComboDelay());
     }
 
     private IEnumerator ManageAttackTrigger()
@@ -155,11 +168,26 @@ public class FemaleWarriorCharacter : WarriorCharacter
         }
     }
 
-    private IEnumerator ComboDelay()
+
+    protected override void OnAttackChaseTarget()
     {
-        canComboContinue = false;
-        yield return new WaitForSeconds(comboDelaySeconds);
-        canComboContinue = true;
+        base.OnAttackChaseTarget();
+        StartCoroutine(ManageAttackTrigger());
+        StartCoroutine(ManageForceAttack());
+    }
+
+    private IEnumerator ManageForceAttack()
+    {
+        var target = chaseTarget == null ? null : chaseTarget.GetComponent<Character>();
+        while (chaseTarget != null && animationManager.IsAttacking)
+        {
+            yield return new WaitUntil(() => (animationManager.CanDealDamage && leftBattleAxeTrigger.IsActive && rightBattleAxeTrigger.IsActive) || !animationManager.IsAttacking);
+            if (animationManager.CanDealDamage && leftBattleAxeTrigger.IsActive && rightBattleAxeTrigger.IsActive)
+            {
+                leftBattleAxeTrigger.ForceAttackAfterDelay(target, BasicAttackForceDelay); // TODO...
+            }
+            yield return new WaitWhile(() => animationManager.CanDealDamage);
+        }
     }
 
     #endregion
@@ -180,6 +208,11 @@ public class FemaleWarriorCharacter : WarriorCharacter
         {
             leftBattleAxeTrigger.IsActive = true;
             rightBattleAxeTrigger.IsActive = true;
+            if (leapAttackTarget != null)
+            {
+                leftBattleAxeTrigger.ForceAttackAfterDelay(leapAttackTarget, LeapAttackForceDelay);
+                rightBattleAxeTrigger.ForceAttackAfterDelay(leapAttackTarget, LeapAttackForceDelay);
+            }
             AudioManager.Instance.PlayOneShotSFX(rightBattleAxeAudioSource, SFX.Slash);
         }
         yield return new WaitWhile(() => animationManager.CanDealDamage);
@@ -202,6 +235,7 @@ public class FemaleWarriorCharacter : WarriorCharacter
         while (warriorAnimationManager.IsWhirlwindOnGoing && warriorAnimationManager.CanDealDamage)
         {
             rightBattleAxeTrigger.IsActive = true;
+            leftBattleAxeTrigger.IsActive = true;
             float elapsedTime = 0;
             while (elapsedTime < WhirlwindAttackTriggerPeriod && warriorAnimationManager.IsWhirlwindOnGoing && warriorAnimationManager.CanDealDamage)
             {
@@ -209,6 +243,7 @@ public class FemaleWarriorCharacter : WarriorCharacter
                 yield return null;
             }
             rightBattleAxeTrigger.IsActive = false;
+            leftBattleAxeTrigger.IsActive = false;
         }
     }
 

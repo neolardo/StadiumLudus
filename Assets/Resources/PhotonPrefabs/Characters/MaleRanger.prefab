@@ -781,7 +781,7 @@ NavMeshAgent:
   m_Height: 1.8
   m_BaseOffset: 0
   m_WalkableMask: 1
-  m_ObstacleAvoidanceType: 2
+  m_ObstacleAvoidanceType: 0
 --- !u!114 &1131998773343001476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -794,6 +794,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7567d451fa321d346ad1b58428133c1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  outline: {fileID: 0}
   healthMaximum: 100
   healthRecoveryDelay: 1.6
   healthRecoveryInitialAmount: 0
@@ -804,14 +805,13 @@ MonoBehaviour:
   sprintingSpeedInitialMaximum: 5
   acceleration: 20
   deceleration: 20
-  rotationSpeedMaximum: 1500
-  rotationSpeedMinimum: 400
   attackRange: 10
   characterAudioSource: {fileID: 1131998775310625163}
   transform: {fileID: 0}
   animationManager: {fileID: 1256493612}
+  characterTrigger: {fileID: 0}
   attackStaminaCost: 16
-  hitValidationColliderContainer: {fileID: 1031104074581391231}
+  hitBoxTransform: {fileID: 0}
   dashJumpForce: 200
   dashMaximumDistance: 1.5
   dashCooldown: 2
@@ -5733,15 +5733,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3ea56941e414811499754369c314e948, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.707107
+      value: 0.70710695
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3ea56941e414811499754369c314e948, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.0000001564622
+      value: -0.00000014901158
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3ea56941e414811499754369c314e948, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0000003576279
+      value: -0.00000035762778
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3ea56941e414811499754369c314e948, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

@@ -12,6 +12,11 @@ public abstract class WarriorCharacter : Character
     protected WarriorAnimationManager warriorAnimationManager;
     public override CharacterClass Class => CharacterClass.Barbarian;
 
+    #region Attack
+    protected abstract float BasicAttackForceDelay { get; }
+
+    #endregion
+
     #region Skills
 
     #region Leap Attack
@@ -45,6 +50,8 @@ public abstract class WarriorCharacter : Character
     private bool CanLeapAttack => IsAlive && IsLeapAttackAvailable && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill && stamina > leapAttackStaminaCost;
 
     protected abstract float JumpingTime { get; }
+    protected abstract float LeapAttackForceDelay { get; }
+
 
     #endregion
 
@@ -264,7 +271,7 @@ public abstract class WarriorCharacter : Character
         yield return new WaitUntil(() => warriorAnimationManager.IsJumping);
         while (warriorAnimationManager.IsJumping)
         {
-            var tempTarget = leapAttackTarget.transform.position;
+            var tempTarget = leapAttackTarget.transform.position - (agentAvoidanceRadius * 2 * (leapAttackTarget.transform.position - jumpOrigin).normalized);
             if ((tempTarget - jumpOrigin).magnitude > leapAttackMaximumDistance)
             {
                 tempTarget = jumpOrigin + (tempTarget - jumpOrigin).normalized * leapAttackMaximumDistance;
@@ -384,7 +391,7 @@ public abstract class WarriorCharacter : Character
             {
                 PhotonView.RPC(nameof(GroundSlam), RpcTarget.Others, attackTarget);
             }
-            attackTarget = ClampPointInsideRange(attackTarget, groundSlamMaximumDistance);
+            attackTarget = ClampPointInsideRange(attackTarget, groundSlamMaximumDistance, true);
             IsGroundSlamAvailable = false;
             SetRotationTarget(attackTarget);
             forceRotation = true;
@@ -409,7 +416,6 @@ public abstract class WarriorCharacter : Character
     {
         yield return new WaitUntil(() => groundSlamManager.IsRockVisible);
         groundSlamAttackTrigger.IsActive = true;
-        //audio?
         yield return new WaitForSeconds(groundSlamRockAttackTriggerDuration);
         groundSlamAttackTrigger.IsActive = false;
     }

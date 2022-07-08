@@ -121,7 +121,7 @@ public class Projectile : MonoBehaviour
     [PunRPC]
     public void OnCharacterDamaged(int characterPhotonViewID)
     {
-        projectileTrigger.OnCharacterDamaged(characterPhotonViewID);
+        projectileTrigger.OnDamagingSucceeded(characterPhotonViewID);
     }
 
     private IEnumerator DisableAttackTriggerAfterDelay()

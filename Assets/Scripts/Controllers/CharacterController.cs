@@ -2,6 +2,7 @@ using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 
+[DisallowMultipleComponent]
 /// <summary>
 /// Controls a character of the game.
 /// </summary>

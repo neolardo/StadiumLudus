@@ -84,8 +84,7 @@ public class Outline : MonoBehaviour {
 
     // Cache renderers
     renderers = GetComponentsInChildren<Renderer>();
-
-        // Instantiate outline materials
+    // Instantiate outline materials
 
     outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Outline/Materials/OutlineMask"));
     outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Outline/Materials/OutlineFill"));
@@ -98,20 +97,22 @@ public class Outline : MonoBehaviour {
 
     // Apply material properties immediately
     needsUpdate = true;
+    UpdateMaterialProperties();
   }
 
-  void OnEnable() {
-    foreach (var renderer in renderers) {
-
-      // Append outline shaders
-      var materials = renderer.sharedMaterials.ToList();
-
-      materials.Add(outlineMaskMaterial);
-      materials.Add(outlineFillMaterial);
-
-      renderer.materials = materials.ToArray();
+    void OnEnable() 
+    {
+        foreach (var renderer in renderers) 
+        {
+            var materials = renderer.sharedMaterials.ToList();
+            // make the base layer appear after the outline
+            materials[0].renderQueue = renderer.material.renderQueue + 2;
+            // Append outline shaders
+            materials.Add(outlineMaskMaterial);
+            materials.Add(outlineFillMaterial);
+            renderer.materials = materials.ToArray();
+        }
     }
-  }
 
   void OnValidate() {
 
@@ -138,18 +139,19 @@ public class Outline : MonoBehaviour {
     }
   }
 
-  void OnDisable() {
-    foreach (var renderer in renderers) {
-
-      // Remove outline shaders
-      var materials = renderer.sharedMaterials.ToList();
-
-      materials.Remove(outlineMaskMaterial);
-      materials.Remove(outlineFillMaterial);
-
-      renderer.materials = materials.ToArray();
+    void OnDisable()
+    {
+        foreach (var renderer in renderers) 
+        {
+            var materials = renderer.sharedMaterials.ToList();
+            // Remove outline shaders
+            materials.Remove(outlineMaskMaterial);
+            materials.Remove(outlineFillMaterial);
+            // Reset the order of the baselayer
+            materials[0].renderQueue = renderer.material.renderQueue - 2;
+            renderer.materials = materials.ToArray();
+        }
     }
-  }
 
   void OnDestroy() {
 

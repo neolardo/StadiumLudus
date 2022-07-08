@@ -27,7 +27,7 @@ public class MaleWarriorCharacter : WarriorCharacter
     [SerializeField]
     private AudioSource battleAxeAudioSource;
 
-    private const float basicAttackForceDelay = 0.3f;
+    protected override float BasicAttackForceDelay => 0.3f;
 
     #endregion
 
@@ -35,9 +35,9 @@ public class MaleWarriorCharacter : WarriorCharacter
 
     #region Leap Attack
 
-    protected override float JumpingTime => .45f;
+    protected override float JumpingTime => .65f;
 
-    private const float leapAttackForceDelay = 0.5f;
+    protected override float LeapAttackForceDelay => 0.5f;
 
 
     #endregion
@@ -52,7 +52,7 @@ public class MaleWarriorCharacter : WarriorCharacter
 
     #region Ground Slam
 
-    protected override float GroundSlamStartDelay => 0.5f;
+    protected override float GroundSlamStartDelay => 0.7f;
 
 
     #endregion
@@ -111,7 +111,7 @@ public class MaleWarriorCharacter : WarriorCharacter
         var target = chaseTarget == null ? null : chaseTarget.GetComponent<Character>();
         if (target != null && battleAxeTrigger.IsActive && warriorAnimationManager.CanDealDamage)
         {
-            battleAxeTrigger.ForceAttackAfterDelay(target, basicAttackForceDelay);
+            battleAxeTrigger.ForceAttackAfterDelay(target, BasicAttackForceDelay);
         }
     }
 
@@ -134,7 +134,7 @@ public class MaleWarriorCharacter : WarriorCharacter
             battleAxeTrigger.IsActive = true;
             if (leapAttackTarget != null)
             {
-                battleAxeTrigger.ForceAttackAfterDelay(leapAttackTarget, leapAttackForceDelay);
+                battleAxeTrigger.ForceAttackAfterDelay(leapAttackTarget, LeapAttackForceDelay);
             }
             AudioManager.Instance.PlayOneShotSFX(battleAxeAudioSource, SFX.Slash);
         }

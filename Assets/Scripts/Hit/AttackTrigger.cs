@@ -16,7 +16,7 @@ public class AttackTrigger : MonoBehaviour
     [Tooltip("The photon view of the object with this attack trigger.")]
     public PhotonView photonView;
 
-    [Tooltip("The transform of the owner character used to determine the hit direction.")]
+    [Tooltip("The transform of the owner character used to determine the hit direction. Optional, if the hit direction is calculated using the attack trigger's foward vector.")]
     public Transform ownerTransform;
 
     [Tooltip("True if the attack trigger transform's forward should be used as the attack direction, otherwise the direction between owner character and the target's center will be used.")]
@@ -38,12 +38,17 @@ public class AttackTrigger : MonoBehaviour
     public float MaximumDamage { get; set; }
 
     /// <summary>
-    /// A list of gameobjects representing the previously attacked characters.
+    /// A list of <see cref="Character"/>s which are currently in the trigger zone.
+    /// </summary>
+    private List<Character> TriggeredCharacters { get; } = new List<Character>();
+
+    /// <summary>
+    /// A list of previously attacked <see cref="Character"/>s.
     /// </summary>
     private List<Character> AttackedCharacters { get; } = new List<Character>();
 
     /// <summary>
-    /// A list of gameobjects representing the previously damaged characters.
+    /// A list of previously damaged <see cref="Character"/>s.
     /// </summary>
     private List<Character> DamagedCharacters { get; } = new List<Character>();
 
@@ -73,13 +78,14 @@ public class AttackTrigger : MonoBehaviour
         set
         {
             _isActive = value;
-            if (!value)
+            if (value)
             {
-                forceAttackTarget = null;
-                AnyObjectHit = false;
-                DamagedCharacters.Clear();
-                AttackedCharacters.Clear();
+                OnActivated();
             }
+            else
+            {
+                OnDeactivated();
+            }    
         }
     }
 
@@ -107,43 +113,76 @@ public class AttackTrigger : MonoBehaviour
 
     #endregion
 
-    #region Regular Attack
+    #region Activation
+
+    private void OnActivated()
+    {
+        foreach (var c in TriggeredCharacters)
+        {
+            DealDamage(c);
+        }
+    }
+
+    private void OnDeactivated()
+    {
+        forceAttackTarget = null;
+        AnyObjectHit = false;
+        DamagedCharacters.Clear();
+        AttackedCharacters.Clear();
+    }
+
+    #endregion
+
+    #region Trigger
 
     private void OnTriggerEnter(Collider other)
     {
-        if (IsActive)
+        if (other.tag.Contains(Globals.HitBoxTag))
         {
-            if (other.tag.Contains(Globals.HitBoxTag))
+            var character = other.GetComponent<HitBox>().character;
+            TriggeredCharacters.Add(character);
+            if (IsActive)
             {
-                DealDamage(other);
+                DealDamage(character);
             }
-            else if (!AnyObjectHit)
+        }
+        else if (IsActive && !AnyObjectHit)
+        {
+            if (other.tag.Contains(Globals.WoodTag))
             {
-                if (other.tag == Globals.WoodTag)
-                {
-                    AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.HitOnWood);
-                    AnyObjectHit = true;
-                }
-                else if (other.tag == Globals.StoneTag)
-                {
-                    AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.HitOnStone);
-                    AnyObjectHit = true;
-                }
+                AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.HitOnWood);
+                AnyObjectHit = true;
+            }
+            else if (other.tag.Contains(Globals.StoneTag))
+            {
+                AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.HitOnStone);
+                AnyObjectHit = true;
             }
         }
     }
 
-    private void DealDamage(Collider other)
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag.Contains(Globals.HitBoxTag))
+        {
+            var character = other.GetComponent<HitBox>().character;
+            TriggeredCharacters.Remove(character);
+        }
+    }
+
+    #endregion
+
+    #region Regular Attack
+
+    private void DealDamage(Character target)
     {
         if (photonView.IsMine)
         {
-            var hitBox = other.GetComponent<HitBox>();
-            if (!AttackedCharacters.Contains(hitBox.character))
+            if (!AttackedCharacters.Contains(target))
             {
                 var info = CalculateColliderInfo(collider);
-                hitBox.character.PhotonView.RPC(TryTakeDamageFunctionName, hitBox.character.PhotonView.Controller, Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(hitBox.character.transform.forward, hitBox.character.transform.position), info.point0, info.point1, info.radius, photonView.ViewID, forceAttackTarget == hitBox.character, canBeGuarded);
-                AttackedCharacters.Add(hitBox.character);
-                Debug.LogWarning($"Trying regular attack...");
+                target.PhotonView.RPC(TryTakeDamageFunctionName, target.PhotonView.Controller, Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(target.transform.forward, target.transform.position), info.point0, info.point1, info.radius, photonView.ViewID, forceAttackTarget == target, canBeGuarded);
+                AttackedCharacters.Add(target);
             }
         }
     }
@@ -165,11 +204,6 @@ public class AttackTrigger : MonoBehaviour
         {
             target.PhotonView.RPC(TryTakeDamageFunctionName, target.PhotonView.Controller, Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(target.transform.forward, target.transform.position), Vector3.zero, Vector3.zero, 0f, photonView.ViewID, true, canBeGuarded);
             AttackedCharacters.Add(target);
-            Debug.LogWarning($"Force attack successful.");
-        }
-        else
-        {
-            Debug.LogWarning($"Could not force attack: isActive: {IsActive}, already attacked:{AttackedCharacters.Contains(target)}");
         }
     }
 
@@ -227,9 +261,26 @@ public class AttackTrigger : MonoBehaviour
     #region Character Damaged
 
     [PunRPC]
-    public void OnCharacterDamaged(int characterPhotonViewID)
+    public void OnDamagingSucceeded(int characterPhotonViewID)
     {
-        DamagedCharacters.Add(GameRoundManager.Instance.LocalCharacterReferenceDictionary[characterPhotonViewID]);
+        if (IsActive)
+        {
+            DamagedCharacters.Add(GameRoundManager.Instance.LocalCharacterReferenceDictionary[characterPhotonViewID]);
+        }
+    }
+
+    [PunRPC]
+    public void OnDamagingFailed(int characterPhotonViewID)
+    {
+        if (IsActive)
+        {
+            var target = GameRoundManager.Instance.LocalCharacterReferenceDictionary[characterPhotonViewID];
+            AttackedCharacters.Remove(target);
+            if (TriggeredCharacters.Contains(target))
+            {
+                DealDamage(target);
+            }
+        }
     }
 
     #endregion
