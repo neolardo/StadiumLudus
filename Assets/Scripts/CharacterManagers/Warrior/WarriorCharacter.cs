@@ -39,7 +39,6 @@ public abstract class WarriorCharacter : Character
     [Tooltip("Represents the stamina cost of the leap attack skill.")]
     [SerializeField]
     private float leapAttackStaminaCost = 15f;
-
     private bool IsLeapAttackAvailable { get; set; } = true;
 
     private float jumpingTimeDelta;
@@ -48,10 +47,8 @@ public abstract class WarriorCharacter : Character
 
     protected Character leapAttackTarget;
     private bool CanLeapAttack => IsAlive && IsLeapAttackAvailable && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill && stamina > leapAttackStaminaCost;
-
     protected abstract float JumpingTime { get; }
     protected abstract float LeapAttackForceDelay { get; }
-
 
     #endregion
 
@@ -260,7 +257,11 @@ public abstract class WarriorCharacter : Character
     {
         if (warriorAnimationManager.IsJumping && jumpingTimeDelta < JumpingTime)
         {
-            var tempPosition = Vector3.Lerp(jumpOrigin, jumpTarget, jumpingTimeDelta / JumpingTime);
+            float x = (jumpingTimeDelta / JumpingTime);
+            float f = x * x;
+            float g = -(x - 1) * (x - 1) + 1;
+            float y = Mathf.Lerp(f, g, x);
+            var tempPosition = Vector3.Lerp(jumpOrigin, jumpTarget, y);
             rb.MovePosition(new Vector3(tempPosition.x, rb.position.y, tempPosition.z));
             jumpingTimeDelta += Time.fixedDeltaTime;
         }

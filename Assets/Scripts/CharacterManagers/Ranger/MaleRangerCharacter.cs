@@ -83,34 +83,26 @@ public class MaleRangerCharacter : RangerCharacter
 
     #region Attack
 
-    public override bool TryAttack(Vector3 attackTarget)
+    public override void StartAttack(Vector3 attackTarget, Character target = null)
     {
-        if (CanAttack)
-        {
-            OnAttack(attackTarget);
-            return true;
-        }
-        else if (CanReload)
+        if (CanReload)
         {
             Reload();
-            return true;
         }
-        return false;
-    }
-
-    protected override void OnAttack(Vector3 attackTarget)
-    {
-        FireBolt(attackTarget);
-    }
-
-    [PunRPC]
-    public void FireBolt(Vector3 attackTarget)
-    {
-        if (PhotonView.IsMine)
+        else
         {
-            PhotonView.RPC(nameof(FireBolt), RpcTarget.Others, attackTarget);
+            base.StartAttack(attackTarget, target);
         }
-        base.OnAttack(attackTarget);
+    }
+
+    protected override void OnAttackWithoutTarget(Vector3 attackTarget)
+    {
+        base.OnAttackWithoutTarget(attackTarget);
+        FireBolt();
+    }
+
+    private void FireBolt()
+    {
         crossbow.Attack();
         IsArrowLoaded = false;
     }

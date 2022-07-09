@@ -82,6 +82,10 @@ MonoBehaviour:
   - OnDamagingFailed
   - OnOnDamagingSucceeded
   - OnDamagingSucceeded
+  - AttackChaseTarget
+  - AttackWithoutTarget
+  - EndPreviousAttack
+  - RequestAnotherComboAttack
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

@@ -39,11 +39,10 @@ public class FemaleWarriorCharacter : WarriorCharacter
     private int currentComboCount = 0;
     private int requestedComboCount = 0;
     private const int maximumComboCount = 2;
-    private const float comboDelaySeconds = .1f;
-    private bool comboDelayElapsed;
+    private bool previousAttackEnded;
 
     private bool CanRequestAnotherComboAttack => !animationManager.IsInterrupted && !animationManager.IsInteracting && !animationManager.IsGuarding && !animationManager.IsUsingSkill
-        && animationManager.IsAttacking && !femaleWarriorAnimationManager.IsContinueAttackRequested && currentComboCount < 2 && stamina > attackStaminaCost && comboDelayElapsed;
+        && animationManager.IsAttacking && requestedComboCount < maximumComboCount && stamina > attackStaminaCost * (requestedComboCount - currentComboCount + 1) && previousAttackEnded;
 
     #endregion
 
@@ -98,58 +97,90 @@ public class FemaleWarriorCharacter : WarriorCharacter
 
     #region Attack
 
-    public override bool TryAttack(Vector3 attackTarget)
+    #region Start
+
+    public override void StartAttack(Vector3 attackPoint, Character target = null)
     {
-        if (CanAttack)
+        if (!animationManager.IsAttacking)
         {
-            StartComboAttack(attackTarget);
-            return true;
+            base.StartAttack(attackPoint, target);
         }
-        else if (animationManager.IsAttacking && comboDelayElapsed && requestedComboCount < maximumComboCount)
+        else
         {
-            StartCoroutine(WaitForComboDelay());
-            requestedComboCount += 1;
-            return true;
+            RequestAnotherComboAttack();
         }
-        return false;
     }
 
     [PunRPC]
-    public void StartComboAttack(Vector3 attackTarget)
+    public void RequestAnotherComboAttack()
     {
-        if (PhotonView.IsMine)
+        if (CanRequestAnotherComboAttack || !PhotonView.IsMine)
         {
-            PhotonView.RPC(nameof(StartComboAttack), RpcTarget.Others, attackTarget);
+            if (PhotonView.IsMine)
+            {
+                PhotonView.RPC(nameof(RequestAnotherComboAttack), RpcTarget.Others);
+            }
+            requestedComboCount += 1;
+            previousAttackEnded = false;
         }
-        OnAttack(attackTarget);
-        currentComboCount = 0;
-        requestedComboCount = 0;
-        StartCoroutine(ManageComboRequests());
-        StartCoroutine(WaitForComboDelay());
     }
 
-    private IEnumerator WaitForComboDelay()
+    #endregion
+
+    #region End
+
+    public override void EndAttack(Vector3 attackPoint, Character target = null)
     {
-        comboDelayElapsed = false;
-        yield return new WaitForSeconds(comboDelaySeconds);
-        comboDelayElapsed = true;
+        EndPreviousAttack();
+    }
+
+    [PunRPC]
+    public void EndPreviousAttack()
+    {
+        if (animationManager.IsAttacking || !PhotonView.IsMine)
+        {
+            if (PhotonView.IsMine)
+            {
+                PhotonView.RPC(nameof(EndPreviousAttack), RpcTarget.Others);
+            }
+            previousAttackEnded = true;
+        }
+    }
+
+    #endregion
+
+    #region Without Target
+
+    protected override void OnAttackWithoutTarget(Vector3 attackTarget)
+    {
+        base.OnAttackWithoutTarget(attackTarget);
+        currentComboCount = 0;
+        requestedComboCount = 0;
+        previousAttackEnded = false;
+        StartCoroutine(ManageComboRequests());
+        StartCoroutine(ManageAttackTrigger());
     }
 
     private IEnumerator ManageComboRequests()
     {
-        //TODO
-        femaleWarriorAnimationManager.SetContinueComboAttack(true);
-        yield return new WaitWhile(() => animationManager.CanDealDamage);
-        stamina -= attackStaminaCost;
-        yield return new WaitUntil(() => animationManager.CanDealDamage || !animationManager.IsAttacking);
         femaleWarriorAnimationManager.SetContinueComboAttack(false);
-    }
+        while (animationManager.IsAttacking)
+        {
+            yield return new WaitUntil(() => requestedComboCount > currentComboCount || !animationManager.IsAttacking);
+            if (animationManager.IsAttacking)
+            {
+                femaleWarriorAnimationManager.SetContinueComboAttack(true);
+            }
+            yield return new WaitWhile(() => animationManager.CanDealDamage); //wait for the end of the current attack animation
 
-
-    protected override void OnAttack(Vector3 attackTarget)
-    {
-        base.OnAttack(attackTarget);
-        StartCoroutine(ManageAttackTrigger());
+            yield return new WaitUntil(() => animationManager.CanDealDamage || !animationManager.IsAttacking);
+            if (animationManager.IsAttacking)
+            {
+                stamina -= attackStaminaCost;
+                currentComboCount += 1;
+            }
+            femaleWarriorAnimationManager.SetContinueComboAttack(false);
+        }
     }
 
     private IEnumerator ManageAttackTrigger()
@@ -168,10 +199,17 @@ public class FemaleWarriorCharacter : WarriorCharacter
         }
     }
 
+    #endregion
+
+    #region With Target
 
     protected override void OnAttackChaseTarget()
     {
         base.OnAttackChaseTarget();
+        currentComboCount = 0;
+        requestedComboCount = 0;
+        previousAttackEnded = false;
+        StartCoroutine(ManageComboRequests());
         StartCoroutine(ManageAttackTrigger());
         StartCoroutine(ManageForceAttack());
     }
@@ -184,10 +222,22 @@ public class FemaleWarriorCharacter : WarriorCharacter
             yield return new WaitUntil(() => (animationManager.CanDealDamage && leftBattleAxeTrigger.IsActive && rightBattleAxeTrigger.IsActive) || !animationManager.IsAttacking);
             if (animationManager.CanDealDamage && leftBattleAxeTrigger.IsActive && rightBattleAxeTrigger.IsActive)
             {
-                leftBattleAxeTrigger.ForceAttackAfterDelay(target, BasicAttackForceDelay); // TODO...
+                leftBattleAxeTrigger.ForceAttackAfterDelay(target, BasicAttackForceDelay); // TODO... which axe?
             }
             yield return new WaitWhile(() => animationManager.CanDealDamage);
         }
+    }
+
+    #endregion
+
+    #endregion
+
+    #region Take Damage
+
+    protected override void OnTakeDamage()
+    {
+        base.OnTakeDamage();
+        femaleWarriorAnimationManager.SetContinueComboAttack(false);
     }
 
     #endregion

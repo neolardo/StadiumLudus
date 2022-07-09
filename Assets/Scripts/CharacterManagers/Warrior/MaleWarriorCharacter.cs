@@ -80,9 +80,11 @@ public class MaleWarriorCharacter : WarriorCharacter
 
     #region Attack
 
-    protected override void OnAttack(Vector3 attackTarget)
+    #region Without Target
+
+    protected override void OnAttackWithoutTarget(Vector3 attackTarget)
     {
-        base.OnAttack(attackTarget);
+        base.OnAttackWithoutTarget(attackTarget);
         StartCoroutine(ManageAttackTrigger());
     }
 
@@ -97,6 +99,10 @@ public class MaleWarriorCharacter : WarriorCharacter
         yield return new WaitWhile(() => warriorAnimationManager.CanDealDamage);
         battleAxeTrigger.IsActive = false;
     }
+
+    #endregion
+
+    #region With Target
 
     protected override void OnAttackChaseTarget()
     {
@@ -114,6 +120,8 @@ public class MaleWarriorCharacter : WarriorCharacter
             battleAxeTrigger.ForceAttackAfterDelay(target, BasicAttackForceDelay);
         }
     }
+
+    #endregion
 
     #endregion
 

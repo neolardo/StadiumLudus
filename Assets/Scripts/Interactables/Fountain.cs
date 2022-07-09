@@ -14,9 +14,13 @@ public class Fountain :  Interactable
     [SerializeField]
     private GameObject interactionPointContainer;
 
-    [Tooltip("The amount of healing is done by drinking from this fountain.")]
+    [Tooltip("The amount of health is gained by drinking from this fountain.")]
     [SerializeField]
-    private float healAmount;
+    private float healthHealAmount;
+
+    [Tooltip("The amount of stamina is gained by drinking from this fountain.")]
+    [SerializeField]
+    private float staminaHealAmount;
 
     private List<Vector3> interactionPoints;
 
@@ -82,9 +86,13 @@ public class Fountain :  Interactable
         {
             interactionPoints.Add(interactionPointContainer.transform.GetChild(i).position);
         }
-        if (healAmount <= 0)
+        if (healthHealAmount <= 0)
         {
-            Debug.LogWarning("A fountain's heal amount is set to a non-positive value.");
+            Debug.LogWarning("A fountain's health heal amount is set to a non-positive value.");
+        }
+        if (staminaHealAmount <= 0)
+        {
+            Debug.LogWarning("A fountain's stamina heal amount is set to a non-positive value.");
         }
         IsFilled = true;
     }
@@ -124,7 +132,7 @@ public class Fountain :  Interactable
     private IEnumerator HealCharacterAfterDelay(Character character)
     {
         yield return new WaitForSeconds(delayBeforeHeal);
-        character.TryHeal(healAmount);
+        character.TryHeal(healthHealAmount, staminaHealAmount);
     }
 
     private IEnumerator WaitAndRefill()

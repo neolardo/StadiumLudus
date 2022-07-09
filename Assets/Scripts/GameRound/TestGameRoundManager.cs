@@ -15,7 +15,7 @@ public class TestGameRoundManager : MonoBehaviour
     void Start()
     {
         characterUI.Initialize(localCharacter);
-        var characterController = localCharacter.GetComponent<CharacterController>();
+        var characterController = localCharacter.gameObject.AddComponent<CharacterController>();
         characterController.Initialize(characterUI);
         cameraController.Initialize(localCharacter);
         var characterAudioListener = Instantiate(characterAudioListenerPrefab, null);

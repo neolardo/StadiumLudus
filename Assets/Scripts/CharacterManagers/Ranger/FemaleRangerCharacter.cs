@@ -75,9 +75,9 @@ public class FemaleRangerCharacter : RangerCharacter
 
     #region Attack
 
-    protected override void OnAttack(Vector3 attackTarget)
+    protected override void OnAttackWithoutTarget(Vector3 attackTarget)
     {
-        base.OnAttack(attackTarget);
+        base.OnAttackWithoutTarget(attackTarget);
         StartCoroutine(ManageAnimations());
     }
 

@@ -172,43 +172,6 @@ public class AttackTrigger : MonoBehaviour
 
     #endregion
 
-    #region Regular Attack
-
-    private void DealDamage(Character target)
-    {
-        if (photonView.IsMine)
-        {
-            if (!AttackedCharacters.Contains(target))
-            {
-                var info = CalculateColliderInfo(collider);
-                target.PhotonView.RPC(TryTakeDamageFunctionName, target.PhotonView.Controller, Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(target.transform.forward, target.transform.position), info.point0, info.point1, info.radius, photonView.ViewID, forceAttackTarget == target, canBeGuarded);
-                AttackedCharacters.Add(target);
-            }
-        }
-    }
-
-    #endregion
-
-    #region Force Attack
-
-    public void ForceAttackAfterDelay(Character target, float delaySeconds)
-    {
-        StartCoroutine(WaitUntilDelayThenForceAttack(target, delaySeconds));
-    }
-
-    private IEnumerator WaitUntilDelayThenForceAttack(Character target, float delaySeconds)
-    {
-        forceAttackTarget = target;
-        yield return new WaitForSeconds(delaySeconds);
-        if (IsActive && !AttackedCharacters.Contains(target))
-        {
-            target.PhotonView.RPC(TryTakeDamageFunctionName, target.PhotonView.Controller, Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(target.transform.forward, target.transform.position), Vector3.zero, Vector3.zero, 0f, photonView.ViewID, true, canBeGuarded);
-            AttackedCharacters.Add(target);
-        }
-    }
-
-    #endregion
-
     #region Calculate Infos
 
     private (Vector3 point0, Vector3 point1, float radius) CalculateColliderInfo(Collider col)
@@ -253,6 +216,43 @@ public class AttackTrigger : MonoBehaviour
         else
         {
             return HitDirection.FrontLeft;
+        }
+    }
+
+    #endregion
+
+    #region Regular Attack
+
+    private void DealDamage(Character target)
+    {
+        if (photonView.IsMine)
+        {
+            if (!AttackedCharacters.Contains(target))
+            {
+                var info = CalculateColliderInfo(collider);
+                target.PhotonView.RPC(TryTakeDamageFunctionName, target.PhotonView.Controller, Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(target.transform.forward, target.transform.position), info.point0, info.point1, info.radius, photonView.ViewID, forceAttackTarget == target, canBeGuarded);
+                AttackedCharacters.Add(target);
+            }
+        }
+    }
+
+    #endregion
+
+    #region Force Attack
+
+    public void ForceAttackAfterDelay(Character target, float delaySeconds)
+    {
+        StartCoroutine(WaitUntilDelayThenForceAttack(target, delaySeconds));
+    }
+
+    private IEnumerator WaitUntilDelayThenForceAttack(Character target, float delaySeconds)
+    {
+        forceAttackTarget = target;
+        yield return new WaitForSeconds(delaySeconds);
+        if (IsActive && !AttackedCharacters.Contains(target))
+        {
+            target.PhotonView.RPC(TryTakeDamageFunctionName, target.PhotonView.Controller, Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(target.transform.forward, target.transform.position), Vector3.zero, Vector3.zero, 0f, photonView.ViewID, true, canBeGuarded);
+            AttackedCharacters.Add(target);
         }
     }
 

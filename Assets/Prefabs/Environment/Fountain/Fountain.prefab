@@ -2910,7 +2910,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outline: {fileID: 885455632}
   interactionPointContainer: {fileID: 7607558169687886698}
-  healAmount: 30
+  healthHealAmount: 40
+  staminaHealAmount: 30
   refillTime: 30
   smallWater: {fileID: 9161470685267833616}
   largeWater: {fileID: 5141378229857843213}

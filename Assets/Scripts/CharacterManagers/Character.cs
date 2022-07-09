@@ -335,9 +335,33 @@ public abstract class Character : MonoBehaviour, IHighlightable
     #endregion
 
     #region Skills
-    public abstract void StartSkill(int skillNumber, Vector3 clickPosition, Character target);
+
+    /// <summary>
+    /// Starts using a skill if possible. This should only be called from the <see cref="CharacterController"/>.
+    /// </summary>
+    /// <param name="skillNumber">The number of the skill.</param>
+    /// <param name="clickPosition">The click position.</param>
+    /// <param name="target">The optional target <see cref="Character"/>.</param>
+    public abstract void StartSkill(int skillNumber, Vector3 clickPosition, Character target = null);
+
+    /// <summary>
+    /// Ends a skill. This should only be called from the <see cref="CharacterController"/>.
+    /// </summary>
+    /// <param name="skillNumber">The number of the skill.</param>
     public virtual void EndSkill(int skillNumber) { }
+
+    /// <summary>
+    /// Indicates whether a skill with the given number is a rechargeable or not.
+    /// </summary>
+    /// <param name="skillNumber">The number of the skill.</param>
+    /// <returns>True if the skill is a rechargeable, otherwise false.</returns>
     public virtual bool IsSkillChargeable(int skillNumber) => false;
+
+    /// <summary>
+    /// Determines the initial charge number of the given skill.
+    /// </summary>
+    /// <param name="skillNumber">The number of the skill.</param>
+    /// <returns>The initial charge number of the given skill.</returns>
     public virtual int InitialChargeCountOfSkill(int skillNumber) => 0;
 
     /// <summary>
@@ -377,34 +401,60 @@ public abstract class Character : MonoBehaviour, IHighlightable
 
     #region Attack
 
+    /// <summary>
+    /// Starts an attack. This should only be called from the <see cref="CharacterController"/>.
+    /// </summary>
+    /// <param name="attackPoint">The attack point.</param>
+    /// <param name="target">The optional attack target <see cref="Character"/>.</param>
+    public virtual void StartAttack(Vector3 attackPoint, Character target = null)
+    {
+        if (target != null)
+        {
+            SetChaseTarget(target.transform);
+        }
+        else
+        {
+            AttackWithoutTarget(attackPoint);
+        }
+    }
+
+    /// <summary>
+    /// Ends an attack. This should only be called from the <see cref="CharacterController"/>.
+    /// </summary>
+    /// <param name="attackPoint">The attack point.</param>
+    /// <param name="target">The optional attack target <see cref="Character"/>.</param>
+    public virtual void EndAttack(Vector3 attackPoint, Character target = null) { }
+
+    #region Without Target
+
     [PunRPC]
-    public virtual bool TryAttack(Vector3 attackTarget)
+    public void AttackWithoutTarget(Vector3 attackPoint)
     {
         if (CanAttack || !PhotonView.IsMine)
         {
             if (PhotonView.IsMine)
             {
-                PhotonView.RPC(nameof(TryAttack), RpcTarget.Others, attackTarget);
+                PhotonView.RPC(nameof(AttackWithoutTarget), RpcTarget.Others, attackPoint);
             }
-            OnAttack(attackTarget);
-            return true;
+            OnAttackWithoutTarget(attackPoint);
         }
-        return false;
     }
 
-    protected virtual void OnAttack(Vector3 attackTarget)
+    protected virtual void OnAttackWithoutTarget(Vector3 attackPoint)
     {
         chaseTarget = null;
         interactionTarget = null;
         ClearDestination();
         animationManager.Attack();
-        rotationTarget = attackTarget;
+        rotationTarget = attackPoint;
         stamina -= attackStaminaCost;
     }
 
-    #region Chase
+    #endregion
 
-    public void SetChaseTarget(Transform target)
+    #region With Target
+
+    protected void SetChaseTarget(Transform target)
     {
         if (CanSetChaseTarget)
         {
@@ -418,18 +468,18 @@ public abstract class Character : MonoBehaviour, IHighlightable
         if (chaseTarget != null)
         {
             SetDestination(chaseTarget.position);
-            TryAttackChaseTarget();
+            AttackChaseTarget();
         }
     }
 
     [PunRPC]
-    public void TryAttackChaseTarget()
+    public void AttackChaseTarget()
     {
         if (!PhotonView.IsMine || (CanAttack && ((chaseTarget.position - rb.position).magnitude < attackRange)))
         {
             if (PhotonView.IsMine)
             {
-                PhotonView.RPC(nameof(TryAttackChaseTarget), RpcTarget.Others);
+                PhotonView.RPC(nameof(AttackChaseTarget), RpcTarget.Others);
             }
             OnAttackChaseTarget();
         }
@@ -485,6 +535,15 @@ public abstract class Character : MonoBehaviour, IHighlightable
         hitBoxInfoCircularBuffer.Push(info);
     }
 
+    /// <summary>
+    /// Determines whether a hit is valid by checking the hitbox <see cref="Collider"/>'s and the <see cref="AttackTrigger"/>'s position at the time when the hit occured.
+    /// </summary>
+    /// <param name="colliderPoint1">The first colliderpoint of the <see cref="AttackTrigger"/>'s <see cref="Collider"/>.</param>
+    /// <param name="colliderPoint2">The second colliderpoint of the <see cref="AttackTrigger"/>'s <see cref="Collider"/>.</param>
+    /// <param name="colliderRadius">The radius of the <see cref="AttackTrigger"/>'s <see cref="Collider"/>.</param>
+    /// <param name="oldTimeStamp">The server timestamp when the collision has occured.</param>
+    /// <param name="isForced">True if the attack was forced, so it is unavoidable, unless the <see cref="Character"/> cannot be interrupted.</param>
+    /// <returns>True if the hit was valid, otherwise false.</returns>
     public bool IsHitValid(Vector3 colliderPoint1, Vector3 colliderPoint2, float colliderRadius, int oldTimeStamp, bool isForced)
     {
         int deltaFixedUpdateFrames = Mathf.RoundToInt((PhotonNetwork.ServerTimestamp - oldTimeStamp) / 20f); // 1000/50 ms is one fixed update frame delta
@@ -662,6 +721,10 @@ public abstract class Character : MonoBehaviour, IHighlightable
 
     #region Interactions
 
+    /// <summary>
+    /// Sets the interaction target of this <see cref="Character"/>.  This should only be called from the <see cref="CharacterController"/>.
+    /// </summary>
+    /// <param name="interactable">The interaction target.</param>
     public void SetInteractionTarget(Interactable interactable)
     {
         if (CanSetInteractionTarget)
@@ -711,11 +774,12 @@ public abstract class Character : MonoBehaviour, IHighlightable
         }
     }
 
-    public void TryHeal(float healAmount)
+    public void TryHeal(float healthHealAmount, float staminaHealAmount)
     {
         if (IsAlive && animationManager.IsInteracting)
         {
-            health = Mathf.Min(health + healAmount, healthMaximum);
+            health = Mathf.Min(health + healthHealAmount, healthMaximum);
+            stamina = Mathf.Min(stamina + staminaHealAmount, staminaMaximum);
         }
     }
 
@@ -829,6 +893,10 @@ public abstract class Character : MonoBehaviour, IHighlightable
         this.isSprintingRequested = isSprintingRequested;
     }
 
+    /// <summary>
+    /// Set the destination of the <see cref="Character"/>.  This should only be called from the <see cref="CharacterController"/>.
+    /// </summary>
+    /// <param name="position">The next destionation of the <see cref="Character"/>.</param>
     public void MoveTo(Vector3 position)
     {
         agent.CalculatePath(position, helperPath);
@@ -930,6 +998,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
         }
         return false;
     }
+
     #endregion
 
     #region Recovery

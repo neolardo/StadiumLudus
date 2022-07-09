@@ -17,6 +17,7 @@ public class CharacterController : MonoBehaviour
     private bool AreInputsEnabled => characterUI.IsUIVisible;
     private bool ignoreEverythingUntilRelease = false;
     private bool ignoreActionsExceptAttackUntilRelease = false;
+    private bool lastActionWasAttack = false;
 
     [Tooltip("The key which should be pressed to trigger the first skill of the character.")]
     [SerializeField]
@@ -81,25 +82,27 @@ public class CharacterController : MonoBehaviour
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         var layerMask = (1 << Globals.GroundLayer) | (1 << Globals.CharacterLayer) | (1 << Globals.InteractableLayer);
         bool isRaycastSuccessful = Physics.Raycast(ray, out hit, Globals.RaycastDistance,layerMask, QueryTriggerInteraction.Collide);
-        HandleMouseClick(hit, isRaycastSuccessful);
+        HandleMouseInputs(hit, isRaycastSuccessful);
         HandleKeyboardInputs(hit, isRaycastSuccessful);
     }
 
     /// <summary>
-    /// Handles mouse events. On left click the character should chase-attack, interact or move,
-    /// on right click, if there's a target the character should chase-attack, otherwise it should attack towards the mouse direction.
+    /// Handles mouse events. On left click the character should start an attack, interact or move.
+    /// On right click, the character should start an attack. On release the character should end their attacks.
     /// </summary>
-    private void HandleMouseClick(RaycastHit hit, bool isRaycastSuccessful)
+    private void HandleMouseInputs(RaycastHit hit, bool isRaycastSuccessful)
     {
         if (AreInputsEnabled)
         {
-            if (Input.GetMouseButtonUp(0))
+            bool isLeftMouseButtonUp = Input.GetMouseButtonUp(0);
+            bool isRightMouseButtonUp = Input.GetMouseButtonUp(1);
+            bool isLeftMouseButton = Input.GetMouseButton(0);
+            bool isRightMouseButton = Input.GetMouseButton(1);
+            if (isLeftMouseButtonUp || isRightMouseButtonUp)
             {
                 ignoreEverythingUntilRelease = false;
                 ignoreActionsExceptAttackUntilRelease = false;
             }
-            bool isLeftMouseButton = Input.GetMouseButton(0);
-            bool isRightMouseButton = Input.GetMouseButton(1);
             if (isRaycastSuccessful)
             {
                 bool interactableAtHit = hit.transform.gameObject.layer == Globals.InteractableLayer;
@@ -112,20 +115,28 @@ public class CharacterController : MonoBehaviour
                 {
                     hit.transform.GetComponent<IHighlightable>().Highlight();
                 }
+                if ((isLeftMouseButtonUp || isRightMouseButtonUp) && lastActionWasAttack)
+                {
+                    character.EndAttack(hit.point, enemyAtHit ? hit.transform.parent.GetComponent<Character>() : null);
+                    lastActionWasAttack = false;
+                }
                 if ((isLeftMouseButton || isRightMouseButton) && !ignoreEverythingUntilRelease)
                 {
                     if (!ignoreActionsExceptAttackUntilRelease)
                     {
                         if (enemyAtHit && (isRightMouseButton || isLeftMouseButton))
                         {
-                            character.SetChaseTarget(hit.transform);
+                            character.StartAttack(hit.point, hit.transform.parent.GetComponent<Character>());
                             ignoreEverythingUntilRelease = true;
+                            lastActionWasAttack = true;
                         }
                         else if (isRightMouseButton)
                         {
-                            character.TryAttack(hit.point);
+                            character.StartAttack(hit.point);
+                            ignoreEverythingUntilRelease = true;
+                            lastActionWasAttack = true;
                         }
-                        else if (isLeftMouseButton && interactableAtHit)
+                        else if (interactableAtHit && isLeftMouseButton)
                         {
                             character.SetInteractionTarget(hit.transform.parent.GetComponent<Interactable>());
                             ignoreEverythingUntilRelease = true;
@@ -138,7 +149,9 @@ public class CharacterController : MonoBehaviour
                     }
                     else if (isRightMouseButton)
                     {
-                        character.TryAttack(hit.point);
+                        character.StartAttack(hit.point, enemyAtHit? hit.transform.parent.GetComponent<Character>() : null);
+                        ignoreEverythingUntilRelease = true;
+                        lastActionWasAttack = true;
                     }
                     else if (isLeftMouseButton)
                     {
