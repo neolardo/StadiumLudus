@@ -9,6 +9,10 @@ public class FemaleWarriorAnimationManager : WarriorAnimationManager
     /// Indicates whether continuing the combo attack is requested or not.
     /// </summary>
     public bool IsContinueAttackRequested { get; private set; }
+    public bool CanLeftWeaponDealDamage { get; private set; }
+    public bool CanRightWeaponDealDamage { get; private set; }
+
+    public override bool CanDealDamage => CanLeftWeaponDealDamage || CanRightWeaponDealDamage;
 
     #region Animator Constants
 
@@ -37,11 +41,36 @@ public class FemaleWarriorAnimationManager : WarriorAnimationManager
         IsContinueAttackRequested = value;
     }
 
-
     public void OnComboAttackContinued()
     {
         SetContinueComboAttack(false);
     }
+
+    #region Left Weapon
+
+    public void OnLeftWeaponCanDealDamage()
+    {
+        CanLeftWeaponDealDamage = true;
+    }
+    public void OnLeftWeaponCannotDealDamage()
+    {
+        CanLeftWeaponDealDamage = false;
+    }
+
+    #endregion
+
+    #region Right Weapon
+
+    public void OnRightWeaponCanDealDamage()
+    {
+        CanRightWeaponDealDamage = true;
+    }
+    public void OnRightWeaponCannotDealDamage()
+    {
+        CanRightWeaponDealDamage = false;
+    }
+
+    #endregion
 
     #endregion
 

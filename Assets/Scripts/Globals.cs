@@ -64,6 +64,65 @@ public static class Globals
 
     #region Helper Methods
 
+    #region Range
+
+    /// <summary>
+    /// Clamps a point inside a given distance from the <see cref="Character"/>.
+    /// </summary>
+    /// <param name="origin">The origin point.</param>
+    /// <param name="target">The target point.</param>
+    /// <param name="range">The maximum range in the target point's direction.</param>
+    /// <param name="forceOverwrite">True if the given target should be recalculated by raycasting.</param>
+    /// <returns>The target point closer than the given range.</returns>
+    public static Vector3 ClampPointInsideRange(Vector3 origin, Vector3 target, float range, bool forceOverwrite = false)
+    {
+        if ((target - origin).magnitude > range)
+        {
+            var edgePoint = origin + (target - origin).normalized * range;
+            var raycastPoint = edgePoint + Vector3.up * 5;
+            Ray ray = new Ray(raycastPoint, Vector3.down);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 10, 1 << Globals.GroundLayer))
+            {
+                edgePoint = hit.point;
+            }
+            target = edgePoint;
+        }
+        else if (forceOverwrite)
+        {
+            Ray ray = new Ray(target + Vector3.up, Vector3.down);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 10, 1 << Globals.GroundLayer))
+            {
+                target = hit.point;
+            }
+        }
+        return target;
+    }
+
+    /// <summary>
+    /// Gets a point at a given distance from the <see cref="Character"/>.
+    /// </summary>
+    /// <param name="target">A point towards the direction.</param>
+    /// <param name="range">The maximum range in the target point's direction.</param>
+    /// <returns>The target point closer than the given range.</returns>
+    public static Vector3 GetPointAtRange(Vector3 origin, Vector3 target, float range, bool forceOverwrite = false)
+    {
+        var edgePoint = origin + (target - origin).normalized * range;
+        var raycastPoint = edgePoint + Vector3.up * 5;
+        Ray ray = new Ray(raycastPoint, Vector3.down);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 10, 1 << Globals.GroundLayer))
+        {
+            edgePoint = hit.point;
+        }
+        return edgePoint;
+    }
+
+    #endregion
+
+    #region Random Index
+
     /// <summary>
     /// Generates a list of random indexes inside a given range.
     /// </summary>
@@ -96,6 +155,8 @@ public static class Globals
         }
         return resultList;
     }
+
+    #endregion
 
     #region Hashtable
 

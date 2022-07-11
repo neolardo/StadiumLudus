@@ -18,11 +18,6 @@ public class ProjectilePoolManager : MonoBehaviour
     public Transform projectileContainer;
 
     /// <summary>
-    /// Indicates the starting force of the projectiles.
-    /// </summary>
-    public float Force { get; set; }
-
-    /// <summary>
     /// Represents the minimum damage of a fired projectile.
     /// </summary>
     public float MinimumDamage { get; set; }
@@ -78,12 +73,13 @@ public class ProjectilePoolManager : MonoBehaviour
     /// <summary>
     /// Fires an available <see cref="Projectile"/>.
     /// </summary>
-    public void Fire()
+    /// <param name="attackTarget">The potential target.</param>
+    public void Fire(Character attackTarget = null)
     {
         if (isPhotonViewMine)
         {
             var proj = GetNextAvailableProjectile();
-            proj.photonView.RPC(nameof(Projectile.EnableProjectile), Photon.Pun.RpcTarget.All);
+            proj.photonView.RPC(nameof(Projectile.EnableProjectile), Photon.Pun.RpcTarget.All, attackTarget == null ? -1 : attackTarget.PhotonView.ViewID);
         }
     }
 

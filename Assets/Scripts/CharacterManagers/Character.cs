@@ -55,7 +55,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
 
     [Tooltip("Represents the health recovery delay in seconds.")]
     [SerializeField]
-    private float healthRecoveryDelay= 1.6f;
+    private float healthRecoveryDelay = 1.6f;
 
     [Tooltip("Represents the initial health recovery amount per second.")]
     [SerializeField]
@@ -113,7 +113,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
     #region Movement
 
     /// <summary>
-    /// Inidicates whether this character can move or not.
+    /// Inidicates whether this <see cref="Character"/> can move or not.
     /// </summary>
     protected virtual bool CanMove => !animationManager.IsMovementLocked;
 
@@ -153,7 +153,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
     protected const float destinationThreshold = Globals.PositionThreshold;
     protected const float destinationMinimum = 0.7f;
     protected const float rotationThreshold = 2f;
-    protected const float agentSpeedMultiplier = 4f/3.5f;
+    protected const float agentSpeedMultiplier = 4f / 3.5f;
     private const float rotationSmoothDelta = 0.1f;
     private const float maximumRotationDelta = 120f;
     private const float maximumAgentDestinationDelta = 2f;
@@ -193,9 +193,10 @@ public abstract class Character : MonoBehaviour, IHighlightable
     protected Transform chaseTarget;
     private Vector3 rotationTarget;
     private NavMeshPath helperPath;
+    protected bool isChasing = false;
     protected bool forceRotation = false;
     protected bool isSprintingRequested = false;
-    private const float sprintStaminaCostPerFixedUpdateFrame = 20f/50f;
+    private const float sprintStaminaCostPerFixedUpdateFrame = 20f / 50f;
     #endregion
 
     #region Attack
@@ -207,6 +208,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
     protected virtual bool IsInAction => animationManager.IsInterrupted || animationManager.IsAttacking || animationManager.IsGuarding || animationManager.IsUsingSkill || animationManager.IsInteracting;
     protected virtual bool CanAttack => IsAlive && !IsInAction && stamina > attackStaminaCost;
     protected virtual bool CanSetChaseTarget => IsAlive && !IsInAction;
+    protected virtual bool CanSetAttackRotationTarget { get; set; } = false;
 
     #region Validation
 
@@ -228,7 +230,18 @@ public abstract class Character : MonoBehaviour, IHighlightable
     /// <summary>
     /// The number of fixed update frames recorded for validating a hit info.
     /// </summary>
-    private const int NumberOfRecordedValidationFrames = 50*3;
+    private const int NumberOfRecordedValidationFrames = 50 * 3;
+
+    #endregion
+
+    #region Rig Colliders
+
+    [Header("Rig colliders")]
+    [Tooltip("The rig collider's root transform.")]
+    [SerializeField]
+    private Transform rigColliderRoot;
+
+    private List<Transform> rigColliderTransforms;
 
     #endregion
 
@@ -242,9 +255,9 @@ public abstract class Character : MonoBehaviour, IHighlightable
 
     #region Interactions
     protected virtual bool CanSetInteractionTarget => IsAlive && !IsInAction;
-    protected virtual bool CanInteract => IsAlive &&!IsInAction && (interactionPoint - rb.position).magnitude < interactionRange;
+    protected virtual bool CanInteract => IsAlive && !IsInAction && (interactionPoint - rb.position).magnitude < interactionRange;
 
-    private Interactable interactionTarget;
+    protected Interactable interactionTarget;
     private Vector3 interactionPoint;
     protected const float interactionRange = 0.1f;
     protected Buff currentBuff;
@@ -284,10 +297,13 @@ public abstract class Character : MonoBehaviour, IHighlightable
         {
             characterTrigger.layer = Globals.IgnoreRaycastLayer;
             characterTrigger.tag = Globals.IgnoreBoxTag;
+            hitBoxTransform.gameObject.layer = Globals.IgnoreRaycastLayer; // prevent self hit
+            hitBoxTransform.tag = Globals.IgnoreBoxTag; 
         }
         InitializeHitBoxRecording();
+        InitializeRigColliderTransforms();
         ClearDestination();
-        StartCoroutine(RecoverHealth()); 
+        StartCoroutine(RecoverHealth());
         StartCoroutine(RecoverStamina());
         StartCoroutine(HighlightOnTriggered());
     }
@@ -364,39 +380,6 @@ public abstract class Character : MonoBehaviour, IHighlightable
     /// <returns>The initial charge number of the given skill.</returns>
     public virtual int InitialChargeCountOfSkill(int skillNumber) => 0;
 
-    /// <summary>
-    /// Clamps a point inside a given distance from the <see cref="Character"/>.
-    /// </summary>
-    /// <param name="target">The target point.</param>
-    /// <param name="range">The maximum range in the target point's direction.</param>
-    /// <param name="forceOverwrite">True if the given target should be recalculated by raycasting.</param>
-    /// <returns>The target point closer than the given range.</returns>
-    protected Vector3 ClampPointInsideRange(Vector3 target, float range, bool forceOverwrite = false)
-    {
-        if ((target - rb.position).magnitude > range)
-        {
-            var edgePoint = rb.position + (target - rb.position).normalized * range;
-            var raycastPoint = edgePoint + Vector3.up * 5;
-            Ray ray = new Ray(raycastPoint, Vector3.down);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 10, 1 << Globals.GroundLayer))
-            {
-                edgePoint = hit.point;
-            }
-            target = edgePoint;
-        }
-        else if (forceOverwrite)
-        {
-            Ray ray = new Ray(target + Vector3.up, Vector3.down);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 10, 1 << Globals.GroundLayer))
-            {
-                target = hit.point;
-            }
-        }
-        return target;
-    }
-
     #endregion
 
     #region Attack
@@ -419,11 +402,23 @@ public abstract class Character : MonoBehaviour, IHighlightable
     }
 
     /// <summary>
-    /// Ends an attack. This should only be called from the <see cref="CharacterController"/>.
+    /// Ends an attack. This should only be called from the <see cref="CharacterController"/>. 
     /// </summary>
     /// <param name="attackPoint">The attack point.</param>
     /// <param name="target">The optional attack target <see cref="Character"/>.</param>
     public virtual void EndAttack(Vector3 attackPoint, Character target = null) { }
+
+    /// <summary>
+    /// Sets the attack rotation target between the start and the end of an attack. This should only be called from the <see cref="CharacterController"/>.
+    /// </summary>
+    /// <param name="rotationTarget">The rotation target.</param>
+    public void SetAttackRotationTarget(Vector3 rotationTarget)
+    {
+        if (CanSetAttackRotationTarget)
+        {
+            SetRotationTarget(rotationTarget);
+        }
+    }
 
     #region Without Target
 
@@ -442,6 +437,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
 
     protected virtual void OnAttackWithoutTarget(Vector3 attackPoint)
     {
+        isChasing = false;
         chaseTarget = null;
         interactionTarget = null;
         ClearDestination();
@@ -458,14 +454,16 @@ public abstract class Character : MonoBehaviour, IHighlightable
     {
         if (CanSetChaseTarget)
         {
+            Debug.Log("SetChaseTarget");
             chaseTarget = target;
+            isChasing = target != null;
             interactionTarget = null;
         }
     }
 
     private void UpdateChase()
     {
-        if (chaseTarget != null)
+        if (isChasing && chaseTarget !=null)
         {
             SetDestination(chaseTarget.position);
             AttackChaseTarget();
@@ -481,7 +479,13 @@ public abstract class Character : MonoBehaviour, IHighlightable
             {
                 PhotonView.RPC(nameof(AttackChaseTarget), RpcTarget.Others);
             }
+            isChasing = false;
             OnAttackChaseTarget();
+        }
+        else if (PhotonView.IsMine && ((chaseTarget.position - rb.position).magnitude < attackRange) && stamina < attackStaminaCost)
+        {
+            isChasing = false;
+            ClearDestination();
         }
     }
 
@@ -498,13 +502,13 @@ public abstract class Character : MonoBehaviour, IHighlightable
 
     protected IEnumerator RotateToChaseTargetWhileAttacking()
     {
-        yield return new WaitUntil(() => animationManager.CanDealDamage || !animationManager.IsAttacking);
         while (animationManager.IsAttacking && chaseTarget != null)
         {
             SetRotationTarget(chaseTarget.position);
             yield return null;
         }
         chaseTarget = null;
+        isChasing = false;
         ClearDestination();
     }
 
@@ -547,7 +551,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
     public bool IsHitValid(Vector3 colliderPoint1, Vector3 colliderPoint2, float colliderRadius, int oldTimeStamp, bool isForced)
     {
         int deltaFixedUpdateFrames = Mathf.RoundToInt((PhotonNetwork.ServerTimestamp - oldTimeStamp) / 20f); // 1000/50 ms is one fixed update frame delta
-        if(deltaFixedUpdateFrames < NumberOfRecordedValidationFrames)
+        if (deltaFixedUpdateFrames < NumberOfRecordedValidationFrames)
         {
             var info = hitBoxInfoCircularBuffer[deltaFixedUpdateFrames];
             if (info.canBeInterrupted)
@@ -570,17 +574,60 @@ public abstract class Character : MonoBehaviour, IHighlightable
 
     #endregion
 
+    #region Rig Colliders
+
+    private void InitializeRigColliderTransforms()
+    {
+        rigColliderTransforms = new List<Transform>();
+        AddRigTransformsToListRecursively(rigColliderRoot);
+    }
+
+    private void AddRigTransformsToListRecursively(Transform t)
+    {
+        if (t.CompareTag(Globals.IgnoreBoxTag) && t.GetComponent<Collider>() != null)
+        {
+            rigColliderTransforms.Add(t);
+            for (int i = 0; i < t.childCount; i++)
+            {
+                AddRigTransformsToListRecursively(t.GetChild(i));
+            }
+        }
+    }
+
+    public int GetClosestRigColliderTransformIndex(Vector3 hitPoint)
+    {
+        float minDist = (rigColliderTransforms[0].position - hitPoint).magnitude;
+        int minIndex = 0;
+        for(int i=1; i<rigColliderTransforms.Count; i++)
+        {
+            float tempDist = (rigColliderTransforms[i].position - hitPoint).magnitude;
+            if (tempDist < minDist)
+            {
+                minDist = tempDist;
+                minIndex = i;
+            }
+        }
+        return minIndex;
+    }
+
+    public Transform GetRigColliderTransform(int rigColliderIndex)
+    {
+        return rigColliderTransforms[rigColliderIndex];
+    }
+
+    #endregion
+
     #region Take Damage
 
     [PunRPC]
     public void TryTakeDamage(float amount, HitDirection direction, Vector3 attackColliderPoint0, Vector3 attackColliderPoint1, float attackColliderRadius, int senderAttackTriggerPhotonViewID, bool isForced, bool canBeGuarded, PhotonMessageInfo info)
     {
         if (IsAlive && PhotonView.IsMine && IsHitValid(attackColliderPoint0,  attackColliderPoint1,  attackColliderRadius, info.SentServerTimestamp, isForced))
-        { 
-            PhotonView.RPC(nameof(TakeDamage), RpcTarget.All, amount, direction, canBeGuarded);
+        {
+            TakeDamage(amount, direction, canBeGuarded);
             PhotonView.Find(senderAttackTriggerPhotonViewID).RPC(nameof(AttackTrigger.OnDamagingSucceeded), RpcTarget.All, PhotonView.ViewID);
         }
-        else 
+        else if(PhotonView.IsMine)
         {
             PhotonView.Find(senderAttackTriggerPhotonViewID).RPC(nameof(AttackTrigger.OnDamagingFailed), RpcTarget.All, PhotonView.ViewID);
         }
@@ -589,6 +636,11 @@ public abstract class Character : MonoBehaviour, IHighlightable
     [PunRPC]
     public void TakeDamage(float amount, HitDirection direction, bool canBeGuarded)
     {
+        if (PhotonView.IsMine)
+        {
+            PhotonView.RPC(nameof(TakeDamage), RpcTarget.Others, amount, direction, canBeGuarded);
+        }
+        Debug.Log("Take damage");
         if (animationManager.IsGuarding && direction != HitDirection.Back && canBeGuarded)
         {
             float guardedAmount = stamina - Mathf.Max(0, stamina - amount);
@@ -685,9 +737,9 @@ public abstract class Character : MonoBehaviour, IHighlightable
             PhotonView.RPC(nameof(OnDie), RpcTarget.Others, direction);
         }
         health = -1; // making sure the character is no longer alive
+        animationManager.Move(0);
         animationManager.Die(direction);
         ClearDestination();
-        animationManager.Move(0);
         chaseTarget = null;
         interactionTarget = null;
         rb.constraints = RigidbodyConstraints.FreezeAll;

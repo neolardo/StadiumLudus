@@ -31,6 +31,8 @@ public class Trap : MonoBehaviour
 
     #region Methods
 
+    #region Activate
+
     private void OnEnable()
     {
         ActivateTrap();
@@ -43,19 +45,23 @@ public class Trap : MonoBehaviour
         StartCoroutine(ActivateAttackTriggerAfterDelay());
     }
 
-    public void DeactivateTrap(bool notifyTrapPool = true)
-    {
-        trapTrigger.IsActive = false;
-        animator.SetTrigger(AnimatorClose);
-        AudioManager.Instance.PlayOneShotSFX(trapTrigger.audioSource, SFX.TrapDeactivate);
-        StartCoroutine(WaitForDeactivationAndHide(notifyTrapPool));
-    }
-
     private IEnumerator ActivateAttackTriggerAfterDelay()
     {
         yield return new WaitForSeconds(ActivationDelay);
         trapTrigger.IsActive = true;
         StartCoroutine(ExpireTrapAfterDurationEndsOrEnemyHit());
+    }
+
+    #endregion
+
+    #region Deactivate
+
+    public void DeactivateTrap(bool notifyTrapPool = true)
+    {
+        trapTrigger.IsActive = false;
+        animator.SetTrigger(AnimatorClose);
+        AudioManager.Instance.PlayOneShotSFX(trapTrigger.audioSource, SFX.TrapDeactivate);
+        StartCoroutine(WaitForDeactivationAndDisable(notifyTrapPool));
     }
 
     private IEnumerator ExpireTrapAfterDurationEndsOrEnemyHit()
@@ -72,7 +78,7 @@ public class Trap : MonoBehaviour
         }
     }
 
-    private IEnumerator WaitForDeactivationAndHide(bool notifyTrapPool)
+    private IEnumerator WaitForDeactivationAndDisable(bool notifyTrapPool)
     {
         yield return new WaitForSeconds(DeactivationDelay);
         if (notifyTrapPool)
@@ -81,6 +87,8 @@ public class Trap : MonoBehaviour
         }
         gameObject.SetActive(false);
     }
+
+    #endregion
 
     #endregion
 }

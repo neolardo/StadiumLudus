@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -27,22 +28,15 @@ public class MaleRangerCharacter : RangerCharacter
     [SerializeField]
     private float boltMaximumDamage;
 
-    [Tooltip("Represents the force of a fired bolt.")]
-    [SerializeField]
-    private float boltForce = 3;
-
     private bool IsArrowLoaded { get; set; }
 
-    protected override bool CanAttack => base.CanAttack && !crossbow.IsReloading && IsArrowLoaded;
+    protected override bool IsInAction => base.IsInAction || crossbow.IsReloading;
+
+    protected override bool CanAttack => base.CanAttack && IsArrowLoaded;
     
     private bool CanReload => IsAlive && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill && !animationManager.IsInteracting && !crossbow.IsReloading && !IsArrowLoaded;
 
     #region Skills
-
-    #region Dash
-    protected override float DashJumpingTime => 0.29f;
-
-    #endregion
 
     #region Trap
 
@@ -69,13 +63,8 @@ public class MaleRangerCharacter : RangerCharacter
         {
             Debug.LogWarning("Bolt maximum damage for a male ranger character is set to a lesser value than the minimum.");
         }
-        if (boltForce <= 0)
-        {
-            Debug.LogWarning("Bolt force for a male ranger character is set to non-positive value.");
-        }
         boltPool.MinimumDamage = boltMinimumDamage;
         boltPool.MaximumDamage = boltMaximumDamage;
-        boltPool.Force = boltForce;
         maleRangerAnimationManager = animationManager as MaleRangerAnimationManager;
     }
 
@@ -83,28 +72,18 @@ public class MaleRangerCharacter : RangerCharacter
 
     #region Attack
 
-    public override void StartAttack(Vector3 attackTarget, Character target = null)
+    #region Attack
+
+    public override void StartAttack(Vector3 attackPoint, Character target = null)
     {
         if (CanReload)
         {
             Reload();
         }
-        else
+        else if (IsArrowLoaded)
         {
-            base.StartAttack(attackTarget, target);
+            base.StartAttack(attackPoint, target);
         }
-    }
-
-    protected override void OnAttackWithoutTarget(Vector3 attackTarget)
-    {
-        base.OnAttackWithoutTarget(attackTarget);
-        FireBolt();
-    }
-
-    private void FireBolt()
-    {
-        crossbow.Attack();
-        IsArrowLoaded = false;
     }
 
     [PunRPC]
@@ -117,6 +96,59 @@ public class MaleRangerCharacter : RangerCharacter
         maleRangerAnimationManager.Reload();
         crossbow.Reload();
         IsArrowLoaded = true;
+    }
+
+    #region Without Target
+
+    protected override void OnAttackWithoutTarget(Vector3 attackTarget)
+    {
+        Debug.Log("OnAttackWithoutTarget");
+        chaseTarget = null;
+        interactionTarget = null;
+        ClearDestination();
+        rangerAnimationManager.SetIsDrawing(true);
+        animationManager.Attack();
+        crossbow.Draw();
+        StartCoroutine(ManageAnimations());
+    }
+
+    private IEnumerator ManageAnimations()
+    {
+        yield return new WaitUntil(() => !rangerAnimationManager.IsDrawing || !animationManager.IsAttacking);
+        if (animationManager.IsAttacking)
+        {
+            stamina -= attackStaminaCost;
+            crossbow.Fire(attackTarget);
+            IsArrowLoaded = false;
+        }
+    }
+
+    #endregion
+
+    #region With Target
+
+    protected override void OnAttackChaseTarget()
+    {
+        Debug.Log("OnAttackChaseTarget");
+        ClearDestination();
+        rangerAnimationManager.SetIsDrawing(true);
+        animationManager.Attack();
+        crossbow.Draw();
+        StartCoroutine(ManageAnimations());
+    }
+
+    #endregion
+
+    #endregion
+
+    #endregion
+
+    #region Take Damage
+
+    protected override void OnTakeDamage()
+    {
+        base.OnTakeDamage();
+        crossbow.OnTakeDamage();
     }
 
     #endregion

@@ -41,12 +41,12 @@ public abstract class WarriorCharacter : Character
     private float leapAttackStaminaCost = 15f;
     private bool IsLeapAttackAvailable { get; set; } = true;
 
-    private float jumpingTimeDelta;
+    private float elapsedJumpingTime;
     private Vector3 jumpOrigin;
     private Vector3 jumpTarget;
 
     protected Character leapAttackTarget;
-    private bool CanLeapAttack => IsAlive && IsLeapAttackAvailable && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill && stamina > leapAttackStaminaCost;
+    private bool CanLeapAttack => IsAlive && !IsInAction && IsLeapAttackAvailable && stamina > leapAttackStaminaCost;
     protected abstract float JumpingTime { get; }
     protected abstract float LeapAttackForceDelay { get; }
 
@@ -104,7 +104,7 @@ public abstract class WarriorCharacter : Character
     [SerializeField]
     private float groundSlamCooldown = 5f;
     private bool IsGroundSlamAvailable { get; set; } = true;
-    private bool CanGroundSlam => IsAlive && IsGroundSlamAvailable && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill && stamina > groundSlamStaminaCost;
+    private bool CanGroundSlam => IsAlive && !IsInAction && IsGroundSlamAvailable && stamina > groundSlamStaminaCost;
     protected abstract float GroundSlamStartDelay { get; }
 
     private const float groundSlamRockAttackTriggerDuration = 1.3f;
@@ -226,13 +226,13 @@ public abstract class WarriorCharacter : Character
             {
                 PhotonView.RPC(nameof(LeapAttack), RpcTarget.Others, attackTarget, null);
             }
-            leapAttackTarget = target == null ?  null : target;
-            jumpingTimeDelta = 0;
+            leapAttackTarget = target;
+            elapsedJumpingTime = 0;
             IsLeapAttackAvailable = false;
             jumpOrigin = rb.position;
             stamina -= leapAttackStaminaCost;
             forceRotation = true;
-            jumpTarget = ClampPointInsideRange(attackTarget, leapAttackMaximumDistance);
+            jumpTarget = Globals.ClampPointInsideRange(rb.position, attackTarget, leapAttackMaximumDistance);
             SetRotationTarget(jumpTarget);
             MoveTo(jumpTarget);
             warriorAnimationManager.LeapAttack();
@@ -255,15 +255,15 @@ public abstract class WarriorCharacter : Character
 
     private void UpdateLeapAttackJumping()
     {
-        if (warriorAnimationManager.IsJumping && jumpingTimeDelta < JumpingTime)
+        if (warriorAnimationManager.IsJumping && elapsedJumpingTime < JumpingTime)
         {
-            float x = (jumpingTimeDelta / JumpingTime);
+            float x = (elapsedJumpingTime / JumpingTime);
             float f = x * x;
             float g = -(x - 1) * (x - 1) + 1;
             float y = Mathf.Lerp(f, g, x);
             var tempPosition = Vector3.Lerp(jumpOrigin, jumpTarget, y);
             rb.MovePosition(new Vector3(tempPosition.x, rb.position.y, tempPosition.z));
-            jumpingTimeDelta += Time.fixedDeltaTime;
+            elapsedJumpingTime += Time.fixedDeltaTime;
         }
     }
 
@@ -392,7 +392,7 @@ public abstract class WarriorCharacter : Character
             {
                 PhotonView.RPC(nameof(GroundSlam), RpcTarget.Others, attackTarget);
             }
-            attackTarget = ClampPointInsideRange(attackTarget, groundSlamMaximumDistance, true);
+            attackTarget = Globals.ClampPointInsideRange(rb.position, attackTarget, groundSlamMaximumDistance, true);
             IsGroundSlamAvailable = false;
             SetRotationTarget(attackTarget);
             forceRotation = true;

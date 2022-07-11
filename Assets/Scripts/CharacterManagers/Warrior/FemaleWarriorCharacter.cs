@@ -32,7 +32,7 @@ public class FemaleWarriorCharacter : WarriorCharacter
     [SerializeField]
     private AudioSource rightBattleAxeAudioSource;
 
-    protected override float BasicAttackForceDelay => 0.3f;
+    protected override float BasicAttackForceDelay => 0f;
 
     #region Combo Attack
 
@@ -158,7 +158,8 @@ public class FemaleWarriorCharacter : WarriorCharacter
         requestedComboCount = 0;
         previousAttackEnded = false;
         StartCoroutine(ManageComboRequests());
-        StartCoroutine(ManageAttackTrigger());
+        StartCoroutine(ManageRightWeaponAttackTrigger());
+        StartCoroutine(ManageLeftWeaponAttackTrigger());
     }
 
     private IEnumerator ManageComboRequests()
@@ -172,7 +173,6 @@ public class FemaleWarriorCharacter : WarriorCharacter
                 femaleWarriorAnimationManager.SetContinueComboAttack(true);
             }
             yield return new WaitWhile(() => animationManager.CanDealDamage); //wait for the end of the current attack animation
-
             yield return new WaitUntil(() => animationManager.CanDealDamage || !animationManager.IsAttacking);
             if (animationManager.IsAttacking)
             {
@@ -183,19 +183,44 @@ public class FemaleWarriorCharacter : WarriorCharacter
         }
     }
 
-    private IEnumerator ManageAttackTrigger()
+    private IEnumerator ManageRightWeaponAttackTrigger()
     {
+        var target = chaseTarget == null ? null : chaseTarget.GetComponent<Character>();
         while (animationManager.IsAttacking)
         {
-            yield return new WaitUntil(() => animationManager.CanDealDamage || !animationManager.IsAttacking);
-            if (animationManager.CanDealDamage)
+            yield return new WaitUntil(() => femaleWarriorAnimationManager.CanRightWeaponDealDamage || !animationManager.IsAttacking);
+            if (femaleWarriorAnimationManager.CanRightWeaponDealDamage)
             {
-                leftBattleAxeTrigger.IsActive = true;
+                AudioManager.Instance.PlayOneShotSFX(rightBattleAxeAudioSource, SFX.Slash, doNotRepeat: true);
                 rightBattleAxeTrigger.IsActive = true;
+                if (target != null)
+                {
+                    rightBattleAxeTrigger.ForceAttackAfterDelay(target, BasicAttackForceDelay);
+                }
             }
-            yield return new WaitWhile(() => animationManager.CanDealDamage);
-            leftBattleAxeTrigger.IsActive = false;
+            yield return new WaitWhile(() => femaleWarriorAnimationManager.CanRightWeaponDealDamage);
             rightBattleAxeTrigger.IsActive = false;
+        }
+    }
+
+
+    private IEnumerator ManageLeftWeaponAttackTrigger()
+    {
+        var target = chaseTarget == null ? null : chaseTarget.GetComponent<Character>();
+        while (animationManager.IsAttacking)
+        {
+            yield return new WaitUntil(() => femaleWarriorAnimationManager.CanLeftWeaponDealDamage || !animationManager.IsAttacking);
+            if (femaleWarriorAnimationManager.CanLeftWeaponDealDamage)
+            {
+                AudioManager.Instance.PlayOneShotSFX(leftBattleAxeAudioSource, SFX.Slash, doNotRepeat: true);
+                leftBattleAxeTrigger.IsActive = true;
+                if (target != null)
+                {
+                    leftBattleAxeTrigger.ForceAttackAfterDelay(target, BasicAttackForceDelay);
+                }
+            }
+            yield return new WaitWhile(() => femaleWarriorAnimationManager.CanLeftWeaponDealDamage);
+            leftBattleAxeTrigger.IsActive = false;
         }
     }
 
@@ -210,22 +235,8 @@ public class FemaleWarriorCharacter : WarriorCharacter
         requestedComboCount = 0;
         previousAttackEnded = false;
         StartCoroutine(ManageComboRequests());
-        StartCoroutine(ManageAttackTrigger());
-        StartCoroutine(ManageForceAttack());
-    }
-
-    private IEnumerator ManageForceAttack()
-    {
-        var target = chaseTarget == null ? null : chaseTarget.GetComponent<Character>();
-        while (chaseTarget != null && animationManager.IsAttacking)
-        {
-            yield return new WaitUntil(() => (animationManager.CanDealDamage && leftBattleAxeTrigger.IsActive && rightBattleAxeTrigger.IsActive) || !animationManager.IsAttacking);
-            if (animationManager.CanDealDamage && leftBattleAxeTrigger.IsActive && rightBattleAxeTrigger.IsActive)
-            {
-                leftBattleAxeTrigger.ForceAttackAfterDelay(target, BasicAttackForceDelay); // TODO... which axe?
-            }
-            yield return new WaitWhile(() => animationManager.CanDealDamage);
-        }
+        StartCoroutine(ManageRightWeaponAttackTrigger());
+        StartCoroutine(ManageLeftWeaponAttackTrigger());
     }
 
     #endregion
@@ -238,6 +249,8 @@ public class FemaleWarriorCharacter : WarriorCharacter
     {
         base.OnTakeDamage();
         femaleWarriorAnimationManager.SetContinueComboAttack(false);
+        femaleWarriorAnimationManager.OnLeftWeaponCannotDealDamage();
+        femaleWarriorAnimationManager.OnRightWeaponCannotDealDamage();
     }
 
     #endregion
@@ -263,7 +276,7 @@ public class FemaleWarriorCharacter : WarriorCharacter
                 leftBattleAxeTrigger.ForceAttackAfterDelay(leapAttackTarget, LeapAttackForceDelay);
                 rightBattleAxeTrigger.ForceAttackAfterDelay(leapAttackTarget, LeapAttackForceDelay);
             }
-            AudioManager.Instance.PlayOneShotSFX(rightBattleAxeAudioSource, SFX.Slash);
+            AudioManager.Instance.PlayOneShotSFX(rightBattleAxeAudioSource, SFX.Slash, doNotRepeat:true);
         }
         yield return new WaitWhile(() => animationManager.CanDealDamage);
         leftBattleAxeTrigger.IsActive = false;

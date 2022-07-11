@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
-/// Manages the in-game UI of a character.
+/// Manages the in-game UI of a player.
 /// </summary>
 public class CharacterUI : MonoBehaviour
 {
+    #region Fields and Properties
+
     public PauseMenuUI pauseMenuUI;
     public EndGameUI endGameUI;
     public List<SkillSlotUI> skillSlots;
@@ -15,6 +16,8 @@ public class CharacterUI : MonoBehaviour
     public ValueBarUI staminaBarUI;
     public CanvasGroup canvasGroup;
     public AudioSource audioSource;
+    public RectTransform infoContainer;
+    public InfoTextUI infoPrefab;
     private Character character;
     public bool IsUIVisible { get; private set; } = false;
 
@@ -22,7 +25,11 @@ public class CharacterUI : MonoBehaviour
 
     private bool hasInitialized = false;
 
+    #endregion
+
     #region Methods
+
+    #region Initialize
 
     public void Initialize(Character character)
     {
@@ -44,6 +51,10 @@ public class CharacterUI : MonoBehaviour
         hasInitialized = true;
     }
 
+    #endregion
+
+    #region Update
+
     private void Update()
     {
         if (hasInitialized)
@@ -57,11 +68,17 @@ public class CharacterUI : MonoBehaviour
         healthBarUI.UpdateValue(character.HealthRatio);
         staminaBarUI.UpdateValue(character.StaminaRatio);
     }
+
+    #endregion
+
+    #region UI Visiblity
     public void SetUIVisiblity(bool value)
     {
         IsUIVisible = value;
         canvasGroup.alpha = IsUIVisible ? 1 : 0;
     }
+
+    #endregion
 
     #region Skills
 
@@ -129,6 +146,16 @@ public class CharacterUI : MonoBehaviour
 
     #endregion
 
+    #region Info
+
+    public void AddInfo(string info)
+    {
+        var text = Instantiate(infoPrefab, infoContainer);
+        text.SetInfoText(info);
+        text.gameObject.SetActive(true);
+    }
+
     #endregion
 
+    #endregion
 }

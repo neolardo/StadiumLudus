@@ -76281,7 +76281,14 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.6333333
-    functionName: OnAttackCanDealDamage
+    functionName: OnRightWeaponCanDealDamage
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.6333333
+    functionName: OnLeftWeaponCanDealDamage
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -76295,7 +76302,14 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 1.0666667
-    functionName: OnAttackCannotDealDamage
+    functionName: OnRightWeaponCannotDealDamage
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 1.0666667
+    functionName: OnLeftWeaponCannotDealDamage
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

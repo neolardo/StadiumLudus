@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -33,7 +32,7 @@ public class CharacterAnimationManager : MonoBehaviour
     /// <summary>
     /// Indicates whether the character can deal damage currntly or not.
     /// </summary>
-    public bool CanDealDamage { get; protected set; }
+    public virtual bool CanDealDamage { get; protected set; }
 
     /// <summary>
     /// Indicates whether the character is currently interruped or not.
@@ -77,6 +76,7 @@ public class CharacterAnimationManager : MonoBehaviour
 
     private bool canPlayStepSound = true;
     private const float stepSoundCooldown = .15f;
+    private const float interruptionDelay = .7f;
 
     #region Animator Constants
 
@@ -239,6 +239,13 @@ public class CharacterAnimationManager : MonoBehaviour
     public void Impact(bool guard, HitDirection direction)
     {
         IsInterrupted = true;
+        CanBeInterrupted = false;
+        IsAttacking = false;
+        IsUsingSkill = false;
+        IsInteracting = false;
+        CanDealDamage = false;
+        IsJumping = false;
+        StartCoroutine(DisableInterruptionAfterDelay());
         if (guard)
         {
             animator.SetTrigger(direction == HitDirection.Back ? AnimatorGuardImpactBack : AnimatorGuardImpactFront);
@@ -262,15 +269,12 @@ public class CharacterAnimationManager : MonoBehaviour
             }
             EndGuarding();
         }
-        IsAttacking = false;
-        IsUsingSkill = false;
-        IsInteracting = false;
-        CanDealDamage = false;
-        IsJumping = false;
     }
 
-    public void OnImpactFinished()
+    private IEnumerator DisableInterruptionAfterDelay()
     {
+        yield return new WaitForSeconds(interruptionDelay);
+        CanBeInterrupted = true;
         IsInterrupted = false;
     }
 

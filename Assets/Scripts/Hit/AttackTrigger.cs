@@ -247,12 +247,15 @@ public class AttackTrigger : MonoBehaviour
 
     private IEnumerator WaitUntilDelayThenForceAttack(Character target, float delaySeconds)
     {
-        forceAttackTarget = target;
-        yield return new WaitForSeconds(delaySeconds);
-        if (IsActive && !AttackedCharacters.Contains(target))
+        if (photonView.IsMine)
         {
-            target.PhotonView.RPC(TryTakeDamageFunctionName, target.PhotonView.Controller, Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(target.transform.forward, target.transform.position), Vector3.zero, Vector3.zero, 0f, photonView.ViewID, true, canBeGuarded);
-            AttackedCharacters.Add(target);
+            forceAttackTarget = target;
+            yield return new WaitForSeconds(delaySeconds);
+            if (IsActive && !AttackedCharacters.Contains(target))
+            {
+                target.PhotonView.RPC(TryTakeDamageFunctionName, target.PhotonView.Controller, Random.Range(MinimumDamage, MaximumDamage), CalculateHitDirection(target.transform.forward, target.transform.position), Vector3.zero, Vector3.zero, 0f, photonView.ViewID, true, canBeGuarded);
+                AttackedCharacters.Add(target);
+            }
         }
     }
 

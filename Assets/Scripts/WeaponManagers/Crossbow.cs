@@ -25,10 +25,14 @@ public class Crossbow : MonoBehaviour
     private GameObject crossbowBolt;
     public bool IsReloading { get; private set; }
 
+    private Character attackTarget;
+    private bool isFireingRequested;
+
     #region Animator Constants
 
     private const string AnimatorReload = "Reload";
     private const string AnimatorAttack = "Attack";
+    private const string AnimatorIsDrawing = "IsDrawing";
     private const string AnimatorDieFront = "DieFront";
     private const string AnimatorDieBack = "DieBack";
 
@@ -55,6 +59,7 @@ public class Crossbow : MonoBehaviour
         IsReloading = true;
         quiverBolt.SetActive(true);
         animator.SetTrigger(AnimatorReload);
+        animator.SetBool(AnimatorIsDrawing, false);
     }
 
     /// <summary>
@@ -78,15 +83,37 @@ public class Crossbow : MonoBehaviour
     #endregion
 
     #region Attack
-    public void Attack()
+    public void Draw()
     {
         animator.SetTrigger(AnimatorAttack);
+        animator.SetBool(AnimatorIsDrawing, true);
+    }
+
+    public void Fire(Character target)
+    {
+        attackTarget = target;
+        isFireingRequested = true;
+        animator.SetBool(AnimatorIsDrawing, false);
     }
 
     public void OnArrowFired()
     {
-        crossbowBolt.SetActive(false);
-        boltPool.Fire();
+        if (isFireingRequested)
+        {
+            crossbowBolt.SetActive(false);
+            boltPool.Fire(attackTarget);
+            isFireingRequested = false;
+        }
+    }
+
+    #endregion
+
+    #region Take Damage
+
+    public void OnTakeDamage()
+    {
+        isFireingRequested = false;
+        animator.SetBool(AnimatorIsDrawing, false);
     }
 
     #endregion

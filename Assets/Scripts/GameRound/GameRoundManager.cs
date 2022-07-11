@@ -19,9 +19,12 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
     [SerializeField] private BlackScreenUI blackScreenUI;
     [SerializeField] private CameraController cameraController;
     [SerializeField] private CharacterAudioListener characterAudioListenerPrefab;
+    [SerializeField] private GameObject lightPrefab;
     [SerializeField] private List<Transform> spawnPoints;
     private Character localCharacter;
-    public Dictionary<int, Character> LocalCharacterReferenceDictionary { get; private set; }
+    private List<Player> RematchRequestingPlayers { get; } = new List<Player>();
+    private List<Player> DeadCharacters { get; } = new List<Player>();
+    public Dictionary<int, Character> LocalCharacterReferenceDictionary { get; } = new Dictionary<int, Character>();
     public bool RoundStarted { get; private set; } = false;
     public bool RoundEnded { get; private set; } = false;
     public bool RematchStarted { get; private set; } = false;
@@ -89,59 +92,6 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
 
     #endregion
 
-    #region Transform Search
-
-    public string GetTransformFullPath(Transform transform)
-    {
-        string path = transform.name;
-        while (transform.parent != null)
-        {
-            transform = transform.parent;
-            path = $"{transform.name}{Globals.TransformHierarchySeparator}{path}";
-        }
-        var c = transform.GetComponent<Character>();
-        if (c != null)
-        {
-            path = c.PhotonView.ViewID.ToString() + path.Substring(transform.name.Length);
-        }
-        return path;
-    }
-
-    public Transform FindTransformByFullPath(string fullPath)
-    {
-        var transformNames = fullPath.Split(Globals.TransformHierarchySeparator).ToList();
-        var rootTransforms = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects().Select(_ => _.transform).ToList();
-        Transform currentParent = null;
-        if (transformNames[0] == EnvironmentRootGameObjectName)
-        {
-            currentParent = rootTransforms.FirstOrDefault(_ => _.name == transformNames[0]);
-        }
-        else
-        {
-            int photonViewID;
-            if (int.TryParse(transformNames[0], out photonViewID))
-            {
-                if (LocalCharacterReferenceDictionary.ContainsKey(photonViewID))
-                {
-                    currentParent = LocalCharacterReferenceDictionary[photonViewID].transform;
-                }
-            }
-        }
-        transformNames.RemoveAt(0);
-        while (currentParent != null && transformNames.Count > 0)
-        {
-            currentParent = currentParent.Find(transformNames[0]);
-            transformNames.RemoveAt(0);
-        }
-        if (currentParent == null)
-        {
-            Debug.LogWarning($"Transform not found: {fullPath}");
-        }
-        return currentParent;
-    }
-
-    #endregion
-
     #region Initialize
 
     public override void OnEnable()
@@ -156,7 +106,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
 
     private void InitializeGameRound()
     {
-        if (PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().name == Globals.GameScene) // debug only
+        if (PhotonNetwork.IsMasterClient && SceneManager.GetActiveScene().name == Globals.GameScene)
         {
             Debug.Log("Game loaded.");
             PhotonNetwork.CurrentRoom.IsOpen = false;
@@ -192,6 +142,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
         cameraController.Initialize(localCharacter);
         var characterAudioListener = Instantiate(characterAudioListenerPrefab, null);
         characterAudioListener.SetTarget(localCharacter.transform);
+        Instantiate(lightPrefab, localCharacter.transform);
         localCharacter.InitializeAsLocalCharacter(characterUI);
         SetPlayerIsCharacterConfirmed(PhotonNetwork.LocalPlayer, false);
         SetPlayerIsInitialized(PhotonNetwork.LocalPlayer, true);
@@ -294,7 +245,6 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
     private void StartRound()
     {
         Debug.Log("Game round started.");
-        LocalCharacterReferenceDictionary = new Dictionary<int, Character>();
         var characters = FindObjectsOfType<Character>();
         foreach (var c in characters)
         {
@@ -327,7 +277,20 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
         else
         {
             var playerList = PhotonNetwork.PlayerList;
-            int aliveCount = LocalCharacterReferenceDictionary.Values.Where(_=>_.IsAlive).Count();
+            var characters = LocalCharacterReferenceDictionary.Values;
+            int aliveCount = 0;
+            foreach(var c in characters)
+            {
+                if (c.IsAlive)
+                {
+                    aliveCount++;
+                }
+                else if(!DeadCharacters.Contains(c.PhotonView.Owner))
+                {
+                    DeadCharacters.Add(c.PhotonView.Owner);
+                    characterUI.AddInfo($"{c.PhotonView.Owner.NickName} has been slain.");
+                }
+            }
             int initializedCount = 0;
             foreach (var p in playerList)
             {
@@ -381,6 +344,11 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
             {
                 if (p.CustomProperties.ContainsKey(Globals.PlayerIsRematchRequestedKey) && (bool)p.CustomProperties[Globals.PlayerIsRematchRequestedKey])
                 {
+                    if (!RematchRequestingPlayers.Contains(p))
+                    {
+                        RematchRequestingPlayers.Add(p);
+                        characterUI.AddInfo($"{p.NickName} requested a rematch.");
+                    }
                     rematchCount++;
                 }
                 if (p.CustomProperties.ContainsKey(Globals.PlayerIsInitializedKey) && !(bool)p.CustomProperties[Globals.PlayerIsInitializedKey])

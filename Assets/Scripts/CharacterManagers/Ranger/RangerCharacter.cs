@@ -13,6 +13,14 @@ public abstract class RangerCharacter : Character
 
     public override CharacterClass Class => CharacterClass.Ranger;
 
+    #region Attack
+
+    protected Character attackTarget;
+
+    protected override bool CanSetAttackRotationTarget => rangerAnimationManager.IsDrawing;
+
+    #endregion
+
     #region Skills
 
     #region Dash
@@ -20,13 +28,9 @@ public abstract class RangerCharacter : Character
     private const int DashSkillNumber = 1;
 
     [Header("Dash")]
-    [Tooltip("Represents jump force of the dash.")]
+    [Tooltip("Represents distance of the dash.")]
     [SerializeField]
-    private float dashJumpForce = 250;
-
-    [Tooltip("Represents maximum distance of the dash.")]
-    [SerializeField]
-    private float dashMaximumDistance = 3.5f;
+    private float dashDistance = 3.5f;
 
     [Tooltip("Represents cooldown of the dash skill in seconds.")]
     [SerializeField]
@@ -35,17 +39,15 @@ public abstract class RangerCharacter : Character
     [Tooltip("Represents the stamina cost of the dash skill.")]
     [SerializeField]
     private float dashStaminaCost = 10f;
-    protected abstract float DashJumpingTime { get; }
-
     private bool IsDashAvailable { get; set; } = true;
+    private bool CanDash => IsAlive && IsDashAvailable && !IsInAction && stamina > dashStaminaCost;
 
-    private bool IsDashFirstFrame { get; set; }
-
-    private bool CanDash => IsAlive && IsDashAvailable && !rangerAnimationManager.IsInterrupted && !rangerAnimationManager.IsAttacking && !rangerAnimationManager.IsGuarding && !rangerAnimationManager.IsUsingSkill && stamina > dashStaminaCost;
-
-    private Vector3 dashTarget;
-
-    private Vector3 dashJumpDelta;
+    private float elapsedDashingTime;
+    private Vector3 dashPoint;
+    private Vector3 dashOrigin;
+    private const float dashStartVelocity = 40;
+    private const float dashEndVelocity = 5;
+    private const float maximumDashingTime = .7f;
 
     #endregion
 
@@ -77,7 +79,7 @@ public abstract class RangerCharacter : Character
     private Vector3 smokePositionDelta = Vector3.up * 1.5f;
     private bool IsSmokeAvailable { get; set; } = true;
 
-    private bool CanSmoke => IsAlive && IsSmokeAvailable && !rangerAnimationManager.IsInterrupted && !rangerAnimationManager.IsAttacking && !rangerAnimationManager.IsGuarding && !rangerAnimationManager.IsUsingSkill && stamina > smokeStaminaCost;
+    private bool CanSmoke => IsAlive && IsSmokeAvailable && !IsInAction && stamina > smokeStaminaCost;
 
     #endregion
 
@@ -116,7 +118,7 @@ public abstract class RangerCharacter : Character
 
     protected int trapChargeCount;
     protected abstract float TrapPlacementDelay { get; }
-    private bool CanPlaceTrap => IsAlive && trapChargeCount > 0 && !rangerAnimationManager.IsInterrupted && !rangerAnimationManager.IsAttacking && !rangerAnimationManager.IsGuarding && !rangerAnimationManager.IsUsingSkill;
+    private bool CanPlaceTrap => IsAlive && trapChargeCount > 0 && !IsInAction;
 
     #endregion
 
@@ -165,11 +167,52 @@ public abstract class RangerCharacter : Character
 
     #endregion
 
+    #region Updates
+
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
         UpdateDash();
     }
+
+    #endregion
+
+    #region Attack
+
+    #region End
+
+    public override void EndAttack(Vector3 attackPoint, Character target = null)
+    {
+        base.EndAttack(attackPoint, target);
+        attackTarget = target;
+        OnEndAttack();
+    }
+
+    [PunRPC]
+    public virtual void OnEndAttack()
+    {
+        if (PhotonView.IsMine)
+        {
+            PhotonView.RPC(nameof(OnEndAttack), RpcTarget.Others);
+        }
+        Debug.Log("OnEndAttack");
+        rangerAnimationManager.SetIsDrawing(false);
+    }
+
+    #endregion
+
+    #endregion
+
+    #region Take Damage
+
+    protected override void OnTakeDamage()
+    {
+        base.OnTakeDamage();
+        rangerAnimationManager.SetIsDashing(false);
+        rangerAnimationManager.SetIsDrawing(false);
+    }
+
+    #endregion
 
     #region Skills
 
@@ -238,32 +281,26 @@ public abstract class RangerCharacter : Character
     #region Dash
 
     [PunRPC]
-    public void Dash(Vector3 target)
+    public void Dash(Vector3 targetPoint)
     {
         if (CanDash || !PhotonView.IsMine)
         { 
             if (PhotonView.IsMine)
             {
-                PhotonView.RPC(nameof(Dash), RpcTarget.Others, target);
+                PhotonView.RPC(nameof(Dash), RpcTarget.Others, targetPoint);
             }
-            var edgePoint = rb.position - (target - rb.position).normalized * dashMaximumDistance;
-            var raycastPoint = edgePoint + Vector3.up * 5;
-            Ray ray = new Ray(raycastPoint, Vector3.down);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, Globals.RaycastDistance, 1 << Globals.GroundLayer))
-            {
-                target = hit.point;
-            }
-            IsDashFirstFrame = true;
             IsDashAvailable = false;
-            dashTarget = target;
-            SetRotationTarget(target);
-            MoveTo(dashTarget);
+            elapsedDashingTime = 0;
+            stamina -= dashStaminaCost;
+            forceRotation = true;
+            dashOrigin = rb.position;
+            dashPoint = Globals.GetPointAtRange(rb.position, targetPoint, dashDistance);
+            SetRotationTarget(dashPoint);
+            MoveTo(dashPoint);
             rangerAnimationManager.Dash();
-            // sound?
             StartCoroutine(ManageCooldown(DashSkillNumber));
             StartCoroutine(ResetDestinationAfterDash());
-            stamina -= dashStaminaCost;
+            OnDash();
         }
         else if (PhotonView.IsMine && characterUI != null)
         {
@@ -271,28 +308,29 @@ public abstract class RangerCharacter : Character
         }
     }
 
+    protected virtual void OnDash() { }
+
     private void UpdateDash()
     {
-        if (rangerAnimationManager.IsJumping)
+        if (rangerAnimationManager.IsJumping && elapsedDashingTime < maximumDashingTime && (rb.position - dashOrigin).magnitude < (dashPoint - dashOrigin).magnitude)
         {
-            if (IsDashFirstFrame)
-            {
-                rb.AddForce(Vector3.up * dashJumpForce, ForceMode.Impulse);
-                dashJumpDelta = (new Vector3(dashTarget.x, rb.position.y, dashTarget.z) - rb.position) / (DashJumpingTime * 50);
-                IsDashFirstFrame = false;
-            }
-            else
-            {
-                rb.MovePosition(rb.position + dashJumpDelta);
-            }
+            float x = (rb.position - dashOrigin).magnitude / (dashPoint - dashOrigin).magnitude;
+           float dashVelocity = Mathf.Lerp(dashStartVelocity, dashEndVelocity, x);
+            var tempPosition = rb.position + dashVelocity * (dashPoint - dashOrigin).normalized * Time.fixedDeltaTime;
+            rb.MovePosition(new Vector3(tempPosition.x, rb.position.y, tempPosition.z));
+            elapsedDashingTime += Time.fixedDeltaTime;
+        }
+        else if (rangerAnimationManager.IsJumping)
+        {
+            rangerAnimationManager.SetIsDashing(false);
         }
     }
 
-
     private IEnumerator ResetDestinationAfterDash()
     {
-        yield return new WaitUntil(() => rangerAnimationManager.IsJumping);
-        yield return new WaitWhile(() => rangerAnimationManager.IsJumping);
+        yield return new WaitUntil(() => animationManager.IsJumping);
+        yield return new WaitWhile(() => animationManager.IsJumping);
+        forceRotation = false;
         ClearDestination();
     }
 

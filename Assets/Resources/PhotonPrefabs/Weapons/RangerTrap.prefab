@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 1369728629281420252}
   - component: {fileID: 1369728629281420255}
   - component: {fileID: 3202354366110180506}
-  m_Layer: 2
+  m_Layer: 12
   m_Name: RangerTrap
-  m_TagString: IgnoreBox
+  m_TagString: AttackTrigger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -62,9 +62,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e5427545b46bac4c88d9995a338bd2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterTransform: {fileID: 0}
   audioSource: {fileID: 1369728629281420252}
   photonView: {fileID: 3202354366110180506}
+  ownerTransform: {fileID: 0}
+  useForwardAsAttackDirection: 1
+  canBeGuarded: 0
 --- !u!82 &1369728629281420252
 AudioSource:
   m_ObjectHideFlags: 0

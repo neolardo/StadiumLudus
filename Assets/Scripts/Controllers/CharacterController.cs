@@ -96,8 +96,8 @@ public class CharacterController : MonoBehaviour
         {
             bool isLeftMouseButtonUp = Input.GetMouseButtonUp(0);
             bool isRightMouseButtonUp = Input.GetMouseButtonUp(1);
-            bool isLeftMouseButton = Input.GetMouseButton(0);
-            bool isRightMouseButton = Input.GetMouseButton(1);
+            bool isLeftMouseButton = Input.GetMouseButton(0) || Input.GetMouseButtonDown(0);
+            bool isRightMouseButton = Input.GetMouseButton(1) || Input.GetMouseButtonDown(1);
             if (isLeftMouseButtonUp || isRightMouseButtonUp)
             {
                 ignoreEverythingUntilRelease = false;
@@ -115,10 +115,14 @@ public class CharacterController : MonoBehaviour
                 {
                     hit.transform.GetComponent<IHighlightable>().Highlight();
                 }
-                if ((isLeftMouseButtonUp || isRightMouseButtonUp) && lastActionWasAttack)
+                if (lastActionWasAttack)
                 {
-                    character.EndAttack(hit.point, enemyAtHit ? hit.transform.parent.GetComponent<Character>() : null);
-                    lastActionWasAttack = false;
+                    character.SetRotationTarget(hit.point);
+                    if (isLeftMouseButtonUp || isRightMouseButtonUp)
+                    {
+                        character.EndAttack(hit.point, enemyAtHit ? hit.transform.GetComponent<Character>() : null);
+                        lastActionWasAttack = false;
+                    }
                 }
                 if ((isLeftMouseButton || isRightMouseButton) && !ignoreEverythingUntilRelease)
                 {
@@ -126,7 +130,7 @@ public class CharacterController : MonoBehaviour
                     {
                         if (enemyAtHit && (isRightMouseButton || isLeftMouseButton))
                         {
-                            character.StartAttack(hit.point, hit.transform.parent.GetComponent<Character>());
+                            character.StartAttack(hit.point, hit.transform.GetComponent<Character>());
                             ignoreEverythingUntilRelease = true;
                             lastActionWasAttack = true;
                         }
@@ -149,7 +153,7 @@ public class CharacterController : MonoBehaviour
                     }
                     else if (isRightMouseButton)
                     {
-                        character.StartAttack(hit.point, enemyAtHit? hit.transform.parent.GetComponent<Character>() : null);
+                        character.StartAttack(hit.point, enemyAtHit? hit.transform.GetComponent<Character>() : null);
                         ignoreEverythingUntilRelease = true;
                         lastActionWasAttack = true;
                     }

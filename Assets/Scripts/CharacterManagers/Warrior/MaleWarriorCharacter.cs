@@ -27,7 +27,7 @@ public class MaleWarriorCharacter : WarriorCharacter
     [SerializeField]
     private AudioSource battleAxeAudioSource;
 
-    protected override float BasicAttackForceDelay => 0.3f;
+    protected override float BasicAttackForceDelay => 0f;
 
     #endregion
 
