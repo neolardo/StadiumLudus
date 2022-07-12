@@ -710,11 +710,14 @@ public abstract class Character : MonoBehaviour, IHighlightable
     [PunRPC]
     public void EndGuarding()
     {
-        if (PhotonView.IsMine)
+        if (animationManager.IsGuarding || !PhotonView.IsMine)
         {
-            PhotonView.RPC(nameof(EndGuarding), RpcTarget.Others);
+            if (PhotonView.IsMine)
+            {
+                PhotonView.RPC(nameof(EndGuarding), RpcTarget.Others);
+            }
+            animationManager.EndGuarding();
         }
-        animationManager.EndGuarding();
     }
 
     public void SetGuardTarget(Vector3 guardTarget)

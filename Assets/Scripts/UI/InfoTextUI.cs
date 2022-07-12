@@ -12,7 +12,7 @@ public class InfoTextUI : MonoBehaviour
     [SerializeField]private TextMeshProUGUI text;
     private Color initialColor;
     private const float fadeInDuration = .2f;
-    private const float showDuration = 2f;
+    private const float showDuration = 4f;
     private const float fadeOutDuration = .8f;
 
     #endregion

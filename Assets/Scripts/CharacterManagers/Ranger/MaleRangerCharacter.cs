@@ -40,7 +40,7 @@ public class MaleRangerCharacter : RangerCharacter
 
     #region Trap
 
-    protected override float TrapPlacementDelay => 0.7f;
+    protected override float TrapPlacementDelay => Trap.DeactivationDelay + .1f;
 
     #endregion
 

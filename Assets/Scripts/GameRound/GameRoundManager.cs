@@ -159,12 +159,13 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
         SetPlayerIsCharacterConfirmed(PhotonNetwork.LocalPlayer, false);
         SetPlayerIsInitialized(PhotonNetwork.LocalPlayer, false);
         SetPlayerIsRematchRequested(PhotonNetwork.LocalPlayer, false);
-        UnityEngine.SceneManagement.SceneManager.LoadScene(Globals.MainMenuScene);
+        SceneManager.LoadScene(Globals.MainMenuScene);
         Debug.Log("Left room.");
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
+        characterUI.AddInfo($"{otherPlayer.NickName} has left the game.");
         if (PhotonNetwork.PlayerList.Length == 1)
         {
             PhotonNetwork.LeaveRoom();

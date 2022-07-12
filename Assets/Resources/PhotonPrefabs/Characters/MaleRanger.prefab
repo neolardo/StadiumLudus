@@ -47,7 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2024ec4b3e0020341b0ce79fc448c0c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterTransform: {fileID: 1131998773343001477}
+  spawnZone: {fileID: 11862328}
+  container: {fileID: 11862328}
 --- !u!1 &301585922
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,10 +127,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.45
-  m_Height: 1.835807
+  m_Radius: 0.55
+  m_Height: 2.2
   m_Direction: 1
-  m_Center: {x: 0, y: 0.9314813, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!1 &854828924
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,9 +582,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8e0b342077ad1547a360f22ae88ab90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterTransform: {fileID: 1131998773343001477}
   spawnZone: {fileID: 1131998773516273877}
-  projectileContainer: {fileID: 301585923}
+  container: {fileID: 301585923}
 --- !u!1 &544548009649800666
 GameObject:
   m_ObjectHideFlags: 0
@@ -953,7 +953,7 @@ MonoBehaviour:
   trapPool: {fileID: 11862329}
   trapMinimumDamage: 5
   trapMaximumDamage: 10
-  trapDuration: 30
+  trapDuration: 20
   trapCooldown: 8
   trapInitialChargeCount: 1
   trapMaximumChargeCount: 3

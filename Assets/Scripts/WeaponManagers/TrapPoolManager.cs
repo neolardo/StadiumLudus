@@ -5,12 +5,9 @@ using UnityEngine;
 /// <summary>
 /// Manages a pool of <see cref="Trap"/>s.
 /// </summary>
-public class TrapPoolManager : MonoBehaviour
+public class TrapPoolManager : ObjectPoolManager<Trap>
 {
     #region Properties and Fields
-
-    [Tooltip("The transform of the character which places traps.")]
-    public Transform characterTransform;
 
     /// <summary>
     /// Represents the minimum damage of a <see cref="Trap"/>.
@@ -27,46 +24,34 @@ public class TrapPoolManager : MonoBehaviour
     /// </summary>
     public float Duration { get; set; }
 
-    /// <summary>
-    /// The list contianing the currently inactive <see cref="Trap"/>s.
-    /// </summary>
-    private List<Trap> inactiveTraps;
-
-    /// <summary>
-    /// The list contianing the currently active <see cref="Trap"/>s.
-    /// </summary>
-    private List<Trap> activeTraps;
-
     #endregion
 
     #region Methods
 
-    private void Start()
+    protected override void Start()
     {
-        inactiveTraps = new List<Trap>();
-        activeTraps = new List<Trap>();
-        if (transform.childCount == 0)
-        {
-            Debug.LogWarning($"The number of traps of a {characterTransform.name} is set to 0.");
-        }
-        CreateTraps();
+        base.Start();
+        isPhotonViewMine = inactiveObjects[0].photonView.IsMine;
     }
 
     /// <summary>
-    /// Instantiates the <see cref="Trap"/>s of this pool.
+    /// Initializes the <see cref="Trap"/>s of this pool.
     /// </summary>
-    private void CreateTraps()
+    protected override void InitializePoolableObjects()
     {
-        var t = GetComponent<Transform>();
-        for (int i = 0; i < t.childCount; i++)
+        var traps = new List<Trap>();
+        for (int i = 0; i < container.childCount; i++)
         {
-            var trap = t.GetChild(i).GetComponent<Trap>();
+            traps.Add(container.GetChild(i).GetComponent<Trap>());
+        }
+        foreach(var trap in traps)
+        {
             trap.gameObject.transform.parent = null;
             trap.trapPool = this;
             trap.trapTrigger.MinimumDamage = MinimumDamage;
             trap.trapTrigger.MaximumDamage = MaximumDamage;
             trap.activeDuration = Duration;
-            inactiveTraps.Add(trap);
+            inactiveObjects.Add(trap);
         }
     }
 
@@ -76,49 +61,22 @@ public class TrapPoolManager : MonoBehaviour
     /// <param name="delaySeconds">The optional delay before placing the trap.</param>
     public void PlaceTrap(float delaySeconds = 0f)
     {
-        StartCoroutine(PlaceTrapAfterDelay(delaySeconds));
+        if (isPhotonViewMine)
+        {
+            StartCoroutine(PlaceTrapAfterDelay(delaySeconds));
+        }
     }
 
     private IEnumerator PlaceTrapAfterDelay(float delaySeconds)
     {
-        var trap = GetNextAvailableTrap();
+        var obj = GetNextAvailableObject();
         yield return new WaitForSeconds(delaySeconds);
-        trap.transform.position = characterTransform.position;
-        trap.transform.rotation = characterTransform.rotation;
-        trap.gameObject.SetActive(true);
-    }
-
-    /// <summary>
-    /// Gets the next availabe <see cref="Trap"/> if one exists, otherwise get's the earliest used <see cref="Trap"/>.
-    /// </summary>
-    /// <returns>The next available <see cref="Trap"/>.</returns>
-    private Trap GetNextAvailableTrap()
-    {
-        if (inactiveTraps.Count == 0)
+        if (!activeObjects.Contains(obj))
         {
-            var trap = activeTraps[0];
-            activeTraps.Remove(trap);
-            trap.DeactivateTrap(false);
-            activeTraps.Add(trap);
-            return trap;
+            activeObjects.Add(obj);
+            inactiveObjects.Remove(obj);
         }
-        else
-        {
-            var trap = inactiveTraps[0];
-            inactiveTraps.Remove(trap);
-            activeTraps.Add(trap);
-            return trap;
-        }
-    }
-
-    /// <summary>
-    /// Called whenever a <see cref="Trap"/> got deactivated.
-    /// </summary>
-    /// <param name="trap">The <see cref="Trap"/>.</param>
-    public void OnTrapDisappeared(Trap trap)
-    {
-        activeTraps.Remove(trap);
-        inactiveTraps.Add(trap);
+        obj.photonView.RPC(nameof(PoolableObject.EnableObject), Photon.Pun.RpcTarget.All);
     }
 
     #endregion

@@ -222,7 +222,7 @@ public class CharacterController : MonoBehaviour
             character.StartGuarding();
             character.SetGuardTarget(hit.point);
         }
-        else if (Input.GetKeyUp(guardKeyCode))
+        else if (AreInputsEnabled)
         {
             character.EndGuarding();
         }

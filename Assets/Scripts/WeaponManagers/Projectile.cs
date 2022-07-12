@@ -1,13 +1,12 @@
 using Photon.Pun;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// Manages a projectile weapon.
 /// To fire a projectile set it's gameobject to active.
 /// </summary>
-public class Projectile : MonoBehaviour
+public class Projectile : PoolableObject
 {
     #region Properties and Fields
 
@@ -31,14 +30,15 @@ public class Projectile : MonoBehaviour
     /// </summary>
     private const float distanceMaximum = 20;
 
-    public PhotonView photonView;
     private Rigidbody rb;
     private new Transform transform;
     private Character target;
 
     private Vector3 originPoint;
     private Vector3 targetPoint;
-    private Vector3 targetOffset = Vector3.up * 1f;
+    private Vector3 verticalTargetOffset = Vector3.up * 1f;
+    private Vector3 currentOffset;
+    private float verticalRandomOffsetRange = .5f;
     private const float velocity = 100;
 
     private const float triggerDelaySecondsAfterHit = 0.2f;
@@ -59,12 +59,6 @@ public class Projectile : MonoBehaviour
     {
         SetTarget(targetCharacterPhotonViewID);
         gameObject.SetActive(true);
-    }
-
-    [PunRPC]
-    public void DisableProjectile()
-    {
-        gameObject.SetActive(false);
     }
 
     private void OnEnable()
@@ -100,6 +94,7 @@ public class Projectile : MonoBehaviour
         transform.position = ProjectilePool.spawnZone.position;
         transform.rotation = ProjectilePool.spawnZone.rotation;
         originPoint = transform.position;
+        currentOffset = verticalTargetOffset + (Random.Range(0, verticalRandomOffsetRange * 2f) - verticalRandomOffsetRange) * Vector3.up;
         targetPoint = transform.position + new Vector3(ProjectilePool.spawnZone.forward.x, 0, ProjectilePool.spawnZone.forward.z) * (distanceMaximum+1);
         rb.isKinematic = false;
         projectileTrailRenderer.emitting = true;
@@ -116,7 +111,7 @@ public class Projectile : MonoBehaviour
         {
             if (target != null)
             {
-                targetPoint = target.transform.position + targetOffset;
+                targetPoint = target.transform.position + currentOffset;
             }
             var nextPosition = rb.position + velocity * Time.fixedDeltaTime * (targetPoint - rb.position).normalized;
             if (photonView.IsMine && target != null && (targetPoint - nextPosition).magnitude > (targetPoint - rb.position).magnitude)
@@ -148,7 +143,7 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!photonView.IsMine || other.gameObject.transform.IsChildOf(ProjectilePool.characterTransform) || other.CompareTag(Globals.CharacterTag) || other.CompareTag(Globals.AttackTriggerTag) || other.CompareTag(Globals.IgnoreBoxTag))
+        if (!photonView.IsMine || other.CompareTag(Globals.CharacterTag) || other.CompareTag(Globals.AttackTriggerTag) || other.CompareTag(Globals.IgnoreBoxTag))
         {
             return;
         }
@@ -226,7 +221,7 @@ public class Projectile : MonoBehaviour
         if (photonView.IsMine)
         {
             photonView.RPC(nameof(OnProjectileWentTooFar), RpcTarget.Others);
-            ProjectilePool.OnProjectileDisappeared(this);
+            ProjectilePool.OnObjectDisappeared(this);
         }
         StopTrailParticleSystem();
         Stop();

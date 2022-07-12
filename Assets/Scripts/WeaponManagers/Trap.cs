@@ -1,11 +1,11 @@
+using Photon.Pun;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Manages the animations and the behaviour of a ranger trap.
+/// Manages the animations and the behavior of a ranger trap.
 /// </summary>
-public class Trap : MonoBehaviour
+public class Trap : PoolableObject
 {
     #region Fields and Properties
 
@@ -20,13 +20,14 @@ public class Trap : MonoBehaviour
     [HideInInspector]
     public float activeDuration;
 
+    private bool isTrapOpened;
+
     public bool IsTrapActive => trapTrigger.IsActive;
-    private bool CanExpire => trapTrigger.IsActive;
 
     private const string AnimatorOpen = "Open";
     private const string AnimatorClose = "Close";
     private const float ActivationDelay = 0.5f;
-    private const float DeactivationDelay = 0.7f;
+    public const float DeactivationDelay = 0.7f;
     #endregion
 
     #region Methods
@@ -40,7 +41,10 @@ public class Trap : MonoBehaviour
 
     private void ActivateTrap()
     {
+        transform.position = trapPool.container.position;
+        transform.rotation = trapPool.container.rotation;
         animator.SetTrigger(AnimatorOpen);
+        isTrapOpened = true;
         AudioManager.Instance.PlayOneShotSFX(trapTrigger.audioSource, SFX.TrapActivate);
         StartCoroutine(ActivateAttackTriggerAfterDelay());
     }
@@ -56,34 +60,41 @@ public class Trap : MonoBehaviour
 
     #region Deactivate
 
-    public void DeactivateTrap(bool notifyTrapPool = true)
+    [PunRPC]
+    public override void DisableObject()
     {
-        trapTrigger.IsActive = false;
-        animator.SetTrigger(AnimatorClose);
-        AudioManager.Instance.PlayOneShotSFX(trapTrigger.audioSource, SFX.TrapDeactivate);
-        StartCoroutine(WaitForDeactivationAndDisable(notifyTrapPool));
+        DeactivateTrap();
     }
 
     private IEnumerator ExpireTrapAfterDurationEndsOrEnemyHit()
     {
         float elapsedTime = 0;
-        while(gameObject.activeSelf && CanExpire &&  elapsedTime < activeDuration && !trapTrigger.AnyCharacterHit)
+        while(isTrapOpened && elapsedTime < activeDuration && !trapTrigger.AnyCharacterHit)
         {
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        if (gameObject.activeSelf && CanExpire)
+        DeactivateTrap();
+    }
+
+    public void DeactivateTrap()
+    {
+        if (isTrapOpened)
         {
-            DeactivateTrap();
+            isTrapOpened = false;
+            trapTrigger.IsActive = false;
+            animator.SetTrigger(AnimatorClose);
+            AudioManager.Instance.PlayOneShotSFX(trapTrigger.audioSource, SFX.TrapDeactivate);
+            StartCoroutine(WaitForDeactivationAndDisable());
         }
     }
 
-    private IEnumerator WaitForDeactivationAndDisable(bool notifyTrapPool)
+    private IEnumerator WaitForDeactivationAndDisable()
     {
         yield return new WaitForSeconds(DeactivationDelay);
-        if (notifyTrapPool)
+        if (photonView.IsMine)
         {
-            trapPool.OnTrapDisappeared(this);
+            trapPool.OnObjectDisappeared(this);
         }
         gameObject.SetActive(false);
     }
