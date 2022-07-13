@@ -22,15 +22,6 @@ public class RangerAnimationManager : CharacterAnimationManager
 
     #region Methods
 
-    #region Init
-
-    protected override void Start()
-    {
-        base.Start();
-    }
-
-    #endregion
-
     #region Draw
 
     public void SetIsDrawing(bool value)

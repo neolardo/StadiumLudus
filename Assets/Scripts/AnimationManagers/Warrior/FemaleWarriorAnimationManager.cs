@@ -24,14 +24,6 @@ public class FemaleWarriorAnimationManager : WarriorAnimationManager
 
     #region Methods
 
-    #region Init
-
-    protected override void Start()
-    {
-        base.Start();
-    }
-
-    #endregion
 
     #region Combo Attack
 

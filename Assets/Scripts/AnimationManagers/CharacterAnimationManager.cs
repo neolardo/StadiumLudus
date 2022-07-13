@@ -105,7 +105,7 @@ public class CharacterAnimationManager : MonoBehaviour
 
     #region Init
 
-    protected virtual void Start()
+    protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
         animatorMovementLayerIndex = animator.GetLayerIndex(AnimatorMovementLayerName);

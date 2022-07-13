@@ -172,7 +172,10 @@ public abstract class RangerCharacter : Character
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
-        UpdateDash();
+        if (PhotonView.IsMine)
+        {
+            UpdateDash();
+        }
     }
 
     #endregion
@@ -195,7 +198,6 @@ public abstract class RangerCharacter : Character
         {
             PhotonView.RPC(nameof(OnEndAttack), RpcTarget.Others);
         }
-        Debug.Log("OnEndAttack");
         rangerAnimationManager.SetIsDrawing(false);
     }
 
@@ -283,23 +285,23 @@ public abstract class RangerCharacter : Character
     [PunRPC]
     public void Dash(Vector3 targetPoint)
     {
-        if (CanDash || !PhotonView.IsMine)
+        if (!PhotonView.IsMine || CanDash)
         { 
             if (PhotonView.IsMine)
             {
                 PhotonView.RPC(nameof(Dash), RpcTarget.Others, targetPoint);
+                IsDashAvailable = false;
+                elapsedDashingTime = 0;
+                stamina -= dashStaminaCost;
+                forceRotation = true;
+                dashOrigin = rb.position;
+                dashPoint = Globals.GetPointAtRange(rb.position, targetPoint, dashDistance);
+                SetRotationTarget(dashPoint);
+                MoveTo(dashPoint);
+                StartCoroutine(ManageCooldown(DashSkillNumber));
+                StartCoroutine(ResetDestinationAfterDash());
             }
-            IsDashAvailable = false;
-            elapsedDashingTime = 0;
-            stamina -= dashStaminaCost;
-            forceRotation = true;
-            dashOrigin = rb.position;
-            dashPoint = Globals.GetPointAtRange(rb.position, targetPoint, dashDistance);
-            SetRotationTarget(dashPoint);
-            MoveTo(dashPoint);
             rangerAnimationManager.Dash();
-            StartCoroutine(ManageCooldown(DashSkillNumber));
-            StartCoroutine(ResetDestinationAfterDash());
             OnDash();
         }
         else if (PhotonView.IsMine && characterUI != null)
@@ -322,8 +324,18 @@ public abstract class RangerCharacter : Character
         }
         else if (rangerAnimationManager.IsJumping)
         {
-            rangerAnimationManager.SetIsDashing(false);
+            OnDashFinished();
         }
+    }
+
+    [PunRPC]
+    public void OnDashFinished()
+    {
+        if (PhotonView.IsMine)
+        {
+            PhotonView.RPC(nameof(OnDashFinished), RpcTarget.Others);
+        }
+        rangerAnimationManager.SetIsDashing(false);
     }
 
     private IEnumerator ResetDestinationAfterDash()
@@ -341,19 +353,19 @@ public abstract class RangerCharacter : Character
     [PunRPC]
     public void Smoke()
     {
-        if (CanSmoke || !PhotonView.IsMine)
+        if (!PhotonView.IsMine || CanSmoke)
         {
             if (PhotonView.IsMine)
             {
                 PhotonView.RPC(nameof(Smoke), RpcTarget.Others);
+                StartCoroutine(ManageCooldown(SmokeSkillNumber));
+                stamina -= smokeStaminaCost;
+                IsSmokeAvailable = false;
             }
-            IsSmokeAvailable = false;
             rangerAnimationManager.Smoke();
             AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.Smoke);
-            smokeTransform.position = rb.position + smokePositionDelta;
+            smokeTransform.position = transform.position + smokePositionDelta;
             smokeParticleSystem.Play();
-            StartCoroutine(ManageCooldown(SmokeSkillNumber));
-            stamina -= smokeStaminaCost;
         }
         else if (PhotonView.IsMine && characterUI != null)
         {
@@ -368,15 +380,15 @@ public abstract class RangerCharacter : Character
     [PunRPC]
     public void PlaceTrap()
     {
-        if (CanPlaceTrap || !PhotonView.IsMine)
+        if (!PhotonView.IsMine || CanPlaceTrap)
         {
             if (PhotonView.IsMine)
             {
                 PhotonView.RPC(nameof(PlaceTrap), RpcTarget.Others);
+                trapChargeCount -= 1;
+                trapPool.PlaceTrap(TrapPlacementDelay);
             }
-            trapChargeCount -= 1;
             rangerAnimationManager.PlaceTrap();
-            trapPool.PlaceTrap(TrapPlacementDelay);
             if (characterUI != null)
             {
                 characterUI.RemoveSkillCharge(TrapSkillNumber);

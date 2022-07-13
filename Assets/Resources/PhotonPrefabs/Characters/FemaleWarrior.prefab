@@ -120,6 +120,7 @@ GameObject:
   - component: {fileID: 1179606459}
   - component: {fileID: 1179606461}
   - component: {fileID: 1179606460}
+  - component: {fileID: 7237350659958952950}
   m_Layer: 10
   m_Name: CharacterHitBox
   m_TagString: HitBox
@@ -169,6 +170,22 @@ CapsuleCollider:
   m_Height: 1.835807
   m_Direction: 1
   m_Center: {x: 0, y: 0.9314813, z: 0}
+--- !u!54 &7237350659958952950
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1179606458}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &1577072021
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,6 +247,7 @@ GameObject:
   - component: {fileID: 1360269922}
   - component: {fileID: 8882034874765443999}
   - component: {fileID: 1589707957}
+  - component: {fileID: 2096893890}
   m_Layer: 13
   m_Name: FemaleWarrior
   m_TagString: IgnoreBox
@@ -474,10 +492,27 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 2096893890}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &2096893890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8882034873407279612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1001 &2126130499730143571
 PrefabInstance:
   m_ObjectHideFlags: 0

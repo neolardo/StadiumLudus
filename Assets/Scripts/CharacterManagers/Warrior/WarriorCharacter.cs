@@ -136,7 +136,10 @@ public abstract class WarriorCharacter : Character
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
-        UpdateLeapAttackJumping();
+        if (PhotonView.IsMine)
+        {
+            UpdateLeapAttackJumping();
+        }
     }
 
     #region Take Damage
@@ -220,29 +223,29 @@ public abstract class WarriorCharacter : Character
     [PunRPC]
     public void LeapAttack(Vector3 attackTarget, Character target)
     {
-        if (CanLeapAttack || !PhotonView.IsMine)
+        if (!PhotonView.IsMine || CanLeapAttack)
         {
             if (PhotonView.IsMine)
             {
                 PhotonView.RPC(nameof(LeapAttack), RpcTarget.Others, attackTarget, null);
+                leapAttackTarget = target;
+                elapsedJumpingTime = 0;
+                IsLeapAttackAvailable = false;
+                jumpOrigin = rb.position;
+                stamina -= leapAttackStaminaCost;
+                forceRotation = true;
+                jumpTarget = Globals.ClampPointInsideRange(rb.position, attackTarget, leapAttackMaximumDistance);
+                SetRotationTarget(jumpTarget);
+                MoveTo(jumpTarget);
+                StartCoroutine(ManageCooldown(LeapAttackSkillNumber));
+                StartCoroutine(AddJumpForce());
+                StartCoroutine(ResetDestinationAfterLeap());
+                if (leapAttackTarget != null)
+                {
+                    StartCoroutine(ManageJumpAndRotationTarget());
+                }
             }
-            leapAttackTarget = target;
-            elapsedJumpingTime = 0;
-            IsLeapAttackAvailable = false;
-            jumpOrigin = rb.position;
-            stamina -= leapAttackStaminaCost;
-            forceRotation = true;
-            jumpTarget = Globals.ClampPointInsideRange(rb.position, attackTarget, leapAttackMaximumDistance);
-            SetRotationTarget(jumpTarget);
-            MoveTo(jumpTarget);
             warriorAnimationManager.LeapAttack();
-            StartCoroutine(ManageCooldown(LeapAttackSkillNumber));
-            StartCoroutine(AddJumpForce());
-            StartCoroutine(ResetDestinationAfterLeap());
-            if (PhotonView.IsMine && leapAttackTarget != null)
-            {
-                StartCoroutine(ManageJumpAndRotationTarget());
-            }
             OnLeapAttack();
         }
         else if (PhotonView.IsMine && characterUI != null)
@@ -277,20 +280,10 @@ public abstract class WarriorCharacter : Character
             {
                 tempTarget = jumpOrigin + (tempTarget - jumpOrigin).normalized * leapAttackMaximumDistance;
             }
-            SetJumpTarget(tempTarget);
+            jumpTarget = tempTarget;
             SetRotationTarget(leapAttackTarget.transform.position);
             yield return null;
         }
-    }
-
-    [PunRPC]
-    public void SetJumpTarget(Vector3 jumpTarget)
-    {
-        if (PhotonView.IsMine)
-        {
-            PhotonView.RPC(nameof(SetJumpTarget), RpcTarget.Others, jumpTarget);
-        }
-        this.jumpTarget = jumpTarget;
     }
 
     private IEnumerator AddJumpForce()
@@ -315,17 +308,17 @@ public abstract class WarriorCharacter : Character
     [PunRPC]
     public void StartWhirlwind()
     {
-        if (CanWhirlwind || !PhotonView.IsMine)
+        if (!PhotonView.IsMine || CanWhirlwind )
         {
             if (PhotonView.IsMine)
             {
                 PhotonView.RPC(nameof(StartWhirlwind), RpcTarget.Others);
+                StartCoroutine(ManageWhirlwindStaminaDrain());
+                StartCoroutine(ManageWhirlwindRotation());
             }
             warriorAnimationManager.StartWhirlwind();
             AudioManager.Instance.PlaySFX(characterAudioSource, SFX.Whirlwind);
             characterAudioSource.loop = true;
-            StartCoroutine(ManageWhirlwindStaminaDrain());
-            StartCoroutine(ManageWhirlwindRotation());
             OnWhirlwind();
         }
     }
@@ -386,20 +379,20 @@ public abstract class WarriorCharacter : Character
     [PunRPC]
     public void GroundSlam(Vector3 attackTarget)
     {
-        if (CanGroundSlam || !PhotonView.IsMine)
+        if (!PhotonView.IsMine || CanGroundSlam )
         {
             if (PhotonView.IsMine)
             {
                 PhotonView.RPC(nameof(GroundSlam), RpcTarget.Others, attackTarget);
+                IsGroundSlamAvailable = false;
+                forceRotation = true;
+                stamina -= groundSlamStaminaCost;
+                StartCoroutine(ManageCooldown(GroundSlamSkillNumber));
             }
-            attackTarget = Globals.ClampPointInsideRange(rb.position, attackTarget, groundSlamMaximumDistance, true);
-            IsGroundSlamAvailable = false;
+            attackTarget = Globals.ClampPointInsideRange(transform.position, attackTarget, groundSlamMaximumDistance, true);
             SetRotationTarget(attackTarget);
-            forceRotation = true;
             warriorAnimationManager.GroundSlam();
-            StartCoroutine(ManageCooldown(GroundSlamSkillNumber));
             groundSlamManager.Fire(attackTarget, GroundSlamStartDelay);
-            stamina -= groundSlamStaminaCost;
             OnGroundSlam(attackTarget);
             StartCoroutine(EndForceRotateAfterUsingSkill());
         }

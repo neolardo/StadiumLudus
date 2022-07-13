@@ -69,7 +69,6 @@ public class FemaleRangerCharacter : RangerCharacter
         interactionTarget = null;
         ClearDestination();
         rangerAnimationManager.SetIsDrawing(true);
-        Debug.Log("OnAttackWithoutTarget");
         animationManager.Attack();
         StartCoroutine(ManageAnimations());
     }
@@ -95,7 +94,6 @@ public class FemaleRangerCharacter : RangerCharacter
     {
         ClearDestination();
         rangerAnimationManager.SetIsDrawing(true);
-        Debug.Log("OnAttackChaseTarget");
         animationManager.Attack();
         StartCoroutine(ManageAnimations());
     }

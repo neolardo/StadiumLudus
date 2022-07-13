@@ -298,7 +298,11 @@ public abstract class Character : MonoBehaviour, IHighlightable
             characterTrigger.layer = Globals.IgnoreRaycastLayer;
             characterTrigger.tag = Globals.IgnoreBoxTag;
             hitBoxTransform.gameObject.layer = Globals.IgnoreRaycastLayer; // prevent self hit
-            hitBoxTransform.tag = Globals.IgnoreBoxTag; 
+            hitBoxTransform.tag = Globals.IgnoreBoxTag;
+        }
+        else
+        {
+            Destroy(rb);
         }
         InitializeHitBoxRecording();
         InitializeRigColliderTransforms();
@@ -336,14 +340,11 @@ public abstract class Character : MonoBehaviour, IHighlightable
 
     protected virtual void FixedUpdate()
     {
-        if (IsAlive)
+        if (IsAlive && AllowUpdate && PhotonView.IsMine)
         {
-            if (AllowUpdate && PhotonView.IsMine)
-            {
-                UpdateInteractionCheck();
-                UpdateChase();
-                UpdateHitBoxInfo();
-            }
+            UpdateInteractionCheck();
+            UpdateChase();
+            UpdateHitBoxInfo();
             UpdateMove();
         }
     }
@@ -425,7 +426,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
     [PunRPC]
     public void AttackWithoutTarget(Vector3 attackPoint)
     {
-        if (CanAttack || !PhotonView.IsMine)
+        if (!PhotonView.IsMine || CanAttack )
         {
             if (PhotonView.IsMine)
             {
@@ -454,7 +455,6 @@ public abstract class Character : MonoBehaviour, IHighlightable
     {
         if (CanSetChaseTarget)
         {
-            Debug.Log("SetChaseTarget");
             chaseTarget = target;
             isChasing = target != null;
             interactionTarget = null;
@@ -640,7 +640,6 @@ public abstract class Character : MonoBehaviour, IHighlightable
         {
             PhotonView.RPC(nameof(TakeDamage), RpcTarget.Others, amount, direction, canBeGuarded);
         }
-        Debug.Log("Take damage");
         if (animationManager.IsGuarding && direction != HitDirection.Back && canBeGuarded)
         {
             float guardedAmount = stamina - Mathf.Max(0, stamina - amount);
@@ -671,10 +670,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
                 }
                 AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
             }
-            if (PhotonView.IsMine)
-            {
-                ClearDestination();
-            }
+            ClearDestination();
             OnTakeDamage();
         }
         else
@@ -697,7 +693,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
     [PunRPC]
     public void StartGuarding()
     {
-        if (CanGuard || !PhotonView.IsMine)
+        if (!PhotonView.IsMine || CanGuard)
         {
             if (PhotonView.IsMine)
             {
@@ -710,7 +706,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
     [PunRPC]
     public void EndGuarding()
     {
-        if (animationManager.IsGuarding || !PhotonView.IsMine)
+        if (!PhotonView.IsMine || animationManager.IsGuarding)
         {
             if (PhotonView.IsMine)
             {
@@ -738,6 +734,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
         if (PhotonView.IsMine)
         {
             PhotonView.RPC(nameof(OnDie), RpcTarget.Others, direction);
+            rb.constraints = RigidbodyConstraints.FreezeAll;
         }
         health = -1; // making sure the character is no longer alive
         animationManager.Move(0);
@@ -745,7 +742,6 @@ public abstract class Character : MonoBehaviour, IHighlightable
         ClearDestination();
         chaseTarget = null;
         interactionTarget = null;
-        rb.constraints = RigidbodyConstraints.FreezeAll;
         if (characterUI != null)
         {
             characterUI.ShowEndScreen(false);
@@ -769,7 +765,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
         {
             characterUI.ShowEndScreen(true);
         }
-        AllowUpdate = false;
+        AllowUpdate = true;
     }
 
     #endregion
@@ -893,7 +889,6 @@ public abstract class Character : MonoBehaviour, IHighlightable
         movementSpeedMaximum = movementSpeedInitialMaximum;
         sprintingSpeedMaximum = sprintingSpeedInitialMaximum;
         agent.speed = sprintingSpeedMaximum * agentSpeedMultiplier;
-
     }
 
     #endregion
@@ -902,40 +897,33 @@ public abstract class Character : MonoBehaviour, IHighlightable
 
     #region Movement
 
-    [PunRPC]
-    public void SetDestination(Vector3 destination)
+    protected void SetDestination(Vector3 destination)
     {
         if(PhotonView.IsMine)
         {
-            PhotonView.RPC(nameof(SetDestination), RpcTarget.Others, destination);
+            if ((Destination - destination).magnitude > refreshDestinationDelta)
+            {
+                agent.nextPosition = rb.position + transform.forward * destinationMinimum * 1.5f;
+            }
+            Destination = destination;
         }
-        if ((Destination - destination).magnitude > refreshDestinationDelta)
-        {
-            agent.nextPosition = rb.position + transform.forward * destinationMinimum * 1.5f;
-        }
-        Destination = destination;
     }
 
-    [PunRPC]
     protected void ClearDestination()
     {
         if (PhotonView.IsMine)
         {
-            PhotonView.RPC(nameof(ClearDestination), RpcTarget.Others);
+            Destination = rb.position;
+            agent.nextPosition = rb.position;
         }
-        Destination = rb.position;
-        agent.nextPosition = rb.position;
     }
 
-
-    [PunRPC]
     public void SetRotationTarget(Vector3 rotationTarget)
     {
         if (PhotonView.IsMine)
         {
-            PhotonView.RPC(nameof(SetRotationTarget), RpcTarget.Others, rotationTarget);
+            this.rotationTarget = rotationTarget;
         }
-        this.rotationTarget = rotationTarget;
     }
 
     [PunRPC]
@@ -1013,6 +1001,17 @@ public abstract class Character : MonoBehaviour, IHighlightable
             }
             movementSpeed = Mathf.Max(movementSpeed - Time.fixedDeltaTime * deceleration, 0);
         }
+        SetMovementSpeed(movementSpeed);//animationManager.Move(movementSpeed / movementSpeedMaximum);
+    }
+
+    [PunRPC]
+    public void SetMovementSpeed(float movementSpeed)
+    {
+        if (PhotonView.IsMine)
+        {
+            PhotonView.RPC(nameof(SetMovementSpeed), RpcTarget.Others, movementSpeed);
+        }
+        this.movementSpeed = movementSpeed;
         animationManager.Move(movementSpeed / movementSpeedMaximum);
     }
 

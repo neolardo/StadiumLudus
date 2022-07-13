@@ -26,7 +26,7 @@ public class Trap : PoolableObject
 
     private const string AnimatorOpen = "Open";
     private const string AnimatorClose = "Close";
-    private const float ActivationDelay = 0.5f;
+    private const float ActivationDelay = 0.3f;
     public const float DeactivationDelay = 0.7f;
     #endregion
 

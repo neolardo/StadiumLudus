@@ -94,10 +94,10 @@ public class CharacterController : MonoBehaviour
     {
         if (AreInputsEnabled)
         {
-            bool isLeftMouseButtonUp = Input.GetMouseButtonUp(0);
-            bool isRightMouseButtonUp = Input.GetMouseButtonUp(1);
             bool isLeftMouseButton = Input.GetMouseButton(0) || Input.GetMouseButtonDown(0);
             bool isRightMouseButton = Input.GetMouseButton(1) || Input.GetMouseButtonDown(1);
+            bool isLeftMouseButtonUp = !isLeftMouseButton;
+            bool isRightMouseButtonUp = !isRightMouseButton;
             if (isLeftMouseButtonUp || isRightMouseButtonUp)
             {
                 ignoreEverythingUntilRelease = false;
@@ -107,20 +107,16 @@ public class CharacterController : MonoBehaviour
             {
                 bool interactableAtHit = hit.transform.gameObject.layer == Globals.InteractableLayer;
                 bool enemyAtHit = hit.transform.gameObject.layer == Globals.CharacterLayer || hit.transform.gameObject.layer == Globals.RigidbodyLayer;
-                if (interactableAtHit)
+                if (interactableAtHit || enemyAtHit)
                 {
                     hit.transform.parent.GetComponent<IHighlightable>().Highlight();
-                }
-                if (enemyAtHit)
-                {
-                    hit.transform.GetComponent<IHighlightable>().Highlight();
                 }
                 if (lastActionWasAttack)
                 {
                     character.SetRotationTarget(hit.point);
                     if (isLeftMouseButtonUp || isRightMouseButtonUp)
                     {
-                        character.EndAttack(hit.point, enemyAtHit ? hit.transform.GetComponent<Character>() : null);
+                        character.EndAttack(hit.point, enemyAtHit ? hit.transform.parent.GetComponent<Character>() : null);
                         lastActionWasAttack = false;
                     }
                 }
@@ -130,7 +126,7 @@ public class CharacterController : MonoBehaviour
                     {
                         if (enemyAtHit && (isRightMouseButton || isLeftMouseButton))
                         {
-                            character.StartAttack(hit.point, hit.transform.GetComponent<Character>());
+                            character.StartAttack(hit.point, hit.transform.parent.GetComponent<Character>());
                             ignoreEverythingUntilRelease = true;
                             lastActionWasAttack = true;
                         }
@@ -153,7 +149,7 @@ public class CharacterController : MonoBehaviour
                     }
                     else if (isRightMouseButton)
                     {
-                        character.StartAttack(hit.point, enemyAtHit? hit.transform.GetComponent<Character>() : null);
+                        character.StartAttack(hit.point, enemyAtHit? hit.transform.parent.GetComponent<Character>() : null);
                         ignoreEverythingUntilRelease = true;
                         lastActionWasAttack = true;
                     }
@@ -175,7 +171,7 @@ public class CharacterController : MonoBehaviour
         //skills
         if (AreInputsEnabled && isRaycastSuccessful && (Input.GetKeyDown(firstSkillKeyCode) || Input.GetKeyDown(secondSkillKeyCode) || Input.GetKeyDown(thirdSkillKeyCode)))
         {
-            var target = (hit.transform.gameObject.layer == Globals.CharacterLayer || hit.transform.gameObject.layer == Globals.RigidbodyLayer) ? hit.transform.GetComponent<Character>() : null;
+            var target = (hit.transform.gameObject.layer == Globals.CharacterLayer || hit.transform.gameObject.layer == Globals.RigidbodyLayer) ? hit.transform.parent.GetComponent<Character>() : null;
             if (Input.GetKeyDown(firstSkillKeyCode))
             {
                 character.StartSkill(1, hit.point, target);

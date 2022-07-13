@@ -114,7 +114,7 @@ public class FemaleWarriorCharacter : WarriorCharacter
     [PunRPC]
     public void RequestAnotherComboAttack()
     {
-        if (CanRequestAnotherComboAttack || !PhotonView.IsMine)
+        if (!PhotonView.IsMine || CanRequestAnotherComboAttack )
         {
             if (PhotonView.IsMine)
             {
@@ -137,7 +137,7 @@ public class FemaleWarriorCharacter : WarriorCharacter
     [PunRPC]
     public void EndPreviousAttack()
     {
-        if (animationManager.IsAttacking || !PhotonView.IsMine)
+        if (!PhotonView.IsMine || animationManager.IsAttacking)
         {
             if (PhotonView.IsMine)
             {

@@ -23,15 +23,6 @@ public class WarriorAnimationManager : CharacterAnimationManager
 
     #region Methods
 
-    #region Init
-
-    protected override void Start()
-    {
-        base.Start();
-    }
-
-    #endregion
-
     #region Leap Attack
 
     public void LeapAttack()

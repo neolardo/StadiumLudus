@@ -102,7 +102,6 @@ public class MaleRangerCharacter : RangerCharacter
 
     protected override void OnAttackWithoutTarget(Vector3 attackTarget)
     {
-        Debug.Log("OnAttackWithoutTarget");
         chaseTarget = null;
         interactionTarget = null;
         ClearDestination();
@@ -129,7 +128,6 @@ public class MaleRangerCharacter : RangerCharacter
 
     protected override void OnAttackChaseTarget()
     {
-        Debug.Log("OnAttackChaseTarget");
         ClearDestination();
         rangerAnimationManager.SetIsDrawing(true);
         animationManager.Attack();
