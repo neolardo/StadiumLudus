@@ -340,7 +340,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c8b14f55702e9e4dbe4fbf5148bca5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outline: {fileID: 8503012931057178266}
+  highlight: {fileID: 6187385815121430876}
   healthMaximum: 100
   healthRecoveryDelay: 1.6
   healthRecoveryInitialAmount: 0
@@ -3632,24 +3632,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackAnimationCount: 2
   characterAudioSource: {fileID: 8882034874765443999}
---- !u!114 &8503012931057178266
+--- !u!114 &6187385815121430876
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8611509729250268946}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Script: {fileID: 11500000, guid: b5bd424234b15de46b417dc29c827cec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outlineMode: 1
-  outlineColor: {r: 0.509434, g: 0.13648984, b: 0.13648984, a: 1}
-  outlineWidth: 3
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
+  highlightMaterial: {fileID: 2100000, guid: 266edd6845901db48aed2bac4a105864, type: 2}
+  highlightColor: {r: 0.5660378, g: 0, b: 0, a: 0}
 --- !u!4 &8991976333944294824 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 03bb52135c7c77d48b784c3d7e4033e2, type: 3}

@@ -7,14 +7,14 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FountainOutlineMaterial
+  m_Name: HighlightMaterial
   m_Shader: {fileID: -6465566751694194690, guid: 46599f579cf345045a4aa9f1d6c3528f, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3001
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
@@ -86,6 +86,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Alpha: 0.2
     - _AlphaClip: 0
     - _Angle: 89
     - _Blend: 0
@@ -111,10 +112,10 @@ Material:
     - _OutlineThickness: 0.05
     - _OutlineWidth: 2.04
     - _Parallax: 0.005
-    - _Power: 2
+    - _Power: 1
     - _PrecalculateNormals: 1
     - _QueueControl: 0
-    - _QueueOffset: 0
+    - _QueueOffset: 1
     - _ReceiveShadows: 1
     - _SecondOutlineWidth: 0.025
     - _Smoothness: 0.16
@@ -128,7 +129,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.43529412, g: 0.43529412, b: 0.48235294, a: 1}
-    - _Color: {r: 1, g: 0, b: 0, a: 0.6039216}
+    - _Color: {r: 0, g: 0.005741513, b: 1.0966289, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FirstOutlineColor: {r: 1, g: 0, b: 0, a: 0.5}
     - _HighlightColor: {r: 5.3403134, g: 0, b: 0, a: 0}

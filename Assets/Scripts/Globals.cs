@@ -23,7 +23,7 @@ public static class Globals
     public const float CompareDelta = 0.001f;
     public const float PositionThreshold = 0.1f;
     public const float LoadingDelay = 0.2f;
-    public const float OutlineDelay = 0.05f;
+    public const float HighlightDelay = 0.05f;
     public const float RaycastDistance = 30f;
 
     // layers

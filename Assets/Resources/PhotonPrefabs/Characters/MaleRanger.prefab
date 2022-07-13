@@ -941,7 +941,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7567d451fa321d346ad1b58428133c1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outline: {fileID: 1223742162649927309}
+  highlight: {fileID: 1410659473776629852}
   healthMaximum: 100
   healthRecoveryDelay: 1.6
   healthRecoveryInitialAmount: 0
@@ -2779,7 +2779,7 @@ GameObject:
   - component: {fileID: 5372392049975569419}
   - component: {fileID: 2048784674378020465}
   - component: {fileID: 1256493612}
-  - component: {fileID: 1223742162649927309}
+  - component: {fileID: 1410659473776629852}
   m_Layer: 0
   m_Name: male ranger
   m_TagString: Untagged
@@ -2848,24 +2848,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackAnimationCount: 1
   characterAudioSource: {fileID: 1131998775310625163}
---- !u!114 &1223742162649927309
+--- !u!114 &1410659473776629852
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4739267534180415153}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Script: {fileID: 11500000, guid: b5bd424234b15de46b417dc29c827cec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outlineMode: 1
-  outlineColor: {r: 0.509434, g: 0.13648984, b: 0.13648984, a: 1}
-  outlineWidth: 3
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
+  highlightMaterial: {fileID: 2100000, guid: 266edd6845901db48aed2bac4a105864, type: 2}
+  highlightColor: {r: 0.5660378, g: 0, b: 0, a: 0}
+  highlightAlpha: 0.2
 --- !u!1 &4871708595314851151
 GameObject:
   m_ObjectHideFlags: 0

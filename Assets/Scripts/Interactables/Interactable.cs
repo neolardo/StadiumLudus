@@ -8,8 +8,8 @@ public abstract class Interactable : MonoBehaviour, IHighlightable
 {
     #region Fields And Properties
     public PhotonView PhotonView { get; private set; }
-    [SerializeField] private Outline outline;
-    private float lastOutlineTriggerElapsedSeconds = Globals.OutlineDelay * 2;
+    [SerializeField] private Highlight highlight;
+    private float lastHighlightTriggerElapsedSeconds = Globals.HighlightDelay * 2;
     #endregion
 
     #region Methods
@@ -24,22 +24,22 @@ public abstract class Interactable : MonoBehaviour, IHighlightable
 
     public void Highlight()
     {
-        lastOutlineTriggerElapsedSeconds = 0;
+        lastHighlightTriggerElapsedSeconds = 0;
     }
 
     private IEnumerator HighlightOnTriggered()
     {
-        outline.enabled = false;
+        highlight.enabled = false;
         while (true)
         {
-            yield return new WaitUntil(() => lastOutlineTriggerElapsedSeconds < Globals.OutlineDelay);
-            while (lastOutlineTriggerElapsedSeconds < Globals.OutlineDelay)
+            yield return new WaitUntil(() => lastHighlightTriggerElapsedSeconds < Globals.HighlightDelay);
+            while (lastHighlightTriggerElapsedSeconds < Globals.HighlightDelay)
             {
-                outline.enabled = true;
-                lastOutlineTriggerElapsedSeconds += Time.deltaTime;
+                highlight.enabled = true;
+                lastHighlightTriggerElapsedSeconds += Time.deltaTime;
                 yield return null;
             }
-            outline.enabled = false;
+            highlight.enabled = false;
         }
     }
 

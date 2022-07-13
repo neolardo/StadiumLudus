@@ -34,10 +34,10 @@ public abstract class Character : MonoBehaviour, IHighlightable
     public PhotonView PhotonView { get; private set; }
 
     [Header("UI")]
-    [Tooltip("Represents the character trigger outline.")]
+    [Tooltip("Represents the character trigger highlight.")]
     [SerializeField]
-    private Outline outline;
-    private float lastOutlineTriggerElapsedSeconds = Globals.OutlineDelay * 2;
+    private Highlight highlight;
+    private float lastHighlightTriggerElapsedSeconds = Globals.HighlightDelay * 2;
 
     #endregion
 
@@ -1101,22 +1101,22 @@ public abstract class Character : MonoBehaviour, IHighlightable
 
     public void Highlight()
     {
-        lastOutlineTriggerElapsedSeconds = 0;
+        lastHighlightTriggerElapsedSeconds = 0;
     }
 
     private IEnumerator HighlightOnTriggered()
     {
-        outline.enabled = false;
+        highlight.enabled = false;
         while (true)
         {
-            yield return new WaitUntil(() => lastOutlineTriggerElapsedSeconds < Globals.OutlineDelay);
-            while (lastOutlineTriggerElapsedSeconds < Globals.OutlineDelay)
+            yield return new WaitUntil(() => lastHighlightTriggerElapsedSeconds < Globals.HighlightDelay);
+            while (lastHighlightTriggerElapsedSeconds < Globals.HighlightDelay)
             {
-                outline.enabled = true;
-                lastOutlineTriggerElapsedSeconds += Time.deltaTime;
+                highlight.enabled = true;
+                lastHighlightTriggerElapsedSeconds += Time.deltaTime;
                 yield return null;
             }
-            outline.enabled = false;
+            highlight.enabled = false;
         }
     }
 
