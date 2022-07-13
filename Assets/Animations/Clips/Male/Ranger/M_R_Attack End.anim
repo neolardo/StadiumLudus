@@ -41179,15 +41179,15 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0.46666667
-    functionName: OnUnlockMovement
+  - time: 0.43333334
+    functionName: OnAttackFinished
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.46666667
-    functionName: OnAttackFinished
+    functionName: OnUnlockMovement
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

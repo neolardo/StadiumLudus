@@ -23,7 +23,7 @@ public abstract class PoolableObject : MonoBehaviour
     [PunRPC]
     public virtual void DisableObject()
     {
-        gameObject.SetActive(true);
+        gameObject.SetActive(false);
     }
 
     #endregion

@@ -26,7 +26,6 @@ public class RangerAnimationManager : CharacterAnimationManager
 
     public void SetIsDrawing(bool value)
     {
-        Debug.Log($"SetIsDrawing: {value}");
         animator.SetBool(AnimatorIsDrawing, value);
         IsDrawing = value;
     }

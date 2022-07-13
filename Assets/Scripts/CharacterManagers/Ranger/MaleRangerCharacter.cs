@@ -28,13 +28,13 @@ public class MaleRangerCharacter : RangerCharacter
     [SerializeField]
     private float boltMaximumDamage;
 
-    private bool IsArrowLoaded { get; set; }
+    private bool IsBoltLoaded { get; set; }
 
     protected override bool IsInAction => base.IsInAction || crossbow.IsReloading;
 
-    protected override bool CanAttack => base.CanAttack && IsArrowLoaded;
+    protected override bool CanAttack => base.CanAttack && IsBoltLoaded;
     
-    private bool CanReload => IsAlive && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill && !animationManager.IsInteracting && !crossbow.IsReloading && !IsArrowLoaded;
+    private bool CanReload => IsAlive && !animationManager.IsInterrupted && !animationManager.IsAttacking && !animationManager.IsGuarding && !animationManager.IsUsingSkill && !animationManager.IsInteracting && !crossbow.IsReloading && !IsBoltLoaded;
 
     #region Skills
 
@@ -80,7 +80,7 @@ public class MaleRangerCharacter : RangerCharacter
         {
             Reload();
         }
-        else if (IsArrowLoaded)
+        else if (IsBoltLoaded)
         {
             base.StartAttack(attackPoint, target);
         }
@@ -95,7 +95,7 @@ public class MaleRangerCharacter : RangerCharacter
         }
         maleRangerAnimationManager.Reload();
         crossbow.Reload();
-        IsArrowLoaded = true;
+        IsBoltLoaded = true;
     }
 
     #region Without Target
@@ -118,7 +118,7 @@ public class MaleRangerCharacter : RangerCharacter
         {
             stamina -= attackStaminaCost;
             crossbow.Fire(attackTarget);
-            IsArrowLoaded = false;
+            IsBoltLoaded = false;
         }
     }
 
