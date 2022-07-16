@@ -146,8 +146,6 @@ public abstract class Character : MonoBehaviour, IHighlightable
     [SerializeField]
     protected AudioSource characterAudioSource;
 
-    private Vector2 characterPositionRatioOnScreen;
-
     protected float movementSpeed;
     private float rotationVelocity;
     protected const float destinationThreshold = Globals.PositionThreshold;
@@ -160,7 +158,9 @@ public abstract class Character : MonoBehaviour, IHighlightable
     private const float refreshDestinationDelta = 2f;
     protected const float agentAvoidanceRadius = .4f;
     private List<Transform> otherCharacterTransforms;
+    private Vector3 lastMoveDirection;
     private Vector3 _destination;
+
 
     /// <summary>
     /// The destination where the character is headed.
@@ -189,7 +189,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
     [SerializeField]
     protected GameObject characterTrigger;
     protected Rigidbody rb;
-    private NavMeshAgent agent;
+    protected NavMeshAgent agent;
     protected Transform chaseTarget;
     private Vector3 rotationTarget;
     private NavMeshPath helperPath;
@@ -329,10 +329,6 @@ public abstract class Character : MonoBehaviour, IHighlightable
         }
     }
 
-    public void SetCharacterPositionOnScreen(Vector2 value)
-    {
-        characterPositionRatioOnScreen = value;
-    }
 
     #endregion
 
@@ -948,13 +944,14 @@ public abstract class Character : MonoBehaviour, IHighlightable
             var lastCorner = helperPath.corners[helperPath.corners.Length - 1];
             if ((lastCorner - rb.position).magnitude < destinationMinimum)
             {
-                var dir = new Vector3(characterPositionRatioOnScreen.x - Input.mousePosition.x / Screen.width, 0, characterPositionRatioOnScreen.y - Input.mousePosition.y / Screen.height).normalized;
+                var dir = (lastCorner - rb.position).magnitude < Globals.CompareDelta ? lastMoveDirection : (lastCorner - rb.position).normalized;
                 SetDestination(rb.position + dir * destinationMinimum);
             }
             else
             {
                 SetDestination(lastCorner);
             }
+            lastMoveDirection = (Destination - rb.position).normalized;
             chaseTarget = null;
             interactionTarget = null;
         }
@@ -1001,7 +998,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
             }
             movementSpeed = Mathf.Max(movementSpeed - Time.fixedDeltaTime * deceleration, 0);
         }
-        SetMovementSpeed(movementSpeed);//animationManager.Move(movementSpeed / movementSpeedMaximum);
+        SetMovementSpeed(movementSpeed);
     }
 
     [PunRPC]

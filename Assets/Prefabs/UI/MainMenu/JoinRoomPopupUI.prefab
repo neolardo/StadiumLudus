@@ -86,8 +86,8 @@ RectTransform:
   m_Father: {fileID: 6296036817585215833}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.4, y: 1}
+  m_AnchorMin: {x: 0.1, y: 0.2}
+  m_AnchorMax: {x: 0.4, y: 0.8}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -148,7 +148,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 32
+  m_fontSize: 29.9
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -225,8 +225,8 @@ RectTransform:
   m_Father: {fileID: 6296036817585215833}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.42, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.42, y: 0.1}
+  m_AnchorMax: {x: 1, y: 0.9}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -563,7 +563,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5864261583631418515}
-  - component: {fileID: 5864261583631418512}
   m_Layer: 5
   m_Name: InputContainer
   m_TagString: Untagged
@@ -588,37 +587,11 @@ RectTransform:
   m_Father: {fileID: 5864261584095323362}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.03, y: 0.2}
-  m_AnchorMax: {x: 0.97, y: 0.8}
+  m_AnchorMin: {x: 0.05, y: 0.2}
+  m_AnchorMax: {x: 0.95, y: 0.75}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5864261583631418512
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5864261583631418514}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 10
-    m_Bottom: 10
-  m_ChildAlignment: 3
-  m_Spacing: 15
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 1
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
 --- !u!1 &5864261583701864353
 GameObject:
   m_ObjectHideFlags: 0
@@ -657,8 +630,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 432, y: -49.68}
-  m_SizeDelta: {x: 288, y: 99.36}
+  m_AnchoredPosition: {x: 384.6825, y: -22.14}
+  m_SizeDelta: {x: 256.455, y: 44.28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5864261583701864357
 CanvasRenderer:
@@ -743,8 +716,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: CreateRoomPopUpUI, Assembly-CSharp
-        m_MethodName: OnCancel
+        m_TargetAssemblyTypeName: MainMenuUI, Assembly-CSharp
+        m_MethodName: OnBackButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -754,9 +727,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainMenuUI, Assembly-CSharp
-        m_MethodName: OnMenuButtonClick
+      - m_Target: {fileID: 5864261584818881663}
+        m_TargetAssemblyTypeName: JoinRoomPopUpUI, Assembly-CSharp
+        m_MethodName: OnCancel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -828,8 +801,8 @@ RectTransform:
   m_Father: {fileID: 5864261584095323362}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.75}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0.8}
+  m_AnchorMax: {x: 1, y: 0.95}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -890,7 +863,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 48
+  m_fontSize: 42.8
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -943,6 +916,7 @@ GameObject:
   - component: {fileID: 5864261584095323362}
   - component: {fileID: 5864261584095323360}
   - component: {fileID: 5864261584095323363}
+  - component: {fileID: 1924948563}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -968,10 +942,10 @@ RectTransform:
   m_Father: {fileID: 5864261584678323804}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.35, y: 0.27}
-  m_AnchorMax: {x: 0.65, y: 0.73}
+  m_AnchorMin: {x: 0.35, y: 0.3}
+  m_AnchorMax: {x: 0.65, y: 0.7}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 81.36, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5864261584095323360
 CanvasRenderer:
@@ -1008,6 +982,20 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!114 &1924948563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5864261584095323389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AspectMode: 2
+  m_AspectRatio: 1.39
 --- !u!1 &5864261584193686795
 GameObject:
   m_ObjectHideFlags: 0
@@ -1041,8 +1029,8 @@ RectTransform:
   m_Father: {fileID: 5864261584493773941}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.4, y: 1}
+  m_AnchorMin: {x: 0, y: 0.2}
+  m_AnchorMax: {x: 0.4, y: 0.8}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1101,7 +1089,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
+  m_fontSize: 26.45
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1210,7 +1198,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: abcd1234
+  m_text: Optional pass...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6b65883f077e2e94d9dc2ba7b30252a0, type: 2}
   m_sharedMaterial: {fileID: -4819065625056045820, guid: 6b65883f077e2e94d9dc2ba7b30252a0, type: 2}
@@ -1311,7 +1299,7 @@ GameObject:
   - component: {fileID: 5864261584282827005}
   - component: {fileID: 5864261584282827004}
   m_Layer: 5
-  m_Name: CreateText
+  m_Name: JoinText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1394,7 +1382,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 34.25
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1469,10 +1457,10 @@ RectTransform:
   m_Father: {fileID: 5864261583631418515}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 270.72003, y: -196.54001}
-  m_SizeDelta: {x: 541.44006, y: 80}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5864261584678323807
 GameObject:
@@ -1598,6 +1586,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88641c6d9655da744a5f4c08d0cd96e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  roomsUI: {fileID: 0}
   usernameInput: {fileID: 5977684080394805934}
   roomPasswordInput: {fileID: 5864261585260038367}
 --- !u!1 &5864261584842222060
@@ -1638,8 +1627,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 144, y: -49.68}
-  m_SizeDelta: {x: 288, y: 99.36}
+  m_AnchoredPosition: {x: 128.2275, y: -22.14}
+  m_SizeDelta: {x: 256.455, y: 44.28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5864261584842222032
 CanvasRenderer:
@@ -1723,9 +1712,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: CreateRoomPopUpUI, Assembly-CSharp
-        m_MethodName: OnCreateRoom
+      - m_Target: {fileID: 5864261584818881663}
+        m_TargetAssemblyTypeName: JoinRoomPopUpUI, Assembly-CSharp
+        m_MethodName: TryJoinRoom
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1737,7 +1726,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MainMenuUI, Assembly-CSharp
-        m_MethodName: OnMenuButtonClick
+        m_MethodName: OnButtonClickAlt
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1810,8 +1799,8 @@ RectTransform:
   m_Father: {fileID: 5864261584095323362}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.2}
+  m_AnchorMin: {x: 0, y: 0.04}
+  m_AnchorMax: {x: 1, y: 0.16}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1936,7 +1925,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 34.25
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2013,10 +2002,10 @@ RectTransform:
   m_Father: {fileID: 5864261584493773941}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.42, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0000076293945, y: 0}
-  m_SizeDelta: {x: 0.000015258789, y: 0}
+  m_AnchorMin: {x: 0.42, y: 0.1}
+  m_AnchorMax: {x: 1, y: 0.9}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5864261585260038365
 CanvasRenderer:
@@ -2322,10 +2311,10 @@ RectTransform:
   m_Father: {fileID: 5864261583631418515}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 270.72003, y: -101.54001}
-  m_SizeDelta: {x: 541.44006, y: 80}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8270899718757446062
 GameObject:
@@ -2421,7 +2410,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 32
+  m_fontSize: 31.1
   m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 1

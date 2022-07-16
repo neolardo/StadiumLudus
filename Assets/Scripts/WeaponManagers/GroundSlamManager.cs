@@ -35,6 +35,7 @@ public class GroundSlamManager: MonoBehaviour
     private const string RockAnimatorAppear = "Appear";
     private const string RockAnimatorDisappear = "Disappear";
     private const float RockDisableDelay = 1f;
+    private const float crackSoundFadeOutDuration = .5f;
 
     private bool ShouldCloseCracks { get; set; } = false;
     private bool CrackDestinationReached { get; set; } = false;
@@ -119,7 +120,7 @@ public class GroundSlamManager: MonoBehaviour
         endSmoke.Play();
         yield return new WaitUntil(() => ShouldCloseCracks);
         rockAnimator.SetTrigger(RockAnimatorDisappear);
-        AudioManager.Instance.Stop(startAudioSource);
+        AudioManager.Instance.FadeOut(startAudioSource, crackSoundFadeOutDuration);
         yield return new WaitForSeconds(RockDisableDelay);
         rockTransform.gameObject.SetActive(false);
         CrackDestinationReached = false;

@@ -109,7 +109,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &981628412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -305,7 +305,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 80
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!195 &7491871208043821296
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2114,7 +2114,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -1140314469492483442, guid: aad0b39bb1a7ba6459d40df0c4b8fccf, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: -1120321268735054774, guid: aad0b39bb1a7ba6459d40df0c4b8fccf, type: 3}
       propertyPath: m_Layer
@@ -2294,7 +2294,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 635547659545568360, guid: aad0b39bb1a7ba6459d40df0c4b8fccf, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 735444000990239363, guid: aad0b39bb1a7ba6459d40df0c4b8fccf, type: 3}
       propertyPath: m_Layer
@@ -2498,11 +2498,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1500937377208012460, guid: aad0b39bb1a7ba6459d40df0c4b8fccf, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 1616691718831697463, guid: aad0b39bb1a7ba6459d40df0c4b8fccf, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 1702413671773783738, guid: aad0b39bb1a7ba6459d40df0c4b8fccf, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3454,11 +3454,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6728297642402996013, guid: aad0b39bb1a7ba6459d40df0c4b8fccf, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6748995668481900857, guid: aad0b39bb1a7ba6459d40df0c4b8fccf, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6784321534613523624, guid: aad0b39bb1a7ba6459d40df0c4b8fccf, type: 3}
       propertyPath: m_Layer
@@ -3494,7 +3494,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7145447365369851683, guid: aad0b39bb1a7ba6459d40df0c4b8fccf, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 7351296060386474158, guid: aad0b39bb1a7ba6459d40df0c4b8fccf, type: 3}
       propertyPath: m_Layer

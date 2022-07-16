@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 /// <summary>
 /// A helper static class containing global variables.
 /// </summary>
@@ -35,6 +36,8 @@ public static class Globals
     public const int ValidationLayer = 11;
     public const int AttackTriggerLayer = 12;
     public const int RigidbodyLayer = 13;
+    public const int GroundPlaneLayer = 16;
+
 
     // audio mixer 
     public const string AudioMixerSFXVolume = "SFXVolume";
@@ -57,8 +60,8 @@ public static class Globals
     public const string PlayerIsInitializedKey = "IsInitialized";
     public const string PlayerIsRematchRequestedKey = "IsRematchRequested";
 
-    // transform
-    public const char TransformHierarchySeparator = '/';
+    // helper methods
+    public const float NavMeshPositionIncrement = 0.2f;
 
     #endregion
 
@@ -74,7 +77,7 @@ public static class Globals
     /// <param name="range">The maximum range in the target point's direction.</param>
     /// <param name="forceOverwrite">True if the given target should be recalculated by raycasting.</param>
     /// <returns>The target point closer than the given range.</returns>
-    public static Vector3 ClampPointInsideRange(Vector3 origin, Vector3 target, float range, bool forceOverwrite = false)
+    public static Vector3 ClampPointInsideRange(Vector3 origin, Vector3 target, float range, bool forceOverwrite = false, NavMeshAgent agent = null)
     {
         if ((target - origin).magnitude > range)
         {
@@ -82,7 +85,7 @@ public static class Globals
             var raycastPoint = edgePoint + Vector3.up * 5;
             Ray ray = new Ray(raycastPoint, Vector3.down);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 10, 1 << Globals.GroundLayer))
+            if (Physics.Raycast(ray, out hit, 10, 1 << Globals.GroundPlaneLayer))
             {
                 edgePoint = hit.point;
             }
@@ -90,12 +93,16 @@ public static class Globals
         }
         else if (forceOverwrite)
         {
-            Ray ray = new Ray(target + Vector3.up, Vector3.down);
+            Ray ray = new Ray(target + Vector3.up * 5, Vector3.down);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 10, 1 << Globals.GroundLayer))
+            if (Physics.Raycast(ray, out hit, 10, 1 << Globals.GroundPlaneLayer))
             {
                 target = hit.point;
             }
+        }
+        if (agent != null)
+        {
+            target = FindFarthestValidPointOfNavMesh(origin, target, agent);
         }
         return target;
     }
@@ -105,18 +112,53 @@ public static class Globals
     /// </summary>
     /// <param name="target">A point towards the direction.</param>
     /// <param name="range">The maximum range in the target point's direction.</param>
+    /// <param name="agent">The optional agent which is used when a valid navmesh path has to exists between the origin point and the target.</param>
     /// <returns>The target point closer than the given range.</returns>
-    public static Vector3 GetPointAtRange(Vector3 origin, Vector3 target, float range, bool forceOverwrite = false)
+    public static Vector3 GetPointAtRange(Vector3 origin, Vector3 target, float range, NavMeshAgent agent = null)
     {
         var edgePoint = origin + (target - origin).normalized * range;
         var raycastPoint = edgePoint + Vector3.up * 5;
         Ray ray = new Ray(raycastPoint, Vector3.down);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 10, 1 << Globals.GroundLayer))
+        if (Physics.Raycast(ray, out hit, 10, 1 << Globals.GroundPlaneLayer))
         {
             edgePoint = hit.point;
         }
+        if (agent != null)
+        {
+            edgePoint = FindFarthestValidPointOfNavMesh(origin, edgePoint, agent);
+        }
         return edgePoint;
+    }
+
+    /// <summary>
+    /// Finds the farthest valid point of the navmesh ground from the origin point towards a direction.
+    /// </summary>
+    /// <param name="origin">The origin point.</param>
+    /// <param name="target">The target point.</param>
+    /// <param name="agent">The <see cref="NavMeshAgent"/>.</param>
+    /// <returns>The farthest valid point of the navmesh ground from the origin point towards the given direction.</returns>
+    private static Vector3 FindFarthestValidPointOfNavMesh(Vector3 origin, Vector3 target, NavMeshAgent agent)
+    {
+        NavMeshPath tempPath = new NavMeshPath();
+        agent.CalculatePath(target, tempPath);
+        if (tempPath.status == NavMeshPathStatus.PathComplete)
+        {
+            return target;
+        }
+        else
+        {
+            var dir = (target - origin).normalized;
+            var dist = (target - origin).magnitude;
+            var tempTarget = origin + dir * NavMeshPositionIncrement;
+            agent.CalculatePath(tempTarget, tempPath);
+            while ((tempTarget - origin).magnitude < dist && tempPath.status == NavMeshPathStatus.PathComplete)
+            {
+                tempTarget += dir * NavMeshPositionIncrement;
+                agent.CalculatePath(tempTarget, tempPath);
+            }
+            return tempTarget - dir * NavMeshPositionIncrement;
+        }
     }
 
     #endregion

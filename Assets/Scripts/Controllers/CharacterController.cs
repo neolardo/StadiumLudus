@@ -80,7 +80,7 @@ public class CharacterController : MonoBehaviour
     {
         RaycastHit hit;
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        var layerMask = (1 << Globals.GroundLayer) | (1 << Globals.CharacterLayer) | (1 << Globals.InteractableLayer);
+        var layerMask = (1 << Globals.GroundPlaneLayer) | (1 << Globals.CharacterLayer) | (1 << Globals.InteractableLayer);
         bool isRaycastSuccessful = Physics.Raycast(ray, out hit, Globals.RaycastDistance,layerMask, QueryTriggerInteraction.Collide);
         HandleMouseInputs(hit, isRaycastSuccessful);
         HandleKeyboardInputs(hit, isRaycastSuccessful);

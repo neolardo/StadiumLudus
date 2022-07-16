@@ -234,7 +234,7 @@ public abstract class WarriorCharacter : Character
                 jumpOrigin = rb.position;
                 stamina -= leapAttackStaminaCost;
                 forceRotation = true;
-                jumpTarget = Globals.ClampPointInsideRange(rb.position, attackTarget, leapAttackMaximumDistance);
+                jumpTarget = Globals.ClampPointInsideRange(rb.position, attackTarget, leapAttackMaximumDistance, agent : agent);
                 SetRotationTarget(jumpTarget);
                 MoveTo(jumpTarget);
                 StartCoroutine(ManageCooldown(LeapAttackSkillNumber));
@@ -332,7 +332,7 @@ public abstract class WarriorCharacter : Character
             {
                 PhotonView.RPC(nameof(EndWhirlwind), RpcTarget.Others);
             }
-            AudioManager.Instance.Stop(characterAudioSource);
+            AudioManager.Instance.FadeOut(characterAudioSource, WhirlwindEndAnimationDelay);
             characterAudioSource.loop = false;
             warriorAnimationManager.EndWhirlwind();
         }
@@ -390,6 +390,7 @@ public abstract class WarriorCharacter : Character
                 StartCoroutine(ManageCooldown(GroundSlamSkillNumber));
             }
             attackTarget = Globals.ClampPointInsideRange(transform.position, attackTarget, groundSlamMaximumDistance, true);
+            
             SetRotationTarget(attackTarget);
             warriorAnimationManager.GroundSlam();
             groundSlamManager.Fire(attackTarget, GroundSlamStartDelay);

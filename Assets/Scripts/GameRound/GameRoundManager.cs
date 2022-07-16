@@ -19,7 +19,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
     [SerializeField] private BlackScreenUI blackScreenUI;
     [SerializeField] private CameraController cameraController;
     [SerializeField] private CharacterAudioListener characterAudioListenerPrefab;
-    [SerializeField] private GameObject lightPrefab;
+    [SerializeField] private GameObject environmentLightPrefab;
     [SerializeField] private List<Transform> spawnPoints;
     private Character localCharacter;
     private List<Player> RematchRequestingPlayers { get; } = new List<Player>();
@@ -50,6 +50,10 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
             if (Instance != null)
             {
                 Destroy(Instance);
+            }
+            else
+            {
+                AudioManager.Instance.PlayBGM(BGM.Main);
             }
             Instance = this;
         }
@@ -142,7 +146,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
         cameraController.Initialize(localCharacter);
         var characterAudioListener = Instantiate(characterAudioListenerPrefab, null);
         characterAudioListener.SetTarget(localCharacter.transform);
-        Instantiate(lightPrefab, localCharacter.transform);
+        Instantiate(environmentLightPrefab, localCharacter.transform);
         localCharacter.InitializeAsLocalCharacter(characterUI);
         SetPlayerIsCharacterConfirmed(PhotonNetwork.LocalPlayer, false);
         SetPlayerIsInitialized(PhotonNetwork.LocalPlayer, true);

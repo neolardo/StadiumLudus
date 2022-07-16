@@ -4,5 +4,5 @@
 public enum BGM
 {
     Menu = 0,
-    Arena = 1
+    Main = 1
 }

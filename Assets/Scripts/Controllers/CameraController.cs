@@ -9,8 +9,8 @@ public class CameraController : MonoBehaviour
     #region Properties and Fields
 
     private new Camera camera;
-    private Character character;
     private Transform characterTransform;
+    [Header("Camera")]
     [Tooltip("Represents the camera's angle from the character.")]
     public float minimumAngleFromCharacter = 40;
     [Tooltip("Represents the camera's angle from the character.")]
@@ -27,6 +27,16 @@ public class CameraController : MonoBehaviour
     public float angularSpeed = 10;
     [Tooltip("Represents strength of zooming.")]
     public float zoomMultiplier = 2f;
+
+    [Header("Character Light")]
+    [Tooltip("The transform of the character light.")]
+    public Transform characterLightTransform;
+    [Tooltip("Represents the character light's angle from the camera.")]
+    public float lightAngleFromCamera = 50;
+    [Tooltip("Represents the character light's vertical distance from the character.")]
+    public float lightVerticalDistanceFromCharacter = 3;
+    [Tooltip("Represents the character light's horizontal distance from the character.")]
+    public float lightHorizontalDistanceFromCharacter = 2;
 
     private Vector3 relativePosition;
     private float lastMousePositionX;
@@ -45,7 +55,6 @@ public class CameraController : MonoBehaviour
     {
         angleFromCharacter = Mathf.Lerp(minimumAngleFromCharacter, maximumAngleFromCharacter, zoomValue);
         distanceFromCharacter = Mathf.Lerp(minimumDistanceFromCharacter, maximumDistanceFromCharacter, zoomValue);
-        this.character = character;
         camera = GetComponent<Camera>();
         characterTransform = character.GetComponent<Transform>();
         RefreshCameraTransform();
@@ -54,11 +63,14 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        if(hasInitialized)
+        if (hasInitialized)
         {
             UpdateCameraPosition();
+            UpdateCharacterLightPosition();
         }
     }
+
+    #region Camera
 
     private void UpdateCameraPosition()
     {
@@ -72,12 +84,12 @@ public class CameraController : MonoBehaviour
         }
         if (!Mathf.Approximately(zoomValue, zoomTarget))
         {
-            float delta = Mathf.Abs(zoomValue - zoomTarget)/5f;
+            float delta = Mathf.Abs(zoomValue - zoomTarget) / 5f;
             if (zoomValue > zoomTarget)
             {
                 zoomValue = delta > minimumZoomDelta ? zoomValue - delta : Mathf.Min(zoomValue - minimumZoomStep, zoomTarget);
             }
-            else 
+            else
             {
                 zoomValue = delta > minimumZoomDelta ? zoomValue + delta : Mathf.Max(zoomValue + minimumZoomDelta, zoomTarget);
             }
@@ -87,7 +99,7 @@ public class CameraController : MonoBehaviour
         }
         if (Input.GetMouseButton(2))
         {
-            currentRotationAngle = (currentRotationAngle + angularSpeed * Time.fixedDeltaTime * (lastMousePositionX - Input.mousePosition.x))%360f;
+            currentRotationAngle = (currentRotationAngle + angularSpeed * Time.fixedDeltaTime * (lastMousePositionX - Input.mousePosition.x)) % 360f;
             RefreshCameraTransform();
         }
         else
@@ -99,12 +111,24 @@ public class CameraController : MonoBehaviour
 
     private void RefreshCameraTransform()
     {
-        relativePosition = Quaternion.AngleAxis(currentRotationAngle, Vector3.up) * ( new Vector3(0, lookAtHeight, 0) + new Vector3(0, Mathf.Sin(angleFromCharacter / 180 * Mathf.PI), Mathf.Cos(angleFromCharacter / 180 * Mathf.PI)) * distanceFromCharacter);
+        relativePosition = Quaternion.AngleAxis(currentRotationAngle, Vector3.up) * (new Vector3(0, lookAtHeight, 0) + new Vector3(0, Mathf.Sin(angleFromCharacter / 180 * Mathf.PI), Mathf.Cos(angleFromCharacter / 180 * Mathf.PI)) * distanceFromCharacter);
         transform.position = characterTransform.position + relativePosition;
         transform.LookAt(characterTransform.position + new Vector3(0, lookAtHeight, 0));
         var characterScreenPosition = camera.WorldToScreenPoint(characterTransform.position);
-        character.SetCharacterPositionOnScreen(new Vector2(0.5f, characterScreenPosition.y / Screen.height));
     }
+
+    #endregion
+
+    #region Character Light
+
+    private void UpdateCharacterLightPosition()
+    {
+        var dirToCamera = (new Vector3(transform.position.x, 0, transform.position.z) - new Vector3(characterTransform.position.x, 0, characterTransform.position.z)).normalized;
+        characterLightTransform.position = (characterTransform.position + Quaternion.AngleAxis(lightAngleFromCamera, Vector3.up) * dirToCamera * lightHorizontalDistanceFromCharacter + Vector3.up * lightVerticalDistanceFromCharacter);
+        characterLightTransform.LookAt(characterTransform.position + lookAtHeight * Vector3.up);
+    }
+
+    #endregion
 
     #endregion
 }

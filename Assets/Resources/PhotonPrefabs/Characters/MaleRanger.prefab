@@ -257,7 +257,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!136 &1562701159
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -643,7 +643,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5897220920372172605}
   - component: {fileID: 1124454856536906461}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Shirt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -906,7 +906,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 80
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!195 &1131998773343001479
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1155,7 +1155,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6012913139793856101}
   - component: {fileID: 6946375429772752428}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Boots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1894,7 +1894,7 @@ GameObject:
   m_Component:
   - component: {fileID: 506988141386191968}
   - component: {fileID: 1515367984753839147}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Vambraces
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2110,7 +2110,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2972535982830726140}
   - component: {fileID: 6901187366497557429}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Quiver Bolt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2499,7 +2499,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8723042295906765116}
   - component: {fileID: 1212104387309930568}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Pants
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2936,7 +2936,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8417523086962704858}
   - component: {fileID: 6603847176271861426}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3535,7 +3535,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6837620021933061963}
   - component: {fileID: 5134633458769080191}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Belt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3785,7 +3785,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1682024201791958080}
   - component: {fileID: 9019183526946725907}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Collar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4188,7 +4188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6922224710840758720}
   - component: {fileID: 3024824015827276774}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Bolts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4451,7 +4451,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3646824161030937979}
   - component: {fileID: 447507976979869247}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Quiver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5665,7 +5665,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -1807978934979323271, guid: 3ea56941e414811499754369c314e948, type: 3}
       propertyPath: m_Layer
-      value: 2
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 3ea56941e414811499754369c314e948, type: 3}
       propertyPath: m_Name
@@ -5717,7 +5717,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5828839722311367465, guid: 3ea56941e414811499754369c314e948, type: 3}
       propertyPath: m_Layer
-      value: 2
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 3ea56941e414811499754369c314e948, type: 3}
       propertyPath: m_Controller

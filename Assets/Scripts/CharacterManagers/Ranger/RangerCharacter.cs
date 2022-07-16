@@ -295,7 +295,7 @@ public abstract class RangerCharacter : Character
                 stamina -= dashStaminaCost;
                 forceRotation = true;
                 dashOrigin = rb.position;
-                dashPoint = Globals.GetPointAtRange(rb.position, targetPoint, dashDistance);
+                dashPoint = Globals.GetPointAtRange(rb.position, targetPoint, dashDistance, agent);
                 SetRotationTarget(dashPoint);
                 MoveTo(dashPoint);
                 StartCoroutine(ManageCooldown(DashSkillNumber));

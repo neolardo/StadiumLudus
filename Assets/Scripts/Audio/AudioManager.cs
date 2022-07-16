@@ -21,6 +21,8 @@ public class AudioManager : MonoBehaviour
     private Dictionary<SFX, List<AudioClip>> SFXDictionary;
     private Dictionary<SFX, int> LastSFXIndexDictionary;
     private Dictionary<BGM, AudioClip> BGMDictionary;
+    public AudioSource MusicAudioSource { get; private set; }
+    private const float MusicFadeOutSeconds = 2f;
 
     #endregion
 
@@ -35,6 +37,7 @@ public class AudioManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(this);
             LoadResources();
+            MusicAudioSource = GetComponent<AudioSource>();
         }
         else if (Instance != this)
         {
@@ -123,20 +126,53 @@ public class AudioManager : MonoBehaviour
         source.PlayOneShot(SFXDictionary[sfx][index]);
     }
 
-    public void PlayBGM(AudioSource source, BGM bgm)
+    public void PlayBGM(BGM bgm)
     {
-        source.clip = BGMDictionary[bgm];
-        source.Play();
+        StartCoroutine(FadeOutOldBGMThenPlayNewBGM(bgm));
+    }
+
+    private IEnumerator FadeOutOldBGMThenPlayNewBGM(BGM bgm)
+    {
+        if (MusicAudioSource.clip != BGMDictionary[bgm])
+        {
+            if (MusicAudioSource.isPlaying)
+            {
+                yield return ManageFadeOut(MusicAudioSource, MusicFadeOutSeconds);
+            }
+            MusicAudioSource.clip = BGMDictionary[bgm];
+            MusicAudioSource.loop = true;
+            MusicAudioSource.Play();
+        }
     }
 
     #endregion
 
-    #region Stop
+    #region Stop and Fade Out
 
     public void Stop(AudioSource source)
     {
         source.Stop();
     }
+
+    public void FadeOut(AudioSource source, float fadeDuration)
+    {
+        StartCoroutine(ManageFadeOut(source, fadeDuration));
+    }
+
+    private IEnumerator ManageFadeOut(AudioSource source, float fadeDuration)
+    {
+        float elapsedSeconds = 0;
+        while (elapsedSeconds < fadeDuration)
+        {
+            source.volume = Mathf.Lerp(1, 0, elapsedSeconds / fadeDuration);
+            elapsedSeconds += Time.deltaTime;
+            yield return null;
+        }
+        source.volume = 0;
+        source.Stop();
+        source.volume = 1;
+    }
+
 
     #endregion 
 

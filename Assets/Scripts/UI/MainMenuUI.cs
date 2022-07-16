@@ -53,6 +53,7 @@ public class MainMenuUI : MonoBehaviour, IDropReceiver, IPointerEnterReceiver
         {
             StartCoroutine(FadeInTitleAndLoadingText());
         }
+        AudioManager.Instance.PlayBGM(BGM.Menu);
     }
 
     #region Loading
