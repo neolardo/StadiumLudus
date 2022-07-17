@@ -32,6 +32,9 @@ public class CharacterSelectionUI : MonoBehaviour
     public TextMeshProUGUI confirmedText;
     public GameObject loadingPopUp;
     public List<Button> arrowButtons;
+    public GameObject playersText;
+    public GameObject practiceModeText;
+    public GameObject otherPlayersCannotJoinText;
 
     private const string femaleBarbarianDescription = "Female barbarians militate quickly wielding a pair of axes and are able to perform combo attacks with them.";
     private const string maleBarbarianDescription = "Male barbarians strike slow but strong with their large battle-axe.";
@@ -49,11 +52,23 @@ public class CharacterSelectionUI : MonoBehaviour
         NetworkLauncher.Instance.PlayerLeftRoom += OnPlayerLeftRoom;
         NetworkLauncher.Instance.PlayerPropertiesChanged += OnPlayerCharacterIsConfirmedChanged;
         NetworkLauncher.Instance.StartingGame += OnGameStarting;
+        if (NetworkLauncher.Instance.IsPracticeMode)
+        {
+            InitializeAsPracticeMode();
+        }
         RefreshCharacterGameObject();
         LoadPlayerNames();
     }
 
     #region Add, Remove players
+
+    private void InitializeAsPracticeMode()
+    {
+        playersText.SetActive(false);
+        practiceModeText.SetActive(true);
+        otherPlayersCannotJoinText.SetActive(true);
+        confirmedText.text = "Loading game...";
+    }
 
     private void LoadPlayerNames()
     {

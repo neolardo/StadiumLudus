@@ -15,6 +15,7 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
 
     public static NetworkLauncher Instance { get; private set; }
     public bool IsDisconnected { get; private set; }
+    public bool IsPracticeMode { get; private set; }
     private List<RoomInfo> networkRooms;
     public RoomsUI roomsUI;
     private bool isPlayerTheCreatorOfTheRoom = false;
@@ -30,6 +31,7 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
     public event Action<Player> PlayerLeftRoom;
     public event Action<Player> PlayerPropertiesChanged;
     public event Action StartingGame;
+    public event Action CreateRoomFailed;
 
     #endregion
 
@@ -103,6 +105,12 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
 
     #region Create Room
 
+    public void CreatePracticeRoom()
+    {
+        IsPracticeMode = true;
+        PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = 1, IsVisible = false, IsOpen = false });
+    }
+
     public void CreateRoom(string roomName, string roomPassword, string firstUser)
     {
         isPlayerTheCreatorOfTheRoom = true;
@@ -117,6 +125,8 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
         Debug.LogError(message);
         tempRoomPassword = "";
         isPlayerTheCreatorOfTheRoom = false;
+        CreateRoomFailed?.Invoke();
+        IsPracticeMode = false;
     }
 
     public bool IsNewRoomNameValid(string roomName)
@@ -144,8 +154,13 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
     }
 
     public override void OnJoinedRoom()
-    {
-        if (isPlayerTheCreatorOfTheRoom)
+    {   
+        if (IsPracticeMode)
+        {
+            Debug.Log($"Created and joined practice room: {PhotonNetwork.CurrentRoom.Name}");
+            roomsUI.OnSuccessfullyJoinedRoom();
+        }
+        else if (isPlayerTheCreatorOfTheRoom)
         {
             isPlayerTheCreatorOfTheRoom = false;
             SetRoomPassword();

@@ -132,6 +132,7 @@ public class CharacterUI : MonoBehaviour
 
     public void ShowEndScreen(bool win)
     {
+        AudioManager.Instance.PlayOneShotSFX(audioSource, win ? SFX.Win : SFX.Lose);
         StartCoroutine(ShowEndScreenAfterDelay(win, endScreenDelay));
     }
 

@@ -12,6 +12,7 @@ public class SettingsUI : MonoBehaviour
     public AudioMixer mainAudioMixer;
     public Slider musicVolumeSlider;
     public Slider soundVolumeSlider;
+    public CheckBox fullscreenCheckBox;
 
     private float musicVolumeDefaultValue = 1;
     private float soundVolumeDefaultValue = 1;
@@ -27,6 +28,8 @@ public class SettingsUI : MonoBehaviour
         musicVolumeSlider.value = Mathf.Pow(Mathf.InverseLerp(Globals.AudioMixerMinimumDecibel, Globals.AudioMixerMaximumDecibel, value), 4);
         mainAudioMixer.GetFloat(Globals.AudioMixerSFXVolume, out value);
         soundVolumeSlider.value = Mathf.Pow(Mathf.InverseLerp(Globals.AudioMixerMinimumDecibel, Globals.AudioMixerMaximumDecibel, value), 4);
+        fullscreenCheckBox.SetIsTicked(Screen.fullScreen);
+        fullscreenCheckBox.IsTickedChanged += OnFullScreenCheckBoxChanged;
     }
 
     public void RestoreDefaults()
@@ -42,6 +45,11 @@ public class SettingsUI : MonoBehaviour
     public void OnSFXVolumeSliderChanged(float value)
     {
         mainAudioMixer.SetFloat(Globals.AudioMixerSFXVolume, Mathf.Lerp(Globals.AudioMixerMinimumDecibel, Globals.AudioMixerMaximumDecibel, Mathf.Pow(value, 0.25f)));
+    }
+
+    private void OnFullScreenCheckBoxChanged()
+    {
+        Screen.fullScreen = fullscreenCheckBox.IsTicked;
     }
 
     #endregion

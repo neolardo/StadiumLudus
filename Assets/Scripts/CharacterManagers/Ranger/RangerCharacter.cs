@@ -301,6 +301,7 @@ public abstract class RangerCharacter : Character
                 StartCoroutine(ManageCooldown(DashSkillNumber));
                 StartCoroutine(ResetDestinationAfterDash());
             }
+            AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.Dash, doNotRepeat: true);
             rangerAnimationManager.Dash();
             OnDash();
         }

@@ -50,6 +50,7 @@ public enum SFX
     TrapActivate = 64,
     TrapDeactivate = 65,
     Whirlwind = 66,
+    Dash = 67,
 
     // win and lose
     Win = 70,

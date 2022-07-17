@@ -21,7 +21,7 @@ public class CheckBox : MonoBehaviour
         }
     }
 
-    public Action OnIsTickedChanged;
+    public Action IsTickedChanged;
 
     #endregion
 
@@ -30,7 +30,7 @@ public class CheckBox : MonoBehaviour
     public void OnClick()
     {
         _isTicked = !_isTicked;
-        OnIsTickedChanged?.Invoke();
+        IsTickedChanged?.Invoke();
     }
     public void SetIsTicked(bool value)
     {

@@ -21,6 +21,7 @@ public class MainMenuUI : MonoBehaviour, IDropReceiver, IPointerEnterReceiver
     public TextMeshProUGUI loadingText;
     public CanvasGroup buttonContainerCanvasGroup;
     public CanvasGroup exitButtonCanvasGroup;
+    public GameObject loadingPopup;
     private MainMenuPage currentPage;
 
     public const float slideDuration = 0.35f;
@@ -39,6 +40,7 @@ public class MainMenuUI : MonoBehaviour, IDropReceiver, IPointerEnterReceiver
         currentPage = MainMenuPage.MainMenu;
         NetworkLauncher.Instance.Connected += OnLoaded;
         NetworkLauncher.Instance.Disconnected += OnConnectionFailed;
+        NetworkLauncher.Instance.CreateRoomFailed += OnCreateRoomFailed;
         if (PhotonNetwork.InLobby)
         {
             InitializeAsLoaded();
@@ -98,7 +100,12 @@ public class MainMenuUI : MonoBehaviour, IDropReceiver, IPointerEnterReceiver
 
     public void OnLoaded()
     {
-        StartCoroutine(FadeOutLoadingTextAndFadeInButtons());  
+        StartCoroutine(FadeOutLoadingTextAndFadeInButtons());
+    }
+
+    public void OnCreateRoomFailed()
+    {
+        loadingPopup.SetActive(false);
     }
 
     public void OnConnectionFailed(string errorMessage)
@@ -155,6 +162,16 @@ public class MainMenuUI : MonoBehaviour, IDropReceiver, IPointerEnterReceiver
         }
         buttonContainerCanvasGroup.alpha = 1;
         IsFading = false;
+    }
+
+    #endregion
+
+    #region Practice Mode
+
+    public void CreatePracticeRoom()
+    {
+        loadingPopup.SetActive(true);
+        NetworkLauncher.Instance.CreatePracticeRoom();
     }
 
     #endregion
