@@ -1,4 +1,3 @@
-using System.IO;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -16,7 +15,7 @@ public class SettingsUI : MonoBehaviour
     public CheckBox fullscreenCheckBox;
     public CheckBox tutorialOverlayCheckBox;
 
-    private SerializableSettings settings;
+    private SettingsData settings;
 
     #endregion
 
@@ -26,7 +25,7 @@ public class SettingsUI : MonoBehaviour
 
     private void Start()
     {
-        LoadSettings();
+        settings = new SettingsData();
         musicVolumeSlider.value = settings.musicVolume;
         soundVolumeSlider.value = settings.musicVolume;
         tutorialOverlayCheckBox.SetIsTicked(settings.showTutorialOverlay);
@@ -51,24 +50,9 @@ public class SettingsUI : MonoBehaviour
 
     #region Serialization
 
-    private void LoadSettings()
-    {
-        if (File.Exists(Globals.SettingsDataPath))
-        {
-            string jsonString = File.ReadAllText(Globals.SettingsDataPath);
-            settings = JsonUtility.FromJson<SerializableSettings>(jsonString);
-        }
-        else
-        {
-            settings = new SerializableSettings();
-            SaveSettings();
-        }
-    }
-
     public void SaveSettings()
     {
-        string jsonString = JsonUtility.ToJson(settings, true);
-        File.WriteAllText(Globals.SettingsDataPath, jsonString);
+        settings.Save();
     }
 
     #endregion
@@ -98,11 +82,13 @@ public class SettingsUI : MonoBehaviour
     #endregion
 
     #region Restore Defaults
+
     public void RestoreDefaults()
     {
-        musicVolumeSlider.value = SerializableSettings.defaultMusicVolume;
-        soundVolumeSlider.value = SerializableSettings.defaultSoundVolume;
-        tutorialOverlayCheckBox.SetIsTicked(SerializableSettings.defaultShowTutorialOverlay);
+        settings.Reset();
+        musicVolumeSlider.value = settings.musicVolume;
+        soundVolumeSlider.value = settings.soundVolume;
+        tutorialOverlayCheckBox.SetIsTicked(settings.showTutorialOverlay);
     }
 
     #endregion

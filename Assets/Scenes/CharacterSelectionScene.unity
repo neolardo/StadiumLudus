@@ -2309,6 +2309,36 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 251528315, guid: cf45bf08270578f4c8a1a5a736fdf68f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 464507738, guid: cf45bf08270578f4c8a1a5a736fdf68f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 464507739, guid: cf45bf08270578f4c8a1a5a736fdf68f, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.81
+      objectReference: {fileID: 0}
+    - target: {fileID: 464507739, guid: cf45bf08270578f4c8a1a5a736fdf68f, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.775
+      objectReference: {fileID: 0}
+    - target: {fileID: 464507739, guid: cf45bf08270578f4c8a1a5a736fdf68f, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 464507739, guid: cf45bf08270578f4c8a1a5a736fdf68f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 464507740, guid: cf45bf08270578f4c8a1a5a736fdf68f, type: 3}
+      propertyPath: m_text
+      value: '(other players cannot join)
+
+'
+      objectReference: {fileID: 0}
     - target: {fileID: 1420733014541051452, guid: cf45bf08270578f4c8a1a5a736fdf68f, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0

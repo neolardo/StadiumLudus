@@ -23,6 +23,7 @@ public class MainMenuUI : MonoBehaviour, IDropReceiver, IPointerEnterReceiver
     public TextMeshProUGUI versionText;
     public CanvasGroup versionTextCanvasGroup;
     public GameObject loadingPopup;
+    public SettingsUI settingsUI;
     private MainMenuPage currentPage;
 
     public const float slideDuration = 0.35f;
@@ -41,7 +42,7 @@ public class MainMenuUI : MonoBehaviour, IDropReceiver, IPointerEnterReceiver
     private void Start()
     {
         currentPage = MainMenuPage.MainMenu;
-        versionText.text = $"ver { Application.version}";
+        versionText.text = $"{Application.version}";
         NetworkLauncher.Instance.Connected += OnLoaded;
         NetworkLauncher.Instance.Disconnected += OnConnectionFailed;
         NetworkLauncher.Instance.CreateRoomFailed += OnCreateRoomFailed;
@@ -71,6 +72,7 @@ public class MainMenuUI : MonoBehaviour, IDropReceiver, IPointerEnterReceiver
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             NavigateToMainMenuPage();
+            settingsUI.SaveSettings();
         }
     }
 

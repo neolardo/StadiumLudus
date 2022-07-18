@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-4301416814241639993
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -7,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: OceanMaterial
-  m_Shader: {fileID: -6465566751694194690, guid: 9c269befebcdf1a459a8eb0f0e8890fc, type: 3}
+  m_Name: LoadingPopupLeftSideMaterial
+  m_Shader: {fileID: 4800000, guid: 429b31c94b7bfd247907af5c0ef05a4a, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -76,15 +89,9 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Ints: []
+    m_Ints:
+    - _Direction: 0
     m_Floats:
-    - Vector1_1c208d5fe785485b8537349822456279: 0.7
-    - Vector1_90036d6ff8f34b5183afcfd03ebda94e: 1
-    - Vector1_a6f17709bc3442ebb13bb31129f07a0f: 0.03
-    - Vector1_c840766b082a43f99c36a0857aa59175: 1
-    - Vector1_d44e880b0afd45f190d53184e7de79bf: 1800
-    - Vector1_e659c5b5dd8d4cf998d562640f0ef7c5: 2
-    - Vector1_ebe175a0fc8a44548e7e79ef349e1724: 0.62
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -101,8 +108,8 @@ Material:
     - _GlossyReflections: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
+    - _Offset: 0
     - _Parallax: 0.005
-    - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Smoothness: 0.5
@@ -113,23 +120,8 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_1435c2eb690e4ef5900ba696f370d86b: {r: 0.7169812, g: 0.7169812, b: 0.7169812, a: 0}
-    - Color_d04d9a8168dc4795b8e230e9ea554039: {r: 0.20687076, g: 0.21026552, b: 0.24528301, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &8345958294588869533
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 5

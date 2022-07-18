@@ -1,7 +1,6 @@
 using ExitGames.Client.Photon;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 /// <summary>
@@ -28,6 +27,7 @@ public static class Globals
     public const float RaycastDistance = 30f;
 
     // layers
+    public const int DefaultLayer = 0;
     public const int IgnoreRaycastLayer = 2;
     public const int CharacterLayer = 6;
     public const int GroundLayer = 7;
@@ -88,7 +88,7 @@ public static class Globals
             var raycastPoint = edgePoint + Vector3.up * 5;
             Ray ray = new Ray(raycastPoint, Vector3.down);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 10, 1 << Globals.GroundPlaneLayer))
+            if (Physics.Raycast(ray, out hit, 10, 1 << Globals.GroundPlaneLayer, QueryTriggerInteraction.Collide))
             {
                 edgePoint = hit.point;
             }
@@ -98,7 +98,7 @@ public static class Globals
         {
             Ray ray = new Ray(target + Vector3.up * 5, Vector3.down);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 10, 1 << Globals.GroundPlaneLayer))
+            if (Physics.Raycast(ray, out hit, 10, 1 << Globals.GroundPlaneLayer, QueryTriggerInteraction.Collide))
             {
                 target = hit.point;
             }
@@ -123,7 +123,7 @@ public static class Globals
         var raycastPoint = edgePoint + Vector3.up * 5;
         Ray ray = new Ray(raycastPoint, Vector3.down);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 10, 1 << Globals.GroundPlaneLayer))
+        if (Physics.Raycast(ray, out hit, 10, 1 << Globals.GroundPlaneLayer, QueryTriggerInteraction.Collide))
         {
             edgePoint = hit.point;
         }

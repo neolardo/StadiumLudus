@@ -296,7 +296,7 @@ public abstract class RangerCharacter : Character
                 forceRotation = true;
                 dashOrigin = rb.position;
                 dashPoint = Globals.GetPointAtRange(rb.position, targetPoint, dashDistance, agent);
-                SetRotationTarget(dashPoint);
+                SetRotationTarget(dashPoint + (dashPoint - rb.position).normalized * destinationMinimum);
                 MoveTo(dashPoint);
                 StartCoroutine(ManageCooldown(DashSkillNumber));
                 StartCoroutine(ResetDestinationAfterDash());

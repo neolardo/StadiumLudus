@@ -33,6 +33,8 @@ public class Projectile : PoolableObject
     private Rigidbody rb;
     private new Transform transform;
     private Character target;
+    private bool doesPotentialHitPointExist;
+    private Vector3 potentialHitPoint;
 
     private Vector3 originPoint;
     private Vector3 targetPoint;
@@ -67,7 +69,7 @@ public class Projectile : PoolableObject
         {
             Initialize();
         }
-        Fire();
+        StartCoroutine(Fire());
     }
 
     private void Initialize()
@@ -83,7 +85,7 @@ public class Projectile : PoolableObject
 
     #region Fire
 
-    private void Fire()
+    private IEnumerator Fire()
     {
         AudioManager.Instance.PlayOneShotSFX(projectileTrigger.audioSource, projectileSFX, doNotRepeat: true);
         gameObject.transform.parent = null;
@@ -96,9 +98,26 @@ public class Projectile : PoolableObject
         originPoint = transform.position;
         currentOffset = verticalTargetOffset + (Random.Range(0, verticalRandomOffsetRange * 2f) - verticalRandomOffsetRange) * Vector3.up;
         targetPoint = transform.position + new Vector3(ProjectilePool.spawnZone.forward.x, 0, ProjectilePool.spawnZone.forward.z) * (distanceMaximum+1);
+        CheckPotentialHit();
+        yield return new WaitForEndOfFrame(); // to avoid showing the projectile vfx before fireing
         rb.isKinematic = false;
         projectileTrailRenderer.emitting = true;
         projectileTrigger.IsActive = true;
+    }
+
+    private void CheckPotentialHit()
+    {
+        Ray ray = new Ray(originPoint, (targetPoint - originPoint).normalized);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, distanceMaximum, (1 << Globals.DefaultLayer) | (1 << Globals.GroundLayer) | (1 << Globals.HitBoxLayer), QueryTriggerInteraction.Collide))
+        {
+            potentialHitPoint = hit.point;
+            doesPotentialHitPointExist = true;
+        }
+        else
+        {
+            doesPotentialHitPointExist = false;
+        }
     }
 
     #endregion
@@ -113,8 +132,8 @@ public class Projectile : PoolableObject
             {
                 targetPoint = target.transform.position + currentOffset;
             }
-            var nextPosition = rb.position + velocity * Time.fixedDeltaTime * (targetPoint - rb.position).normalized;
-            if (photonView.IsMine && target != null && (targetPoint - nextPosition).magnitude > (targetPoint - rb.position).magnitude)
+            var nextVelocity = (targetPoint - rb.position).normalized * velocity;
+            if (photonView.IsMine && target != null && (targetPoint - originPoint).magnitude < (rb.position - originPoint).magnitude)
             {
                 ForceHitTarget();
             }
@@ -122,9 +141,13 @@ public class Projectile : PoolableObject
             {
                 OnProjectileWentTooFar();
             }
+            else if (photonView.IsMine  && ( projectileTrigger.AnyCharacterHit || projectileTrigger.AnyObjectHit || ( doesPotentialHitPointExist && (potentialHitPoint - originPoint).magnitude < (rb.position - originPoint).magnitude)))
+            {
+                OnHit(rb.position);
+            }
             else
             {
-                rb.MovePosition(nextPosition);
+                rb.velocity = nextVelocity;
             }
         }
     }
@@ -191,11 +214,11 @@ public class Projectile : PoolableObject
             }
             else
             {
-                rb.position = point;
+                rb.position = doesPotentialHitPointExist ? potentialHitPoint : point;
+                transform.position = rb.position;
             }
             Stop();
             StartCoroutine(DisableAttackTriggerAfterDelay());
-            StopTrailParticleSystem();
         }
     }
 
@@ -223,7 +246,6 @@ public class Projectile : PoolableObject
             photonView.RPC(nameof(OnProjectileWentTooFar), RpcTarget.Others);
             ProjectilePool.OnObjectDisappeared(this);
         }
-        StopTrailParticleSystem();
         Stop();
         projectileTrigger.IsActive = false;
         gameObject.SetActive(false);
@@ -236,6 +258,7 @@ public class Projectile : PoolableObject
         rb.angularVelocity = Vector3.zero;
         rb.constraints = RigidbodyConstraints.FreezeAll;
         rb.isKinematic = true;
+        projectileTrailRenderer.emitting = false;
     }
 
     private IEnumerator DisableAttackTriggerAfterDelay()
@@ -244,10 +267,6 @@ public class Projectile : PoolableObject
         projectileTrigger.IsActive = false;
     }
 
-    private void StopTrailParticleSystem()
-    {
-        projectileTrailRenderer.emitting = false;
-    }
 
     #endregion
 

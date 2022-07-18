@@ -235,7 +235,7 @@ public abstract class WarriorCharacter : Character
                 stamina -= leapAttackStaminaCost;
                 forceRotation = true;
                 jumpTarget = Globals.ClampPointInsideRange(rb.position, attackTarget, leapAttackMaximumDistance, agent : agent);
-                SetRotationTarget(jumpTarget);
+                SetRotationTarget(jumpTarget + (jumpTarget - rb.position).normalized * destinationMinimum);
                 MoveTo(jumpTarget);
                 StartCoroutine(ManageCooldown(LeapAttackSkillNumber));
                 StartCoroutine(AddJumpForce());

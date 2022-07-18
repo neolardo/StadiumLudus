@@ -55,7 +55,7 @@ public class AttackTrigger : MonoBehaviour
     /// <summary>
     /// Indiactes whether an object has been hit by this attack trigger.
     /// </summary>
-    private bool AnyObjectHit { get; set; }
+    public bool AnyObjectHit { get; private set; }
 
     /// <summary>
     /// Indiactes whether a character has been hit by this attack trigger.
