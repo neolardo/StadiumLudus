@@ -22,7 +22,7 @@ public class AudioManager : MonoBehaviour
     private Dictionary<SFX, int> LastSFXIndexDictionary;
     private Dictionary<BGM, AudioClip> BGMDictionary;
     public AudioSource MusicAudioSource { get; private set; }
-    private const float MusicFadeOutSeconds = 2f;
+    private const float MusicFadeOutDuration = 2.5f;
 
     #endregion
 
@@ -137,7 +137,7 @@ public class AudioManager : MonoBehaviour
         {
             if (MusicAudioSource.isPlaying)
             {
-                yield return ManageFadeOut(MusicAudioSource, MusicFadeOutSeconds);
+                yield return ManageFadeOut(MusicAudioSource, MusicFadeOutDuration);
             }
             MusicAudioSource.clip = BGMDictionary[bgm];
             MusicAudioSource.loop = true;

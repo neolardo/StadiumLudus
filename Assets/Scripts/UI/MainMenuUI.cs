@@ -3,7 +3,6 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Manages the UI of the main menu.
@@ -21,6 +20,8 @@ public class MainMenuUI : MonoBehaviour, IDropReceiver, IPointerEnterReceiver
     public TextMeshProUGUI loadingText;
     public CanvasGroup buttonContainerCanvasGroup;
     public CanvasGroup exitButtonCanvasGroup;
+    public TextMeshProUGUI versionText;
+    public CanvasGroup versionTextCanvasGroup;
     public GameObject loadingPopup;
     private MainMenuPage currentPage;
 
@@ -35,9 +36,12 @@ public class MainMenuUI : MonoBehaviour, IDropReceiver, IPointerEnterReceiver
 
     #region Methods
 
+    #region Initialize
+
     private void Start()
     {
         currentPage = MainMenuPage.MainMenu;
+        versionText.text = $"ver { Application.version}";
         NetworkLauncher.Instance.Connected += OnLoaded;
         NetworkLauncher.Instance.Disconnected += OnConnectionFailed;
         NetworkLauncher.Instance.CreateRoomFailed += OnCreateRoomFailed;
@@ -58,6 +62,20 @@ public class MainMenuUI : MonoBehaviour, IDropReceiver, IPointerEnterReceiver
         AudioManager.Instance.PlayBGM(BGM.Menu);
     }
 
+    #endregion
+
+    #region Update
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            NavigateToMainMenuPage();
+        }
+    }
+
+    #endregion
+
     #region Loading
 
     private void InitializeAsLoaded()
@@ -67,6 +85,7 @@ public class MainMenuUI : MonoBehaviour, IDropReceiver, IPointerEnterReceiver
         loadingCanvasGroup.alpha = 0;
         loadingText.gameObject.SetActive(false);
         buttonContainerCanvasGroup.alpha = 1;
+        versionTextCanvasGroup.alpha = 1;
     }
 
     private IEnumerator FadeInTitleAndLoadingText()
@@ -86,10 +105,12 @@ public class MainMenuUI : MonoBehaviour, IDropReceiver, IPointerEnterReceiver
         while (elapsedTime < fadeDuration)
         {
             loadingCanvasGroup.alpha = Mathf.Lerp(0, 1, elapsedTime / fadeDuration);
+            versionTextCanvasGroup.alpha = Mathf.Lerp(0, 1, elapsedTime / fadeDuration);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
         loadingCanvasGroup.alpha = 1;
+        versionTextCanvasGroup.alpha = 1;
         IsFading = false;
     }
 

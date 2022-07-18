@@ -11,6 +11,7 @@ public class CharacterUI : MonoBehaviour
 
     public PauseMenuUI pauseMenuUI;
     public EndGameUI endGameUI;
+    public TutorialPanelUI tutorialPanelUI;
     public List<SkillSlotUI> skillSlots;
     public ValueBarUI healthBarUI;
     public ValueBarUI staminaBarUI;
@@ -48,6 +49,8 @@ public class CharacterUI : MonoBehaviour
                 skillSlots[i].InitializeAsRanger(character.IsSkillChargeable(i + 1), character.InitialChargeCountOfSkill(i + 1));
             }
         }
+        tutorialPanelUI.Initialize();
+        RefreshTutorialPanel();
         hasInitialized = true;
     }
 
@@ -72,10 +75,12 @@ public class CharacterUI : MonoBehaviour
     #endregion
 
     #region UI Visiblity
+
     public void SetUIVisiblity(bool value)
     {
         IsUIVisible = value;
         canvasGroup.alpha = IsUIVisible ? 1 : 0;
+        RefreshTutorialPanel();
     }
 
     #endregion
@@ -124,6 +129,19 @@ public class CharacterUI : MonoBehaviour
         IsUIVisible = !IsUIVisible;
         canvasGroup.alpha = IsUIVisible ? 1 : 0;
         pauseMenuUI.gameObject.SetActive(!IsUIVisible);
+        RefreshTutorialPanel();
+    }
+
+    public void RefreshTutorialPanel()
+    {
+        if (tutorialPanelUI.IsVisible && IsUIVisible)
+        {
+            tutorialPanelUI.gameObject.SetActive(true);
+        }
+        else
+        {
+            tutorialPanelUI.gameObject.SetActive(false);
+        }
     }
 
     #endregion
@@ -140,6 +158,7 @@ public class CharacterUI : MonoBehaviour
     {
         yield return new WaitForSeconds(delaySeconds);
         IsUIVisible = false;
+        RefreshTutorialPanel(); // fade out maybe?
         canvasGroup.alpha = 0;
         endGameUI.SetMainText(win);
         endGameUI.gameObject.SetActive(true);

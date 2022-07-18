@@ -14,10 +14,11 @@ public class CheckBox : MonoBehaviour
     public bool IsTicked
     {
         get { return _isTicked; }
-        set
+        private set
         {
             _isTicked = value;
             tickGameObject.SetActive(_isTicked);
+            IsTickedChanged?.Invoke();
         }
     }
 
@@ -29,12 +30,11 @@ public class CheckBox : MonoBehaviour
 
     public void OnClick()
     {
-        _isTicked = !_isTicked;
-        IsTickedChanged?.Invoke();
+        IsTicked = !IsTicked;
     }
     public void SetIsTicked(bool value)
     {
-        _isTicked = value;
+        IsTicked = value;
     }
 
     #endregion

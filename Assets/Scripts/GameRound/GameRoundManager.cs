@@ -25,6 +25,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
     private List<Player> RematchRequestingPlayers { get; } = new List<Player>();
     private List<Player> DeadCharacters { get; } = new List<Player>();
     public Dictionary<int, Character> LocalCharacterReferenceDictionary { get; } = new Dictionary<int, Character>();
+    public bool IsPracticeMode { get; private set; }
     public bool RoundStarted { get; private set; } = false;
     public bool RoundEnded { get; private set; } = false;
     public bool RematchStarted { get; private set; } = false;
@@ -37,7 +38,6 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
     private const string MaleRangerPrefabName = "MaleRanger";
     private const string FemaleRangerPrefabName = "FemaleRanger";
 
-    private const string EnvironmentRootGameObjectName = "Environment";
 
     #endregion
 
@@ -115,6 +115,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
             Debug.Log("Game loaded.");
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = false;
+            IsPracticeMode = PhotonNetwork.CurrentRoom.MaxPlayers == 1;
             SpawnCharacters();
         }
     }
@@ -275,7 +276,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
 
     private bool CanRoundEnd()
     {
-        if (RoundEnded || !RoundStarted)
+        if (RoundEnded || !RoundStarted || IsPracticeMode)
         {
             return false;
         }
@@ -336,7 +337,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
 
     private bool CanRematch()
     {
-        if (RematchStarted || !RoundEnded)
+        if (RematchStarted || !RoundEnded || IsPracticeMode)
         {
             return false;
         }

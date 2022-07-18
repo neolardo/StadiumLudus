@@ -60,6 +60,9 @@ public static class Globals
     public const string PlayerIsInitializedKey = "IsInitialized";
     public const string PlayerIsRematchRequestedKey = "IsRematchRequested";
 
+    // paths
+    public static string SettingsDataPath { get; } = Path.Combine(Application.persistentDataPath, "settings.json"); 
+
     // helper methods
     public const float NavMeshPositionIncrement = 0.2f;
 

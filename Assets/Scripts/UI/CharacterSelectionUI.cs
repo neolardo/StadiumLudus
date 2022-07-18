@@ -36,6 +36,8 @@ public class CharacterSelectionUI : MonoBehaviour
     public GameObject practiceModeText;
     public GameObject otherPlayersCannotJoinText;
 
+    private bool isExiting = false;
+
     private const string femaleBarbarianDescription = "Female barbarians militate quickly wielding a pair of axes and are able to perform combo attacks with them.";
     private const string maleBarbarianDescription = "Male barbarians strike slow but strong with their large battle-axe.";
     private const string femaleRangerDescription = "Female rangers use a shortbow to quickly damage their enemies from the distance.";
@@ -45,20 +47,40 @@ public class CharacterSelectionUI : MonoBehaviour
 
     #region Methods
 
+    #region Initialize
+
     private void Start()
     {
         playerNames = new List<PlayerNameUI>();
-        NetworkLauncher.Instance.PlayerEnteredRoom += OnPlayerEnteredRoom;
-        NetworkLauncher.Instance.PlayerLeftRoom += OnPlayerLeftRoom;
-        NetworkLauncher.Instance.PlayerPropertiesChanged += OnPlayerCharacterIsConfirmedChanged;
         NetworkLauncher.Instance.StartingGame += OnGameStarting;
         if (NetworkLauncher.Instance.IsPracticeMode)
         {
             InitializeAsPracticeMode();
         }
+        else
+        {
+            NetworkLauncher.Instance.PlayerPropertiesChanged += OnPlayerCharacterIsConfirmedChanged;
+            NetworkLauncher.Instance.PlayerEnteredRoom += OnPlayerEnteredRoom;
+            NetworkLauncher.Instance.PlayerLeftRoom += OnPlayerLeftRoom;
+            LoadPlayerNames();
+        }
         RefreshCharacterGameObject();
-        LoadPlayerNames();
     }
+
+    #endregion
+
+    #region Update
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            OnLeaveClicked();
+        }
+    }
+
+    #endregion
+
 
     #region Add, Remove players
 
@@ -181,8 +203,12 @@ public class CharacterSelectionUI : MonoBehaviour
 
     public void OnLeaveClicked()
     {
-        loadingPopUp.SetActive(true);
-        StartCoroutine(LeaveRoomAndLoadMainSceneAfterDelay());
+        if (!isExiting)
+        {
+            isExiting = true;
+            loadingPopUp.SetActive(true);
+            StartCoroutine(LeaveRoomAndLoadMainSceneAfterDelay());
+        }
     }
 
     private IEnumerator LeaveRoomAndLoadMainSceneAfterDelay()

@@ -269,15 +269,19 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
     public bool IsEveryPlayerConfirmedTheirCharacter()
     {
         var players = PhotonNetwork.PlayerList;
-        if (players.Length < 2)
+        if (players.Length < 2 && !IsPracticeMode)
         {
             return false;
         }
         foreach (var p in players)
         {
-            if (!p.CustomProperties.ContainsKey(Globals.PlayerIsCharacterConfirmedKey) || !(bool)p.CustomProperties[Globals.PlayerIsCharacterConfirmedKey])
+            if (!IsPracticeMode && !p.CustomProperties.ContainsKey(Globals.PlayerIsCharacterConfirmedKey) || !(bool)p.CustomProperties[Globals.PlayerIsCharacterConfirmedKey])
             {
                 return false;
+            }
+            else if(IsPracticeMode && p.CustomProperties.ContainsKey(Globals.PlayerIsCharacterConfirmedKey) || (bool)p.CustomProperties[Globals.PlayerIsCharacterConfirmedKey]) 
+            {
+                return true;
             }
         }
         return true;

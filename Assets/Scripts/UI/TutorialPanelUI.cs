@@ -5,19 +5,19 @@ using UnityEngine;
 /// </summary>
 public class TutorialPanelUI : MonoBehaviour
 {
-    [SerializeField] CheckBox settingsTutorialOverlayCheckbox;
+    [SerializeField] private CheckBox settingsTutorialOverlayCheckbox;
+    [SerializeField] private CharacterUI characterUI;
+    public bool IsVisible { get; private set; }
 
-    private void Awake()
-    {
-        settingsTutorialOverlayCheckbox.SetIsTicked(gameObject.activeSelf);
-    }
-    void Start()
+    public void Initialize()
     {
         settingsTutorialOverlayCheckbox.IsTickedChanged += OnTutorialOverlayTickedChanged;
+        IsVisible = settingsTutorialOverlayCheckbox.IsTicked;
     }
 
     private void OnTutorialOverlayTickedChanged()
     {
-        gameObject.SetActive(settingsTutorialOverlayCheckbox.IsTicked);
+        IsVisible = settingsTutorialOverlayCheckbox.IsTicked;
+        characterUI.RefreshTutorialPanel();
     }
 }
