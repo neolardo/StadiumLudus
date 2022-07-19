@@ -310,13 +310,13 @@ public abstract class WarriorCharacter : Character
     {
         if (!PhotonView.IsMine || CanWhirlwind )
         {
+            warriorAnimationManager.StartWhirlwind();
             if (PhotonView.IsMine)
             {
                 PhotonView.RPC(nameof(StartWhirlwind), RpcTarget.Others);
                 StartCoroutine(ManageWhirlwindStaminaDrain());
                 StartCoroutine(ManageWhirlwindRotation());
             }
-            warriorAnimationManager.StartWhirlwind();
             AudioManager.Instance.PlaySFX(characterAudioSource, SFX.Whirlwind);
             characterAudioSource.loop = true;
             OnWhirlwind();

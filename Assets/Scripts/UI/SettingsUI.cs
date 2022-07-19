@@ -27,7 +27,7 @@ public class SettingsUI : MonoBehaviour
     {
         settings = new SettingsData();
         musicVolumeSlider.value = settings.musicVolume;
-        soundVolumeSlider.value = settings.musicVolume;
+        soundVolumeSlider.value = settings.soundVolume;
         tutorialOverlayCheckBox.SetIsTicked(settings.showTutorialOverlay);
         tutorialOverlayCheckBox.IsTickedChanged += OnTutorialOverlayCheckBoxChanged;
         fullscreenCheckBox.SetIsTicked(Screen.fullScreen);
