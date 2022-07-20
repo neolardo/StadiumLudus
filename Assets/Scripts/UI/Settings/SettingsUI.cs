@@ -9,11 +9,11 @@ public class SettingsUI : MonoBehaviour
 {
     #region Properties and Fields
 
-    public AudioMixer mainAudioMixer;
-    public Slider musicVolumeSlider;
-    public Slider soundVolumeSlider;
-    public CheckBox fullscreenCheckBox;
-    public CheckBox tutorialOverlayCheckBox;
+    [SerializeField] private AudioMixer mainAudioMixer;
+    [SerializeField] private Slider musicVolumeSlider;
+    [SerializeField] private Slider soundVolumeSlider;
+    [SerializeField] private CheckBox fullscreenCheckBox;
+    [SerializeField] private CheckBox tutorialOverlayCheckBox;
 
     private SettingsData settings;
 
@@ -48,7 +48,7 @@ public class SettingsUI : MonoBehaviour
 
     #endregion
 
-    #region Serialization
+    #region Save
 
     public void SaveSettings()
     {
@@ -57,7 +57,7 @@ public class SettingsUI : MonoBehaviour
 
     #endregion
 
-    #region OnValueChanged
+    #region Handle Value Changes
 
     public void OnMusicVolumeSliderChanged(float value)
     {
@@ -81,7 +81,7 @@ public class SettingsUI : MonoBehaviour
 
     #endregion
 
-    #region Restore Defaults
+    #region Handle Button Clicks
 
     public void RestoreDefaults()
     {

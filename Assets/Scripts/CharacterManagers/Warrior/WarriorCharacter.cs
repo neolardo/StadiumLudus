@@ -199,9 +199,9 @@ public abstract class WarriorCharacter : Character
                 Debug.Log("Invalid skill number for a warrior character.");
                 break;
         }
-        if (characterUI != null)
+        if (characterHUD != null)
         {
-            characterUI.StartSkillCooldown(skillNumber, cooldown);
+            characterHUD.StartSkillCooldown(skillNumber, cooldown);
         }
         yield return new WaitForSeconds(cooldown);
         switch (skillNumber)
@@ -248,9 +248,9 @@ public abstract class WarriorCharacter : Character
             warriorAnimationManager.LeapAttack();
             OnLeapAttack();
         }
-        else if (PhotonView.IsMine && characterUI != null)
+        else if (PhotonView.IsMine && characterHUD != null)
         {
-            characterUI.OnCannotPerformSkill(stamina < leapAttackStaminaCost, !IsLeapAttackAvailable, LeapAttackSkillNumber);
+            characterHUD.OnCannotPerformSkillOrAttack(stamina < leapAttackStaminaCost, !IsLeapAttackAvailable, LeapAttackSkillNumber);
         }
     }
 
@@ -397,9 +397,9 @@ public abstract class WarriorCharacter : Character
             OnGroundSlam(attackTarget);
             StartCoroutine(EndForceRotateAfterUsingSkill());
         }
-        else if (PhotonView.IsMine && characterUI!=null)
+        else if (PhotonView.IsMine && characterHUD!=null)
         {
-            characterUI.OnCannotPerformSkill(stamina < groundSlamStaminaCost, !IsGroundSlamAvailable, GroundSlamSkillNumber);
+            characterHUD.OnCannotPerformSkillOrAttack(stamina < groundSlamStaminaCost, !IsGroundSlamAvailable, GroundSlamSkillNumber);
         }
     }
 

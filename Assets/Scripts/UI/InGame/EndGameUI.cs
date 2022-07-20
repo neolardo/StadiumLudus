@@ -11,16 +11,16 @@ public class EndGameUI : MonoBehaviour
 {
     #region Properties and Fields
 
-    [SerializeField] private TextMeshProUGUI mainText;
+    [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private GameObject rematchRequestedTextGameObject;
     [SerializeField] private GameObject rematchTextGameObject;
     [SerializeField] private Button rematchButton;
-    [SerializeField] private AudioSource audioSource;
     [SerializeField] private CanvasGroup titleCanvasGroup;
     [SerializeField] private CanvasGroup buttonsCanvasGroup;
 
     private const string WinMainText = "YOU WIN";
     private const string LoseMainText = "YOU LOSE";
+    private const float titleFadeDelay = 0.5f;
     private const float titleFadeDuration = 1f;
     private const float buttonsFadeDelay = .5f;
     private const float buttonsFadeDuration = 1f;
@@ -29,6 +29,13 @@ public class EndGameUI : MonoBehaviour
 
     #region Methods
 
+    #region Show 
+
+    public void Show()
+    {
+        gameObject.SetActive(true);
+    }
+
     private void OnEnable()
     {
         StartCoroutine(FadeInTitleAndButtons());
@@ -36,7 +43,8 @@ public class EndGameUI : MonoBehaviour
 
     private IEnumerator FadeInTitleAndButtons()
     {
-        while(titleCanvasGroup.alpha < 1)
+        yield return new WaitForSeconds(titleFadeDelay);
+        while (titleCanvasGroup.alpha < 1)
         {
             titleCanvasGroup.alpha += Time.deltaTime / titleFadeDuration;
             yield return null;
@@ -52,10 +60,14 @@ public class EndGameUI : MonoBehaviour
         buttonsCanvasGroup.alpha = 1;
     }
 
-    public void SetMainText(bool win)
+    public void SetTitleText(bool win)
     {
-        mainText.text = win ? WinMainText : LoseMainText;
+        titleText.text = win ? WinMainText : LoseMainText;
     }
+
+    #endregion
+
+    #region Handle Button Clicks
 
     public void OnRematchRequested()
     {
@@ -67,17 +79,6 @@ public class EndGameUI : MonoBehaviour
     public void OnExit()
     {
         PhotonNetwork.LeaveRoom();
-    }
-
-    #region Button Sounds
-
-    public void OnButtonHover()
-    {
-        AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.MenuButtonHover);
-    }
-    public void OnButtonClick()
-    {
-        AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.MenuButtonClick);
     }
 
     #endregion

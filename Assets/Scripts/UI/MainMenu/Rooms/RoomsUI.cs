@@ -14,17 +14,19 @@ public class RoomsUI : MonoBehaviour
 {
     #region Properties and Fields
 
-    public MainMenuUI mainMenuUI;
-    public RectTransform roomButtonContainer;
-    public RoomButton roomButtonPrefab;
-    public GameObject createRoomPopUp;
-    public JoinRoomPopUpUI joinRoomPopUpUI;
-    public Button joinRoomButton;
-    public GameObject noRoomsText;
-    public GameObject loadingPopUp;
-    public TextMeshProUGUI infoText;
-    public CanvasGroup infoCanvasGroup;
+    [SerializeField] private MainMenuUIManager menuManager;
+    [SerializeField] private RectTransform roomButtonContainer;
+    [SerializeField] private RoomButton roomButtonPrefab;
+    [SerializeField] private GameObject createRoomPopUp;
+    [SerializeField] private GameObject joinRoomPopUp;
+    [SerializeField] private Button joinRoomButton;
+    [SerializeField] private GameObject noRoomsText;
+    [SerializeField] private GameObject loadingPopUp;
+    [SerializeField] private TextMeshProUGUI infoText;
+    [SerializeField] private CanvasGroup infoCanvasGroup;
 
+    private bool isInfoBeingAnimated;
+    private bool requestInfoRefresh;
     private List<RoomInfo> localRooms;
     private List<RoomButton> roomButtons;
 
@@ -56,17 +58,14 @@ public class RoomsUI : MonoBehaviour
             }
             else
             {
-                joinRoomPopUpUI.gameObject.SetActive(false);
+                joinRoomPopUp.SetActive(false);
             }
             joinRoomButton.interactable = _selectedRoom != null;
         }
     }
-
     private const float infoFadeInDuration = 0.3f;
     private const float infoFadeOutDuration = 0.5f;
     private const float infoShowDuration = 2.5f;
-    private bool IsInfoBeingAnimated { get; set; }
-    private bool RequestInfoRefresh { get; set; }
 
     #endregion
 
@@ -79,11 +78,18 @@ public class RoomsUI : MonoBehaviour
         localRooms = new List<RoomInfo>();
         roomButtons = new List<RoomButton>();
         SelectedRoom = null;
-        NetworkLauncher.Instance.roomsUI = this;
+        NetworkLauncher.Instance.RoomListUpdated += RefreshRooms;
+        NetworkLauncher.Instance.TriedToJoinRoom += OnTriedToJoinRoom;
+    }
+
+    private void OnDestroy()
+    {
+        NetworkLauncher.Instance.RoomListUpdated -= RefreshRooms;
+        NetworkLauncher.Instance.TriedToJoinRoom -= OnTriedToJoinRoom;
     }
 
     #endregion
-  
+
     #region Rooms List
 
     public void RefreshRooms(List<RoomInfo> serverRooms)
@@ -118,11 +124,12 @@ public class RoomsUI : MonoBehaviour
     {
         var roomButton = Instantiate(roomButtonPrefab, roomButtonContainer);
         roomButton.RoomInfo = roomInfo;
-        roomButton.MainMenuUI = mainMenuUI;
-        roomButton.RoomsUI = this;
+        roomButton.Clicked += OnRoomSelected;
+        roomButton.Hovered += menuManager.OnButtonHover;
         localRooms.Add(roomInfo);
         roomButtons.Add(roomButton);
     }
+
     private void UpdateLocalRoom(RoomInfo newRoomInfo)
     {
         var btn = roomButtons.FirstOrDefault(_ => _.RoomInfo.Name == newRoomInfo.Name);
@@ -136,7 +143,7 @@ public class RoomsUI : MonoBehaviour
         }
         else
         {
-            Debug.LogError("A room's name has been modified which is not expected.");
+            Debug.LogError("A room name has been modified which is not expected.");
         }
     }
 
@@ -148,8 +155,10 @@ public class RoomsUI : MonoBehaviour
             SelectedRoom = null;
         }
         var rb = roomButtons.FirstOrDefault(_ => _.RoomInfo == roomInfo);
-        if(rb!=null)
+        if(rb != null)
         {
+            rb.Clicked -= OnRoomSelected;
+            rb.Hovered -= menuManager.OnButtonHover;
             roomButtons.Remove(rb);
             Destroy(rb.gameObject);
         }
@@ -164,6 +173,7 @@ public class RoomsUI : MonoBehaviour
         SelectedRoom = r;
         if(SelectedRoom != null)
         {
+            menuManager.OnButtonClick();
             OpenJoinRoomPopUp();
         }
     }
@@ -176,11 +186,11 @@ public class RoomsUI : MonoBehaviour
     {
         if (!NetworkLauncher.Instance.IsNewRoomNameValid(roomName))
         {
-            OnIncorrectRoomName();
+            OnTriedToJoinRoom(JoinRoomResponse.IncorrectRoomName);
         }
         else if (string.IsNullOrWhiteSpace(username))
         {
-            OnIncorrectUsername();
+            OnTriedToJoinRoom(JoinRoomResponse.IncorrectUserName);
         }
         else
         {
@@ -192,7 +202,7 @@ public class RoomsUI : MonoBehaviour
     {
         if (SelectedRoom == null)
         {
-            Debug.LogError("SelectedRoom is null.");
+            Debug.LogError($"{nameof(SelectedRoom)} is null.");
         }
         else
         {
@@ -203,30 +213,41 @@ public class RoomsUI : MonoBehaviour
     public void OnSuccessfullyJoinedRoom()
     {
         ShowLoadingPopUp();
-        NetworkLauncher.Instance.roomsUI = null; 
-        StartCoroutine(LoadCharacterSelectionSceneAsync());
+        NetworkLauncher.Instance.RoomListUpdated -= RefreshRooms;
+        NetworkLauncher.Instance.TriedToJoinRoom -= OnTriedToJoinRoom;
+        StartCoroutine(LoadCharacterSelectionSceneAfterDelay());
     }
 
-    private IEnumerator LoadCharacterSelectionSceneAsync()
+    private IEnumerator LoadCharacterSelectionSceneAfterDelay()
     {
         yield return new WaitForSeconds(Globals.LoadingDelay);
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(Globals.CharacterSelectionScene, LoadSceneMode.Single);
+        SceneManager.LoadScene(Globals.CharacterSelectionScene, LoadSceneMode.Single);
+    }
+
+    public void OnTriedToJoinRoom(JoinRoomResponse response)
+    {
+        switch (response)
+        {
+            case JoinRoomResponse.IncorrectUserName:
+                ShowHideInfoMessage("Username is invalid or already exists in the room.");
+                break;
+            case JoinRoomResponse.IncorrectRoomName:
+                ShowHideInfoMessage("Room name is invalid or a room already exists with this name.");
+                break;
+            case JoinRoomResponse.IncorrectRoomPassword:
+                ShowHideInfoMessage("Incorrect room password.");
+                break;
+            case JoinRoomResponse.Successful:
+                OnSuccessfullyJoinedRoom();
+                break;
+            default:
+                Debug.LogError($"Invalid {nameof(JoinRoomResponse)} value.");
+                break;
+        }
     }
 
     #region Info
 
-    public void OnIncorrectUsername()
-    {
-        ShowHideInfoMessage("Username is invalid or already exists in the room.");
-    }
-    public void OnIncorrectRoomName()
-    {
-        ShowHideInfoMessage("Room name is invalid or a room already exists with this name.");
-    }
-    public void OnIncorrectRoomPassword()
-    {
-        ShowHideInfoMessage("Incorrect room password.");
-    }
     private void ShowHideInfoMessage(string message)
     {
         infoText.text = message;
@@ -235,45 +256,46 @@ public class RoomsUI : MonoBehaviour
 
     private IEnumerator FadeInAndOutInfoMessage()
     {
-        if (IsInfoBeingAnimated)
+        if (isInfoBeingAnimated)
         {
-            RequestInfoRefresh = true;
+            requestInfoRefresh = true;
         }
-        yield return new WaitUntil(() => !IsInfoBeingAnimated);
-        IsInfoBeingAnimated = true;
+        yield return new WaitUntil(() => !isInfoBeingAnimated);
+        isInfoBeingAnimated = true;
         infoCanvasGroup.gameObject.SetActive(true);
-        while (infoCanvasGroup.alpha < 1 && !RequestInfoRefresh)
+        while (infoCanvasGroup.alpha < 1 && !requestInfoRefresh)
         {
             infoCanvasGroup.alpha += Time.deltaTime / infoFadeInDuration;
             yield return null;
         }
-        if (!RequestInfoRefresh)
+        if (!requestInfoRefresh)
         {
             infoCanvasGroup.alpha = 1;
         }
         float elapsedSeconds = 0;
-        while (elapsedSeconds < infoShowDuration && !RequestInfoRefresh)
+        while (elapsedSeconds < infoShowDuration && !requestInfoRefresh)
         {
             elapsedSeconds += Time.deltaTime;
             yield return null;
         }
-        while (infoCanvasGroup.alpha > 0 && !RequestInfoRefresh)
+        while (infoCanvasGroup.alpha > 0 && !requestInfoRefresh)
         {
             infoCanvasGroup.alpha -= Time.deltaTime / infoFadeOutDuration;
             yield return null;
         }
-        if (!RequestInfoRefresh)
+        if (!requestInfoRefresh)
         {
             infoCanvasGroup.alpha = 0;
             infoCanvasGroup.gameObject.SetActive(true);
         }
-        RequestInfoRefresh = false;
-        IsInfoBeingAnimated = false;
+        requestInfoRefresh = false;
+        isInfoBeingAnimated = false;
     }
 
     public void OnNetworkError(string errorMessage)
     {
         HideLoadingPopUp();
+        Debug.LogError(errorMessage);
     }
 
     #endregion
@@ -285,7 +307,7 @@ public class RoomsUI : MonoBehaviour
     private void ShowLoadingPopUp()
     {
         loadingPopUp.SetActive(true);
-        joinRoomPopUpUI.gameObject.SetActive(false);
+        joinRoomPopUp.SetActive(false);
         createRoomPopUp.SetActive(false);
     }
 
@@ -305,12 +327,12 @@ public class RoomsUI : MonoBehaviour
 
     public void OpenJoinRoomPopUp()
     {
-        joinRoomPopUpUI.gameObject.SetActive(true);
+        joinRoomPopUp.SetActive(true);
     }
 
     public void BackToMainMenu()
     {
-        mainMenuUI.NavigateToMainMenuPage();
+        menuManager.NavigateTo(MainMenuPage.MainMenu);
     }
 
     #endregion

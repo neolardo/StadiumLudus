@@ -3,12 +3,21 @@ using TMPro;
 using UnityEngine;
 using System.Linq;
 
+/// <summary>
+/// An FPS counter used for showing the FPS on debug builds.
+/// </summary>
 public class FPSCounter : MonoBehaviour
 {
+    #region Properties and Fields
+
     private TextMeshProUGUI fpsText;
     private const int frameCount = 60;
     private int deltaFrameCount =0;
     private Queue<float> frameLateQueue;
+
+    #endregion
+
+    #region Methods
 
     void Start()
     {
@@ -32,4 +41,6 @@ public class FPSCounter : MonoBehaviour
         frameLateQueue.Enqueue(1.0f / Time.deltaTime);
         deltaFrameCount += 1;
     }
+
+    #endregion
 }

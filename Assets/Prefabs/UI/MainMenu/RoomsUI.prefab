@@ -554,11 +554,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19ecd152ad78e334d9472f815ebe737c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMenuUI: {fileID: 0}
+  menuManager: {fileID: 0}
   roomButtonContainer: {fileID: 1986686570594645778}
   roomButtonPrefab: {fileID: 7492047149724046919, guid: 523586023f48ccd4b9b3e90038862bbc, type: 3}
   createRoomPopUp: {fileID: 1986686569838343556}
-  joinRoomPopUpUI: {fileID: 4908320434731612246}
+  joinRoomPopUp: {fileID: 4908320434731612265}
   joinRoomButton: {fileID: 1986686569407812295}
   noRoomsText: {fileID: 670373596631219566}
   loadingPopUp: {fileID: 3573985632179045680}
@@ -1111,8 +1111,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainMenuUI, Assembly-CSharp
-        m_MethodName: OnMenuButtonClick
+        m_TargetAssemblyTypeName: MainMenuUIManager, Assembly-CSharp
+        m_MethodName: OnButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1140,8 +1140,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: MainMenuUI, Assembly-CSharp
-          m_MethodName: OnMenuButtonHover
+          m_TargetAssemblyTypeName: MainMenuUIManager, Assembly-CSharp
+          m_MethodName: OnButtonHover
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -1243,9 +1243,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainMenuUI, Assembly-CSharp
-        m_MethodName: NavigateToMainMenuPage
+      - m_Target: {fileID: 1487579940}
+        m_TargetAssemblyTypeName: RoomsUI, Assembly-CSharp
+        m_MethodName: BackToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1273,8 +1273,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: MainMenuUI, Assembly-CSharp
-          m_MethodName: OnMenuButtonHover
+          m_TargetAssemblyTypeName: MainMenuUIManager, Assembly-CSharp
+          m_MethodName: OnButtonHover
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -1684,8 +1684,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainMenuUI, Assembly-CSharp
-        m_MethodName: OnMenuButtonClick
+        m_TargetAssemblyTypeName: MainMenuUIManager, Assembly-CSharp
+        m_MethodName: OnButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1713,8 +1713,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: MainMenuUI, Assembly-CSharp
-          m_MethodName: OnMenuButtonHover
+          m_TargetAssemblyTypeName: MainMenuUIManager, Assembly-CSharp
+          m_MethodName: OnButtonHover
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -2157,6 +2157,14 @@ PrefabInstance:
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5132188440693129017, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnButtonHover
+      objectReference: {fileID: 0}
+    - target: {fileID: 5132188440693129017, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MainMenuUIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 5420709508963510301, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
       propertyPath: m_fontSize
       value: 120
@@ -2204,6 +2212,30 @@ PrefabInstance:
     - target: {fileID: 5864261583701864358, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -25.055996
+      objectReference: {fileID: 0}
+    - target: {fileID: 5864261583701864359, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 4908320434731612246}
+    - target: {fileID: 5864261583701864359, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5864261583701864359, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnCancel
+      objectReference: {fileID: 0}
+    - target: {fileID: 5864261583701864359, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnBackButtonClick
+      objectReference: {fileID: 0}
+    - target: {fileID: 5864261583701864359, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: JoinRoomPopUpUI, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5864261583701864359, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: MainMenuUIManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5864261583921564867, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
       propertyPath: m_fontSize
@@ -2377,6 +2409,14 @@ PrefabInstance:
       propertyPath: roomsUI
       value: 
       objectReference: {fileID: 1487579940}
+    - target: {fileID: 5864261584842222034, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnButtonClick
+      objectReference: {fileID: 0}
+    - target: {fileID: 5864261584842222034, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: MainMenuUIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 5864261584842222061, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
       propertyPath: m_SizeDelta.x
       value: 276.48004
@@ -2457,6 +2497,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7894176657656630429, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnButtonHover
+      objectReference: {fileID: 0}
+    - target: {fileID: 7894176657656630429, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MainMenuUIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 8358191560223198320, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
       propertyPath: m_fontSize
       value: 32.05
@@ -2476,7 +2524,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5864261584818881663, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
   m_PrefabInstance: {fileID: 1549187390595054633}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 4908320434731612265}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88641c6d9655da744a5f4c08d0cd96e2, type: 3}
@@ -2485,6 +2533,11 @@ MonoBehaviour:
 --- !u!224 &4908320434731612264 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5864261584818881601, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
+  m_PrefabInstance: {fileID: 1549187390595054633}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4908320434731612265 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5864261584818881600, guid: 70e393f5d33795a4d94897c97ff69c5b, type: 3}
   m_PrefabInstance: {fileID: 1549187390595054633}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4941983262880362514
@@ -2745,6 +2798,14 @@ PrefabInstance:
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4794901053939969695, guid: 39bde0c944fee9e498ab76082be8a959, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnButtonClick
+      objectReference: {fileID: 0}
+    - target: {fileID: 4794901053939969695, guid: 39bde0c944fee9e498ab76082be8a959, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: MainMenuUIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 4794901053939969696, guid: 39bde0c944fee9e498ab76082be8a959, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -2969,6 +3030,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4794901055089764586, guid: 39bde0c944fee9e498ab76082be8a959, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: MainMenuUIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 4794901055089764587, guid: 39bde0c944fee9e498ab76082be8a959, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -2987,7 +3052,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4794901055089764587, guid: 39bde0c944fee9e498ab76082be8a959, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 421.19998
+      value: 421.2
       objectReference: {fileID: 0}
     - target: {fileID: 4794901055089764587, guid: 39bde0c944fee9e498ab76082be8a959, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -3033,6 +3098,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6111897049590970484, guid: 39bde0c944fee9e498ab76082be8a959, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnButtonHover
+      objectReference: {fileID: 0}
+    - target: {fileID: 6111897049590970484, guid: 39bde0c944fee9e498ab76082be8a959, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MainMenuUIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 6400417000867999568, guid: 39bde0c944fee9e498ab76082be8a959, type: 3}
       propertyPath: m_fontSize
       value: 120
@@ -3056,6 +3129,14 @@ PrefabInstance:
     - target: {fileID: 6923898761576188733, guid: 39bde0c944fee9e498ab76082be8a959, type: 3}
       propertyPath: m_fontSizeMin
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 9107787069619194832, guid: 39bde0c944fee9e498ab76082be8a959, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnButtonHover
+      objectReference: {fileID: 0}
+    - target: {fileID: 9107787069619194832, guid: 39bde0c944fee9e498ab76082be8a959, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MainMenuUIManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 9208039237522209473, guid: 39bde0c944fee9e498ab76082be8a959, type: 3}
       propertyPath: m_AnchorMax.y

@@ -30,7 +30,8 @@ public abstract class Character : MonoBehaviour, IHighlightable
 
     #region UI and Managers
 
-    protected CharacterUI characterUI;
+    protected CharacterHUDUI characterHUD;
+    protected InGameUIManager uiManager;
     public PhotonView PhotonView { get; private set; }
 
     [Header("UI")]
@@ -312,9 +313,10 @@ public abstract class Character : MonoBehaviour, IHighlightable
         StartCoroutine(HighlightOnTriggered());
     }
 
-    public void InitializeAsLocalCharacter(CharacterUI characterUI)
+    public void InitializeAsLocalCharacter(CharacterHUDUI characterUI, InGameUIManager uiManager)
     {
-        this.characterUI = characterUI;
+        this.characterHUD = characterUI;
+        this.uiManager = uiManager;
     }
 
     public void InitializeCharacterList()
@@ -328,7 +330,6 @@ public abstract class Character : MonoBehaviour, IHighlightable
             }
         }
     }
-
 
     #endregion
 
@@ -738,9 +739,9 @@ public abstract class Character : MonoBehaviour, IHighlightable
         ClearDestination();
         chaseTarget = null;
         interactionTarget = null;
-        if (characterUI != null)
+        if (uiManager != null)
         {
-            characterUI.ShowEndScreen(false);
+            uiManager.ShowEndScreen(false);
         }
         GameRoundManager.Instance.OnCharacterDied();
         AllowUpdate = false;
@@ -757,9 +758,9 @@ public abstract class Character : MonoBehaviour, IHighlightable
         animationManager.Move(0);
         chaseTarget = null;
         interactionTarget = null;
-        if (characterUI != null)
+        if (uiManager != null)
         {
-            characterUI.ShowEndScreen(true);
+            uiManager.ShowEndScreen(true);
         }
         AllowUpdate = true;
     }

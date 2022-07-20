@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.AI;
+
 /// <summary>
-/// A helper static class containing global variables.
+/// A static class containing global variables and helper methods.
 /// </summary>
 public static class Globals
 {
@@ -25,6 +26,7 @@ public static class Globals
     public const float LoadingDelay = 0.2f;
     public const float HighlightDelay = 0.05f;
     public const float RaycastDistance = 30f;
+    public const float MenuSlideDuration = 0.35f;
 
     // layers
     public const int DefaultLayer = 0;
@@ -37,7 +39,6 @@ public static class Globals
     public const int AttackTriggerLayer = 12;
     public const int RigidbodyLayer = 13;
     public const int GroundPlaneLayer = 16;
-
 
     // audio mixer 
     public const string AudioMixerSFXVolume = "SFXVolume";

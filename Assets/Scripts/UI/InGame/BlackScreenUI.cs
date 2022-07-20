@@ -7,8 +7,14 @@ using UnityEngine.UI;
 /// </summary>
 public class BlackScreenUI : MonoBehaviour
 {
+    #region Properties and Fields
+
     [SerializeField] private RawImage rawImageBackground;
-    public float fadeSeconds;
+    public const float FadeDuration =.5f;
+
+    #endregion
+
+    #region Methods
 
     #region Fade In
 
@@ -20,9 +26,9 @@ public class BlackScreenUI : MonoBehaviour
     private IEnumerator AnimateFadeIn()
     {
         float elapsedTime = 0;
-        while (elapsedTime < fadeSeconds)
+        while (elapsedTime < FadeDuration)
         {
-            rawImageBackground.color = new Color(rawImageBackground.color.r, rawImageBackground.color.g, rawImageBackground.color.b, Mathf.Lerp(0,1, elapsedTime / fadeSeconds));
+            rawImageBackground.color = new Color(rawImageBackground.color.r, rawImageBackground.color.g, rawImageBackground.color.b, Mathf.Lerp(0,1, elapsedTime / FadeDuration));
             elapsedTime += Time.deltaTime;
             yield return null;
         }
@@ -39,14 +45,16 @@ public class BlackScreenUI : MonoBehaviour
     private IEnumerator AnimateFadeOut()
     {
         float elapsedTime = 0;
-        while (elapsedTime < fadeSeconds)
+        while (elapsedTime < FadeDuration)
         {
-            rawImageBackground.color = new Color(rawImageBackground.color.r, rawImageBackground.color.g, rawImageBackground.color.b, Mathf.Lerp(1f, 0f, elapsedTime / fadeSeconds)); 
+            rawImageBackground.color = new Color(rawImageBackground.color.r, rawImageBackground.color.g, rawImageBackground.color.b, Mathf.Lerp(1f, 0f, elapsedTime / FadeDuration)); 
             elapsedTime += Time.deltaTime;
             yield return null;
         }
         gameObject.SetActive(false);
     }
+
+    #endregion
 
     #endregion
 }

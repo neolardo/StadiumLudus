@@ -1,29 +1,23 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Manages the in-game UI of a player.
+/// Manages the in-game HUD.
 /// </summary>
-public class CharacterUI : MonoBehaviour
+public class CharacterHUDUI : MonoBehaviour
 {
     #region Fields and Properties
 
-    public PauseMenuUI pauseMenuUI;
-    public EndGameUI endGameUI;
-    public TutorialPanelUI tutorialPanelUI;
-    public List<SkillSlotUI> skillSlots;
-    public ValueBarUI healthBarUI;
-    public ValueBarUI staminaBarUI;
-    public CanvasGroup canvasGroup;
-    public AudioSource audioSource;
-    public RectTransform infoContainer;
-    public InfoTextUI infoPrefab;
+    [SerializeField] private InGameUIManager uiManager;
+    [SerializeField] private List<SkillSlotUI> skillSlots;
+    [SerializeField] private ValueBarUI healthBarUI;
+    [SerializeField] private ValueBarUI staminaBarUI;
+    [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private RectTransform infoContainer;
+    [SerializeField] private InfoTextUI infoPrefab;
     private Character character;
-    public bool IsUIVisible { get; private set; } = false;
 
-    private const float endScreenDelay = 0.5f;
-
+    public bool IsVisible { get; private set; } = true;
     private bool hasInitialized = false;
 
     #endregion
@@ -49,14 +43,12 @@ public class CharacterUI : MonoBehaviour
                 skillSlots[i].InitializeAsRanger(character.IsSkillChargeable(i + 1), character.InitialChargeCountOfSkill(i + 1));
             }
         }
-        tutorialPanelUI.Initialize();
-        RefreshTutorialPanel();
         hasInitialized = true;
     }
 
     #endregion
 
-    #region Update
+    #region Update Valuebar Shaders
 
     private void Update()
     {
@@ -74,13 +66,18 @@ public class CharacterUI : MonoBehaviour
 
     #endregion
 
-    #region UI Visiblity
+    #region Show Hide
 
-    public void SetUIVisiblity(bool value)
+    public void Show()
     {
-        IsUIVisible = value;
-        canvasGroup.alpha = IsUIVisible ? 1 : 0;
-        RefreshTutorialPanel();
+        IsVisible = true;
+        canvasGroup.alpha = IsVisible ? 1 : 0;
+    }
+
+    public void Hide()
+    {
+        IsVisible = false;
+        canvasGroup.alpha = IsVisible ? 1 : 0;
     }
 
     #endregion
@@ -107,9 +104,9 @@ public class CharacterUI : MonoBehaviour
         skillSlots[skillNumber - 1].RemoveCharge();
     }
 
-    public void OnCannotPerformSkill(bool notEnoughStamina, bool stillOnCooldown, int skillNumber)
+    public void OnCannotPerformSkillOrAttack(bool notEnoughStamina, bool stillOnCooldown = false, int skillNumber = -1)
     {
-        AudioManager.Instance.PlayOneShotSFX(audioSource, SFX.CannotPerformSkillOrAttack);
+        AudioManager.Instance.PlayOneShotSFX(uiManager.uiAudioSource, SFX.CannotPerformSkillOrAttack);
         if (notEnoughStamina)
         {
             staminaBarUI.ShowHideHighlight();
@@ -118,50 +115,6 @@ public class CharacterUI : MonoBehaviour
         {
             skillSlots[skillNumber - 1].ShowHideHighlight();
         }
-    }
-
-    #endregion
-
-    #region Pause Menu
-
-    public void ShowHidePauseMenu()
-    {
-        IsUIVisible = !IsUIVisible;
-        canvasGroup.alpha = IsUIVisible ? 1 : 0;
-        pauseMenuUI.gameObject.SetActive(!IsUIVisible);
-        RefreshTutorialPanel();
-    }
-
-    public void RefreshTutorialPanel()
-    {
-        if (tutorialPanelUI.IsVisible && IsUIVisible)
-        {
-            tutorialPanelUI.gameObject.SetActive(true);
-        }
-        else
-        {
-            tutorialPanelUI.gameObject.SetActive(false);
-        }
-    }
-
-    #endregion
-
-    #region End Screen
-
-    public void ShowEndScreen(bool win)
-    {
-        AudioManager.Instance.PlayOneShotSFX(audioSource, win ? SFX.Win : SFX.Lose);
-        StartCoroutine(ShowEndScreenAfterDelay(win, endScreenDelay));
-    }
-
-    private IEnumerator ShowEndScreenAfterDelay(bool win, float delaySeconds)
-    {
-        yield return new WaitForSeconds(delaySeconds);
-        IsUIVisible = false;
-        RefreshTutorialPanel(); // fade out maybe?
-        canvasGroup.alpha = 0;
-        endGameUI.SetMainText(win);
-        endGameUI.gameObject.SetActive(true);
     }
 
     #endregion

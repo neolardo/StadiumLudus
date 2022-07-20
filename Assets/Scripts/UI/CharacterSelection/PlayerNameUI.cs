@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// Manages a player name prefab of the <see cref="CharacterSelectionUI"/> page.
+/// Manages a player name UI of the <see cref="CharacterSelectionUI"/> page.
 /// </summary>
 public class PlayerNameUI : MonoBehaviour
 {

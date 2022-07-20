@@ -10,20 +10,19 @@ public class JoinRoomPopUpUI : MonoBehaviour
 {
     #region Properties and Fields
 
-    public RoomsUI roomsUI;
-    public TMP_InputField usernameInput;
-    public TMP_InputField roomPasswordInput;
+    [SerializeField] private RoomsUI roomsUI;
+    [SerializeField] private TMP_InputField usernameInput;
+    [SerializeField] private TMP_InputField roomPasswordInput;
 
     private EventSystem system;
-
-    private void Start()
-    {
-        system = EventSystem.current;
-    }
 
     #endregion
 
     #region Methods
+    private void Start()
+    {
+        system = EventSystem.current;
+    }
 
     private void Update()
     {

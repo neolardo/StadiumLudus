@@ -377,7 +377,7 @@ GameObject:
   - component: {fileID: 2507296826872579877}
   - component: {fileID: 2507296826872579876}
   m_Layer: 3
-  m_Name: Skill3
+  m_Name: SkillIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -450,7 +450,7 @@ GameObject:
   - component: {fileID: 2507296826903100497}
   - component: {fileID: 2507296826903100496}
   m_Layer: 3
-  m_Name: Skill1
+  m_Name: SkillIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -599,7 +599,7 @@ GameObject:
   - component: {fileID: 2507296827056904299}
   - component: {fileID: 2507296827056904298}
   m_Layer: 3
-  m_Name: Skill2
+  m_Name: SkillIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -839,7 +839,7 @@ GameObject:
   - component: {fileID: 2507296827925095378}
   - component: {fileID: 6725435648642116234}
   m_Layer: 3
-  m_Name: Button1
+  m_Name: SkillSlot1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -920,7 +920,7 @@ MonoBehaviour:
   iconRawImage: {fileID: 2507296826903100496}
   cooldownImage: {fileID: 2507296827054431462}
   warriorIconTexture2D: {fileID: 2800000, guid: fc06d943f029d9c41aeeb544643ef02a, type: 3}
-  rangerIconTexture2D: {fileID: 2800000, guid: 29eb70f98a69a594b981ea9c4c9cd568, type: 3}
+  rangerIconTexture2D: {fileID: 2800000, guid: f30a2fdba33134248bd3f829030c950f, type: 3}
   chargesText: {fileID: 6725435647788949271}
   highlightRawImage: {fileID: 1701275865}
   sourceMaterial: {fileID: 2100000, guid: 9fefe31cb334b3c49833add0f55d01fc, type: 2}
@@ -937,7 +937,7 @@ GameObject:
   - component: {fileID: 2507296828036323598}
   - component: {fileID: 3542534898524440449}
   m_Layer: 3
-  m_Name: Button3
+  m_Name: SkillSlot3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1032,7 +1032,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2507296828159350623}
   m_Layer: 3
-  m_Name: Buttons
+  m_Name: SkillSlots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1074,7 +1074,7 @@ GameObject:
   - component: {fileID: 2507296828352330582}
   - component: {fileID: 6476307809450457647}
   m_Layer: 3
-  m_Name: Button2
+  m_Name: SkillSlot2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1248,7 +1248,6 @@ GameObject:
   - component: {fileID: 2507296828708173997}
   - component: {fileID: 2507296828708173994}
   - component: {fileID: 1645716584}
-  - component: {fileID: 2507296827198851432}
   - component: {fileID: 3226501076062887073}
   m_Layer: 3
   m_Name: CharacterUI
@@ -1327,9 +1326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a6d5f357278c0b4980b2c18fc2bb592, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseMenuUI: {fileID: 0}
-  endGameUI: {fileID: 0}
-  tutorialPanelUI: {fileID: 0}
+  uiManager: {fileID: 0}
   skillSlots:
   - {fileID: 6725435648642116234}
   - {fileID: 6476307809450457647}
@@ -1337,7 +1334,6 @@ MonoBehaviour:
   healthBarUI: {fileID: 532398826}
   staminaBarUI: {fileID: 1978197916638228190}
   canvasGroup: {fileID: 1645716584}
-  audioSource: {fileID: 2507296827198851432}
   infoContainer: {fileID: 0}
   infoPrefab: {fileID: 5175476699147187115, guid: 08e1b6bac5b3a4346b784ade0a8be2a7, type: 3}
 --- !u!225 &1645716584
@@ -1352,102 +1348,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!82 &2507296827198851432
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2507296828708173985}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 1311341109146075860, guid: b7bb259e1bd1e8943a3ca1626686032e, type: 2}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &3226501076062887073
 MonoBehaviour:
   m_ObjectHideFlags: 0

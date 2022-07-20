@@ -3,14 +3,15 @@ using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// MAnages an in-game info text.
+/// Manages an in-game info text.
 /// </summary>
 public class InfoTextUI : MonoBehaviour
 {
     #region Fields and Properties
 
-    [SerializeField]private TextMeshProUGUI text;
+    [SerializeField] private TextMeshProUGUI text;
     private Color initialColor;
+
     private const float fadeInDuration = .2f;
     private const float showDuration = 4f;
     private const float fadeOutDuration = .8f;

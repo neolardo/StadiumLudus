@@ -261,9 +261,9 @@ public abstract class RangerCharacter : Character
                 Debug.Log("Invalid skill number for a ranger character.");
                 break;
         }
-        if (characterUI != null)
+        if (characterHUD != null)
         {
-            characterUI.StartSkillCooldown(skillNumber, cooldown);
+            characterHUD.StartSkillCooldown(skillNumber, cooldown);
         }
         yield return new WaitForSeconds(cooldown);
         switch (skillNumber)
@@ -305,9 +305,9 @@ public abstract class RangerCharacter : Character
             rangerAnimationManager.Dash();
             OnDash();
         }
-        else if (PhotonView.IsMine && characterUI != null)
+        else if (PhotonView.IsMine && characterHUD != null)
         {
-            characterUI.OnCannotPerformSkill(stamina < dashStaminaCost, !IsDashAvailable, DashSkillNumber);
+            characterHUD.OnCannotPerformSkillOrAttack(stamina < dashStaminaCost, !IsDashAvailable, DashSkillNumber);
         }
     }
 
@@ -368,9 +368,9 @@ public abstract class RangerCharacter : Character
             smokeTransform.position = transform.position + smokePositionDelta;
             smokeParticleSystem.Play();
         }
-        else if (PhotonView.IsMine && characterUI != null)
+        else if (PhotonView.IsMine && characterHUD != null)
         {
-            characterUI.OnCannotPerformSkill(stamina < smokeStaminaCost, !IsSmokeAvailable, SmokeSkillNumber);
+            characterHUD.OnCannotPerformSkillOrAttack(stamina < smokeStaminaCost, !IsSmokeAvailable, SmokeSkillNumber);
         }
     }
 
@@ -390,14 +390,14 @@ public abstract class RangerCharacter : Character
                 trapPool.PlaceTrap(TrapPlacementDelay);
             }
             rangerAnimationManager.PlaceTrap();
-            if (characterUI != null)
+            if (characterHUD != null)
             {
-                characterUI.RemoveSkillCharge(TrapSkillNumber);
+                characterHUD.RemoveSkillCharge(TrapSkillNumber);
             }
         }
-        else if (PhotonView.IsMine && characterUI != null)
+        else if (PhotonView.IsMine && characterHUD != null)
         {
-            characterUI.OnCannotPerformSkill(false, trapChargeCount == 0, TrapSkillNumber);
+            characterHUD.OnCannotPerformSkillOrAttack(false, trapChargeCount == 0, TrapSkillNumber);
         }
     }
 
@@ -408,15 +408,15 @@ public abstract class RangerCharacter : Character
             yield return new WaitUntil(() => trapChargeCount < trapMaximumChargeCount || !IsAlive);
             if (trapChargeCount < trapMaximumChargeCount)
             {
-                if (characterUI != null)
+                if (characterHUD != null)
                 {
-                    characterUI.StartSkillCooldown(TrapSkillNumber, trapCooldown);
+                    characterHUD.StartSkillCooldown(TrapSkillNumber, trapCooldown);
                 }
                 yield return new WaitForSeconds(trapCooldown);
                 trapChargeCount += 1;
-                if (characterUI != null)
+                if (characterHUD != null)
                 {
-                    characterUI.AddSkillCharge(TrapSkillNumber);
+                    characterHUD.AddSkillCharge(TrapSkillNumber);
                 }
             }
         }

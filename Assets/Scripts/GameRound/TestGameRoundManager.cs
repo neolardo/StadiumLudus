@@ -6,11 +6,17 @@ using UnityEngine;
 
 public class TestGameRoundManager : MonoBehaviour
 {
+    #region Properties and Fields
+
     [SerializeField] private Character localCharacter;
-    [SerializeField] private CharacterUI characterUI;
+    [SerializeField] private InGameUIManager uiManager;
+    [SerializeField] private CharacterHUDUI characterUI;
     [SerializeField] private CameraController cameraController;
     [SerializeField] private CharacterAudioListener characterAudioListenerPrefab;
 
+    #endregion
+
+    #region Methods
 
     void Start()
     {
@@ -20,7 +26,9 @@ public class TestGameRoundManager : MonoBehaviour
         cameraController.Initialize(localCharacter);
         var characterAudioListener = Instantiate(characterAudioListenerPrefab, null);
         characterAudioListener.SetTarget(localCharacter.transform);
-        localCharacter.InitializeAsLocalCharacter(characterUI);
-        characterUI.SetUIVisiblity(true);
+        localCharacter.InitializeAsLocalCharacter(characterUI, uiManager);
+        uiManager.OnRoundStarted();
     }
+
+    #endregion
 }

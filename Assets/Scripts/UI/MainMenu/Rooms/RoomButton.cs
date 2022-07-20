@@ -1,13 +1,16 @@
 using Photon.Realtime;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Manages a room button.
+/// Manages a room button of the <see cref="RoomsUI"/>.
 /// </summary>
 public class RoomButton : MonoBehaviour
 {
+    #region Properties and Fields
+
     private RoomInfo _roomInfo;
     public RoomInfo RoomInfo
     {
@@ -18,17 +21,23 @@ public class RoomButton : MonoBehaviour
         set 
         {
             _roomInfo = value;
-            UpdateRoomTexts();
+            roomNameText.text = _roomInfo.Name;
+            roomPlayerCountText.text = $"{_roomInfo.PlayerCount}/{Globals.MaximumPlayerCountPerRoom}";
         }
     }
-    public MainMenuUI MainMenuUI { get; set; }
-    public RoomsUI RoomsUI { get; set; }
-    public TextMeshProUGUI roomNameText;
-    public TextMeshProUGUI roomPlayerCountText;
-    public Button button;
+    [SerializeField] private TextMeshProUGUI roomNameText;
+    [SerializeField] private TextMeshProUGUI roomPlayerCountText;
+    [SerializeField] private Button button;
+
+    public event Action<RoomInfo> Clicked;
+    public event Action Hovered;
 
     private Color buttonNormalColor;
     private Color buttonSelectedColor;
+
+    #endregion
+
+    #region Methods
 
     private void Start()
     {
@@ -38,19 +47,12 @@ public class RoomButton : MonoBehaviour
 
     public void OnHover()
     {
-        MainMenuUI.OnMenuButtonHover();
+        Hovered?.Invoke();
     }
 
     public void OnClick()
     {
-        MainMenuUI.OnMenuButtonClick();
-        RoomsUI.OnRoomSelected(RoomInfo);
-    }
-
-    private void UpdateRoomTexts()
-    {
-        roomNameText.text = RoomInfo.Name;
-        roomPlayerCountText.text = $"{RoomInfo.PlayerCount}/{Globals.MaximumPlayerCountPerRoom}";
+        Clicked.Invoke(RoomInfo);
     }
 
     public void ChangeSelectionColor(bool isSelected)
@@ -59,4 +61,6 @@ public class RoomButton : MonoBehaviour
         colors.normalColor = isSelected ? buttonSelectedColor : buttonNormalColor;
         button.colors = colors;
     }
+
+    #endregion
 }

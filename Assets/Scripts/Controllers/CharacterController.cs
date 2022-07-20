@@ -12,9 +12,9 @@ public class CharacterController : MonoBehaviour
 
     private Character character;
     private Camera mainCamera;
-    private CharacterUI characterUI;
+    private CharacterHUDUI characterUI;
     private PhotonView photonView;
-    private bool AreInputsEnabled => characterUI.IsUIVisible;
+    private bool AreInputsEnabled => characterUI.IsVisible;
     private bool ignoreEverythingUntilRelease = false;
     private bool ignoreActionsExceptAttackUntilRelease = false;
     private bool lastActionWasAttack = false;
@@ -52,7 +52,7 @@ public class CharacterController : MonoBehaviour
         photonView = GetComponent<PhotonView>();
     }
 
-    public void Initialize(CharacterUI characterUI)
+    public void Initialize(CharacterHUDUI characterUI)
     {
         if (!hasInitialized)
         {
@@ -221,11 +221,6 @@ public class CharacterController : MonoBehaviour
         else if (AreInputsEnabled)
         {
             character.EndGuarding();
-        }
-        // pause menu
-        if (character.IsAlive && !GameRoundManager.Instance.RoundEnded && Input.GetKeyDown(KeyCode.Escape))
-        {
-            characterUI.ShowHidePauseMenu();
         }
     }
 

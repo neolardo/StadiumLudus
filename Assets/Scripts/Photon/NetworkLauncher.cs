@@ -7,7 +7,7 @@ using ExitGames.Client.Photon;
 using System;
 
 /// <summary>
-/// Manages the initialization of the photon network at the application's start.
+/// Manages the initialization of the photon network at the start of the application.
 /// </summary>
 public class NetworkLauncher : MonoBehaviourPunCallbacks
 {
@@ -16,8 +16,8 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
     public static NetworkLauncher Instance { get; private set; }
     public bool IsDisconnected { get; private set; }
     public bool IsPracticeMode { get; private set; }
+
     private List<RoomInfo> networkRooms;
-    public RoomsUI roomsUI;
     private bool isPlayerTheCreatorOfTheRoom = false;
     private string tempRoomPassword;
 
@@ -30,6 +30,8 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
     public event Action<Player> PlayerEnteredRoom;
     public event Action<Player> PlayerLeftRoom;
     public event Action<Player> PlayerPropertiesChanged;
+    public event Action<List<RoomInfo>> RoomListUpdated;
+    public event Action<JoinRoomResponse> TriedToJoinRoom;
     public event Action StartingGame;
     public event Action CreateRoomFailed;
 
@@ -92,13 +94,10 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        Debug.Log("RoomList updated.");
+        Debug.Log("Room list updated.");
         networkRooms.Clear();
         networkRooms.AddRange(roomList.Where(_ => !_.RemovedFromList));
-        if (roomsUI != null)
-        {
-            roomsUI.RefreshRooms(networkRooms);
-        }
+        RoomListUpdated?.Invoke(networkRooms);
     }
 
     #endregion
@@ -113,6 +112,7 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
 
     public void CreateRoom(string roomName, string roomPassword, string firstUser)
     {
+        IsPracticeMode = false;
         isPlayerTheCreatorOfTheRoom = true;
         tempRoomPassword = roomPassword;
         PhotonNetwork.NickName = firstUser;
@@ -158,31 +158,31 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
         if (IsPracticeMode)
         {
             Debug.Log($"Created and joined practice room: {PhotonNetwork.CurrentRoom.Name}");
-            roomsUI.OnSuccessfullyJoinedRoom();
+            TriedToJoinRoom?.Invoke(JoinRoomResponse.Successful);
         }
         else if (isPlayerTheCreatorOfTheRoom)
         {
             isPlayerTheCreatorOfTheRoom = false;
             SetRoomPassword();
             Debug.Log($"Created and joined room: {PhotonNetwork.CurrentRoom.Name}");
-            roomsUI.OnSuccessfullyJoinedRoom();
+            TriedToJoinRoom?.Invoke(JoinRoomResponse.Successful);
         }
         else
         {
             if (string.IsNullOrWhiteSpace(PhotonNetwork.NickName) || PhotonNetwork.PlayerListOthers.Any(_ => _.NickName == PhotonNetwork.NickName))
             {
-                roomsUI.OnIncorrectUsername();
+                TriedToJoinRoom?.Invoke(JoinRoomResponse.IncorrectUserName);
                 PhotonNetwork.LeaveRoom();
             }
             else if (tempRoomPassword != PhotonNetwork.CurrentRoom.CustomProperties[Globals.RoomPasswordCustomPropertyKey].ToString())
             {
-                roomsUI.OnIncorrectRoomPassword();
+                TriedToJoinRoom?.Invoke(JoinRoomResponse.IncorrectRoomPassword);
                 PhotonNetwork.LeaveRoom();
             }
             else
             {
                 Debug.Log($"Joined room: {PhotonNetwork.CurrentRoom.Name}");
-                roomsUI.OnSuccessfullyJoinedRoom();
+                TriedToJoinRoom?.Invoke(JoinRoomResponse.Successful);
             }
             tempRoomPassword = "";
         }
@@ -194,6 +194,7 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
+        IsPracticeMode = false;
         UpdatePlayerIsCharacterConfirmedCustomProperty(PhotonNetwork.LocalPlayer, false);
         if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != Globals.MainMenuScene)
         {
@@ -208,18 +209,12 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        if (PlayerEnteredRoom != null)
-        {
-            PlayerEnteredRoom(newPlayer);
-        }
+        PlayerEnteredRoom?.Invoke(newPlayer);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        if (PlayerLeftRoom != null)
-        {
-            PlayerLeftRoom(otherPlayer);
-        }
+        PlayerLeftRoom?.Invoke(otherPlayer);
     }
 
     #endregion

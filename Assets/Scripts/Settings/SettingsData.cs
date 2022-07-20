@@ -52,7 +52,7 @@ public class SettingsData
     #region Constructor
 
     /// <summary>
-    /// Initializes a new settings data by retrieving it from the <see cref="PlayerPrefs"/> if possible, otherwise creates a new instance with default values.
+    /// Initializes a <see cref="SettingsData"/> by retrieving it from the <see cref="PlayerPrefs"/> if possible, otherwise a new instance is created.
     /// </summary>
     public SettingsData()
     {

@@ -14,28 +14,27 @@ public class CharacterSelectionUI : MonoBehaviour
 {
     #region Fields and Properties
 
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private GameObject femaleWarriorGameObject;
+    [SerializeField] private GameObject maleWarriorGameObject;
+    [SerializeField] private GameObject femaleRangerGameObject;
+    [SerializeField] private GameObject maleRangerGameObject;
+    [SerializeField] private PlayerNameUI playerNamePrefab;
+    [SerializeField] private Transform playerNameContainer;
+    [SerializeField] private TextMeshProUGUI fightingStyleValueText;
+    [SerializeField] private TextMeshProUGUI classValueText;
+    [SerializeField] private TextMeshProUGUI descriptionText;
+    [SerializeField] private List<PlayerNameUI> playerNames;
+    [SerializeField] private GameObject confirmButton;
+    [SerializeField] private TextMeshProUGUI confirmedText;
+    [SerializeField] private GameObject loadingPopUp;
+    [SerializeField] private List<Button> arrowButtons;
+    [SerializeField] private GameObject playersText;
+    [SerializeField] private GameObject practiceModeText;
+    [SerializeField] private GameObject otherPlayersCannotJoinText;
+
     private CharacterFightingStyle currentFightingStyle = CharacterFightingStyle.Heavy;
     private CharacterClass currentClass = CharacterClass.Barbarian;
-
-    public AudioSource audioSource;
-    public GameObject femaleWarriorGameObject;
-    public GameObject maleWarriorGameObject;
-    public GameObject femaleRangerGameObject;
-    public GameObject maleRangerGameObject;
-    public PlayerNameUI playerNamePrefab;
-    public Transform playerNameContainer;
-    public TextMeshProUGUI fightingStyleValueText;
-    public TextMeshProUGUI classValueText;
-    public TextMeshProUGUI descriptionText;
-    private List<PlayerNameUI> playerNames;
-    public GameObject confirmButton;
-    public TextMeshProUGUI confirmedText;
-    public GameObject loadingPopUp;
-    public List<Button> arrowButtons;
-    public GameObject playersText;
-    public GameObject practiceModeText;
-    public GameObject otherPlayersCannotJoinText;
-
     private bool isExiting = false;
 
     private const string femaleBarbarianDescription = "Female barbarians militate quickly wielding a pair of axes and are able to perform combo attacks with them.";
@@ -80,7 +79,6 @@ public class CharacterSelectionUI : MonoBehaviour
     }
 
     #endregion
-
 
     #region Add, Remove players
 

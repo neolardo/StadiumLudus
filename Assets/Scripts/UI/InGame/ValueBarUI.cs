@@ -3,34 +3,43 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Manages a valuebar UI element.
+/// Manages a value bar UI element.
 /// </summary>
 public class ValueBarUI : MonoBehaviour
 {
+    #region Properties and Fields
+
     public Material valueBarMaterial;
     public Material highlightSourceMaterial;
     public RawImage highlightRawImage;
     private Material highlightMaterial;
+    private bool isHighlightBeingAnimated;
+    private bool requestHighlightRefresh;
 
     private const string valueShaderPropertyReference = "Vector1_0ae9bdea3f184704b6c11dd6513db5a4";
     private const float highlightFadeInDuration = 0.1f;
     private const float highlightFadeOutDuration = 0.3f;
     private const float highlightShowDuration = .2f;
     private const string highlightAplhaPropertyName = "_Alpha";
-    private bool IsHighlightBeingAnimated { get; set; }
-    private bool RequestHighlightRefresh { get; set; }
+
+    #endregion
 
     #region Methods
+
     void Start()
     {
         highlightMaterial = Instantiate(highlightSourceMaterial);
         highlightRawImage.material = highlightMaterial;
     }
 
+    #region Update Value
+
     public void UpdateValue(float value)
     {
         valueBarMaterial.SetFloat(valueShaderPropertyReference, value);
     }
+
+    #endregion
 
     #region Highlight
 
@@ -41,45 +50,44 @@ public class ValueBarUI : MonoBehaviour
 
     private IEnumerator FadeInAndOutHighlight()
     {
-        if (IsHighlightBeingAnimated)
+        if (isHighlightBeingAnimated)
         {
-            RequestHighlightRefresh = true;
+            requestHighlightRefresh = true;
         }
-        yield return new WaitUntil(() => !IsHighlightBeingAnimated);
-        IsHighlightBeingAnimated = true;
+        yield return new WaitUntil(() => !isHighlightBeingAnimated);
+        isHighlightBeingAnimated = true;
         float alpha = highlightMaterial.GetFloat(highlightAplhaPropertyName);
-        while (alpha < 1 && !RequestHighlightRefresh)
+        while (alpha < 1 && !requestHighlightRefresh)
         {
             alpha += Time.deltaTime / highlightFadeInDuration;
             highlightMaterial.SetFloat(highlightAplhaPropertyName, alpha);
             yield return null;
         }
-        if (!RequestHighlightRefresh)
+        if (!requestHighlightRefresh)
         {
             alpha = 1;
             highlightMaterial.SetFloat(highlightAplhaPropertyName, alpha);
         }
         float elapsedSeconds = 0;
-        while (elapsedSeconds < highlightShowDuration && !RequestHighlightRefresh)
+        while (elapsedSeconds < highlightShowDuration && !requestHighlightRefresh)
         {
             elapsedSeconds += Time.deltaTime;
             yield return null;
         }
-        while (alpha > 0 && !RequestHighlightRefresh)
+        while (alpha > 0 && !requestHighlightRefresh)
         {
             alpha -= Time.deltaTime / highlightFadeOutDuration;
             highlightMaterial.SetFloat(highlightAplhaPropertyName, alpha);
             yield return null;
         }
-        if (!RequestHighlightRefresh)
+        if (!requestHighlightRefresh)
         {
             alpha = 0;
             highlightMaterial.SetFloat(highlightAplhaPropertyName, alpha);
         }
-        RequestHighlightRefresh = false;
-        IsHighlightBeingAnimated = false;
+        requestHighlightRefresh = false;
+        isHighlightBeingAnimated = false;
     }
-
 
     #endregion
 

@@ -10,17 +10,16 @@ public class CreateRoomPopUpUI : MonoBehaviour
 {
     #region Properties and Fields
 
-    public RoomsUI roomsUI;
-    public TMP_InputField usernameInput;
-    public TMP_InputField roomNameInput;
-    public TMP_InputField roomPasswordInput;
+    [SerializeField] private RoomsUI roomsUI;
+    [SerializeField] private TMP_InputField usernameInput;
+    [SerializeField] private TMP_InputField roomNameInput;
+    [SerializeField] private TMP_InputField roomPasswordInput;
 
     private EventSystem system;
 
     #endregion
 
     #region Methods
-
 
     private void Start()
     {

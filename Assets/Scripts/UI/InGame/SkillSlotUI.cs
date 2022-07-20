@@ -10,26 +10,23 @@ public class SkillSlotUI : MonoBehaviour
 {
     #region Properties and Fields
 
-    public RawImage pressedBackgroundRawImage;
-    public RawImage iconRawImage;
-    public Image cooldownImage;
-    public Texture2D warriorIconTexture2D;
-    public Texture2D rangerIconTexture2D;
-    public TextMeshProUGUI chargesText;
-    public RawImage highlightRawImage;
-    public Material sourceMaterial;
+    [SerializeField] private RawImage pressedBackgroundRawImage;
+    [SerializeField] private RawImage iconRawImage;
+    [SerializeField] private Image cooldownImage;
+    [SerializeField] private Texture2D warriorIconTexture2D;
+    [SerializeField] private Texture2D rangerIconTexture2D;
+    [SerializeField] private TextMeshProUGUI chargesText;
+    [SerializeField] private RawImage highlightRawImage;
+    [SerializeField] private Material sourceMaterial;
     private Material highlightMaterial;
-
-    private int currentCharges;
-    private bool isChargesVisible;
+    private int currentChargeCount;
+    private bool isHighlightBeingAnimated;
+    private bool requestHighlightRefresh;
 
     private const float highlightFadeInDuration = 0.1f;
     private const float highlightFadeOutDuration = 0.3f;
     private const float highlightShowDuration = .2f;
     private const string highlightAplhaPropertyName = "_Alpha";
-
-    private bool IsHighlightBeingAnimated { get; set; }
-    private bool RequestHighlightRefresh { get; set; }
 
     #endregion
 
@@ -57,7 +54,7 @@ public class SkillSlotUI : MonoBehaviour
 
     private void InitializeCharges(bool isChargesVisible, int initialCharges)
     {
-        currentCharges = initialCharges;
+        currentChargeCount = initialCharges;
         chargesText.gameObject.SetActive(isChargesVisible);
         chargesText.text = initialCharges.ToString();
     }
@@ -100,43 +97,43 @@ public class SkillSlotUI : MonoBehaviour
 
     private IEnumerator FadeInAndOutHighlight()
     {
-        if (IsHighlightBeingAnimated)
+        if (isHighlightBeingAnimated)
         {
-            RequestHighlightRefresh = true;
+            requestHighlightRefresh = true;
         }
-        yield return new WaitUntil(() => !IsHighlightBeingAnimated);
-        IsHighlightBeingAnimated = true;
+        yield return new WaitUntil(() => !isHighlightBeingAnimated);
+        isHighlightBeingAnimated = true;
         float alpha = highlightMaterial.GetFloat(highlightAplhaPropertyName);
-        while (alpha < 1 && !RequestHighlightRefresh)
+        while (alpha < 1 && !requestHighlightRefresh)
         {
             alpha += Time.deltaTime / highlightFadeInDuration;
             highlightMaterial.SetFloat(highlightAplhaPropertyName, alpha);
             yield return null;
         }
-        if (!RequestHighlightRefresh)
+        if (!requestHighlightRefresh)
         {
             alpha = 1;
             highlightMaterial.SetFloat(highlightAplhaPropertyName, alpha);
         }
         float elapsedSeconds = 0;
-        while (elapsedSeconds < highlightShowDuration && !RequestHighlightRefresh)
+        while (elapsedSeconds < highlightShowDuration && !requestHighlightRefresh)
         {
             elapsedSeconds += Time.deltaTime;
             yield return null;
         }
-        while (alpha > 0 && !RequestHighlightRefresh)
+        while (alpha > 0 && !requestHighlightRefresh)
         {
             alpha -= Time.deltaTime / highlightFadeOutDuration;
             highlightMaterial.SetFloat(highlightAplhaPropertyName, alpha);
             yield return null;
         }
-        if (!RequestHighlightRefresh)
+        if (!requestHighlightRefresh)
         {
             alpha = 0;
             highlightMaterial.SetFloat(highlightAplhaPropertyName, alpha);
         }
-        RequestHighlightRefresh = false;
-        IsHighlightBeingAnimated = false;
+        requestHighlightRefresh = false;
+        isHighlightBeingAnimated = false;
     }
 
     #endregion
@@ -145,14 +142,14 @@ public class SkillSlotUI : MonoBehaviour
 
     public void RemoveCharge()
     {
-        currentCharges -= 1;
-        chargesText.text = currentCharges.ToString();
+        currentChargeCount -= 1;
+        chargesText.text = currentChargeCount.ToString();
     }
 
     public void AddCharge()
     {
-        currentCharges += 1;
-        chargesText.text = currentCharges.ToString();
+        currentChargeCount += 1;
+        chargesText.text = currentChargeCount.ToString();
     }
 
     #endregion

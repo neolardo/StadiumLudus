@@ -15,8 +15,8 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
     #region Properties and Fields
     public static GameRoundManager Instance { get; private set; }
 
-    [SerializeField] private CharacterUI characterUI;
-    [SerializeField] private BlackScreenUI blackScreenUI;
+    [SerializeField] private InGameUIManager uiManager;
+    [SerializeField] private CharacterHUDUI characterHUD;
     [SerializeField] private CameraController cameraController;
     [SerializeField] private CharacterAudioListener characterAudioListenerPrefab;
     [SerializeField] private GameObject environmentLightPrefab;
@@ -142,13 +142,13 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
         var characterPrefab = PhotonNetwork.Instantiate(GetCharacterPrefabNameOfPlayer(PhotonNetwork.LocalPlayer), spawnPoints[spawnIndex].position, spawnPoints[spawnIndex].rotation);
         localCharacter = characterPrefab.GetComponent<Character>();
         var characterController = characterPrefab.AddComponent<CharacterController>();
-        characterUI.Initialize(localCharacter);
-        characterController.Initialize(characterUI);
+        characterHUD.Initialize(localCharacter);
+        characterController.Initialize(characterHUD);
         cameraController.Initialize(localCharacter);
         var characterAudioListener = Instantiate(characterAudioListenerPrefab, null);
         characterAudioListener.SetTarget(localCharacter.transform);
         Instantiate(environmentLightPrefab, localCharacter.transform);
-        localCharacter.InitializeAsLocalCharacter(characterUI);
+        localCharacter.InitializeAsLocalCharacter(characterHUD, uiManager);
         SetPlayerIsCharacterConfirmed(PhotonNetwork.LocalPlayer, false);
         SetPlayerIsInitialized(PhotonNetwork.LocalPlayer, true);
         SetPlayerIsRematchRequested(PhotonNetwork.LocalPlayer, false);
@@ -170,7 +170,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        characterUI.AddInfo($"{otherPlayer.NickName} has left the game.");
+        characterHUD.AddInfo($"{otherPlayer.NickName} has left the game.");
         if (PhotonNetwork.PlayerList.Length == 1)
         {
             PhotonNetwork.LeaveRoom();
@@ -261,8 +261,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
             c.InitializeCharacterList();
         }
         RoundStarted = true;
-        characterUI.SetUIVisiblity(true);
-        blackScreenUI.FadeOutAndDisable();
+        uiManager.OnRoundStarted();
     }
 
     #endregion
@@ -294,7 +293,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
                 else if(!DeadCharacters.Contains(c.PhotonView.Owner))
                 {
                     DeadCharacters.Add(c.PhotonView.Owner);
-                    characterUI.AddInfo($"{c.PhotonView.Owner.NickName} has been slain.");
+                    characterHUD.AddInfo($"{c.PhotonView.Owner.NickName} has been slain.");
                 }
             }
             int initializedCount = 0;
@@ -353,7 +352,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
                     if (!RematchRequestingPlayers.Contains(p))
                     {
                         RematchRequestingPlayers.Add(p);
-                        characterUI.AddInfo($"{p.NickName} requested a rematch.");
+                        characterHUD.AddInfo($"{p.NickName} requested a rematch.");
                     }
                     rematchCount++;
                 }
@@ -375,8 +374,8 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
 
     private IEnumerator FadeInBlackScreenAndReloadScene()
     {
-        blackScreenUI.EnableAndFadeIn();
-        yield return new WaitForSeconds(blackScreenUI.fadeSeconds*2);
+        uiManager.FadeInBlackScreen();
+        yield return new WaitForSeconds(BlackScreenUI.FadeDuration*2);
         PhotonNetwork.LoadLevel(Globals.GameScene);
     }
 
