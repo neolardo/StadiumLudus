@@ -108,6 +108,10 @@ public class FemaleWarriorCharacter : WarriorCharacter
         else
         {
             RequestAnotherComboAttack();
+            if (characterHUD != null && stamina < attackStaminaCost * (requestedComboCount - currentComboCount + 1))
+            {
+                characterHUD.OnCannotPerformSkillOrAttack(true);
+            }
         }
     }
 

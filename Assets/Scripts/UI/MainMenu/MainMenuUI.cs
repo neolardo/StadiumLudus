@@ -62,6 +62,7 @@ public class MainMenuUI : MonoBehaviour
         var loadingCanvasGroup = loadingText.GetComponent<CanvasGroup>();
         loadingCanvasGroup.alpha = 0;
         loadingText.gameObject.SetActive(false);
+        buttonContainerCanvasGroup.gameObject.SetActive(true);
         buttonContainerCanvasGroup.alpha = 1;
         versionTextCanvasGroup.alpha = 1;
     }
@@ -152,6 +153,7 @@ public class MainMenuUI : MonoBehaviour
         }
         loadingCanvasGroup.alpha = 0;
         loadingText.gameObject.SetActive(false);
+        buttonContainerCanvasGroup.gameObject.SetActive(true);
         elapsedTime = 0;
         while (elapsedTime < fadeDuration)
         {

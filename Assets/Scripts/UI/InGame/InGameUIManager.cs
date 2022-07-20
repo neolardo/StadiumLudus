@@ -8,7 +8,7 @@ public class InGameUIManager : MonoBehaviour, IDropReceiver, IPointerEnterReceiv
 {
     #region Properties and Fields
 
-    public AudioSource uiAudioSource;
+    [SerializeField] private AudioSource uiAudioSource;
     [SerializeField] private RectTransform settingsTransform;
     [SerializeField] private CharacterHUDUI characterHUDUI;
     [SerializeField] private BlackScreenUI blackScreenUI;

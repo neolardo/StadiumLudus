@@ -47,7 +47,7 @@ public abstract class RangerCharacter : Character
     private Vector3 dashOrigin;
     private const float dashStartVelocity = 40;
     private const float dashEndVelocity = 5;
-    private const float maximumDashingTime = .7f;
+    private const float maximumDashingTime = .4f;
 
     #endregion
 
@@ -296,7 +296,7 @@ public abstract class RangerCharacter : Character
                 forceRotation = true;
                 dashOrigin = rb.position;
                 dashPoint = Globals.GetPointAtRange(rb.position, targetPoint, dashDistance, agent);
-                SetRotationTarget(dashPoint + (dashPoint - rb.position).normalized * destinationMinimum);
+                SetRotationTarget(dashPoint + (dashPoint - rb.position).normalized * destinationDistanceMinimum);
                 MoveTo(dashPoint);
                 StartCoroutine(ManageCooldown(DashSkillNumber));
                 StartCoroutine(ResetDestinationAfterDash());
@@ -318,9 +318,9 @@ public abstract class RangerCharacter : Character
         if (rangerAnimationManager.IsJumping && elapsedDashingTime < maximumDashingTime && (rb.position - dashOrigin).magnitude < (dashPoint - dashOrigin).magnitude)
         {
             float x = (rb.position - dashOrigin).magnitude / (dashPoint - dashOrigin).magnitude;
-           float dashVelocity = Mathf.Lerp(dashStartVelocity, dashEndVelocity, x);
-            var tempPosition = rb.position + dashVelocity * (dashPoint - dashOrigin).normalized * Time.fixedDeltaTime;
-            rb.MovePosition(new Vector3(tempPosition.x, rb.position.y, tempPosition.z));
+            float dashVelocity = Mathf.Lerp(dashStartVelocity, dashEndVelocity, x);
+            Vector3 dashDirection = (dashPoint - dashOrigin).normalized;
+            rb.velocity = new Vector3(dashVelocity * dashDirection.x, rb.velocity.y, dashVelocity * dashDirection.z);
             elapsedDashingTime += Time.fixedDeltaTime;
         }
         else if (rangerAnimationManager.IsJumping)

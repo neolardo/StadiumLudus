@@ -225,7 +225,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1571243855}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.7}
+  m_LocalPosition: {x: 0, y: -0.1, z: 0.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -341,22 +341,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlight: {fileID: 7088573070980434922}
+  characterTrigger: {fileID: 956117267}
+  characterAudioSource: {fileID: 1508549705953906666}
   healthMaximum: 100
   healthRecoveryDelay: 1.6
   healthRecoveryInitialAmount: 0
   staminaMaximum: 100
   staminaRecoveryDelay: 1.6
   staminaRecoveryInitialAmount: 10
-  movementSpeedInitialMaximum: 3.5
-  sprintingSpeedInitialMaximum: 5
-  acceleration: 20
-  deceleration: 20
-  attackRange: 1.6
-  characterAudioSource: {fileID: 1508549705953906666}
   transform: {fileID: 0}
   animationManager: {fileID: 1726378196}
-  characterTrigger: {fileID: 956117267}
   attackStaminaCost: 15
+  attackRange: 1.6
   hitBoxTransform: {fileID: 1372374132}
   rigColliderRoot: {fileID: 8749538258937557379}
   leapAttackJumpForce: 250

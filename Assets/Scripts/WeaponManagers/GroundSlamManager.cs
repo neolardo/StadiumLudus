@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Manages the ground slam animation of a warrior character.
+/// Manages the ground slam skill of a <see cref="WarriorCharacter"/>
 /// </summary>
 public class GroundSlamManager: MonoBehaviour
 {
@@ -31,7 +31,7 @@ public class GroundSlamManager: MonoBehaviour
     private Vector3 startSmokePositionDelta = 0.1f * Vector3.up;
     private Vector3 startCrackPositionDelta = 0.2f * Vector3.up;
     private Vector3 endSmokePositionDelta = 0.3f * Vector3.up;
-    private Vector3 endRockPositionDelta = -0.1f * Vector3.up;
+    private Vector3 endRockPositionDelta = 0.1f * Vector3.down;
     private const string RockAnimatorAppear = "Appear";
     private const string RockAnimatorDisappear = "Disappear";
     private const float RockDisableDelay = 1f;
@@ -78,6 +78,8 @@ public class GroundSlamManager: MonoBehaviour
 
     #endregion
 
+    #region Fire
+
     public void Fire(Vector3 target, float delaySeconds = 0f)
     {
         StartCoroutine(FireAfterDelay(target, delaySeconds));
@@ -107,6 +109,8 @@ public class GroundSlamManager: MonoBehaviour
         yield return new WaitForSeconds(openDuration);
         ShouldCloseCracks = true;
     }
+
+    #endregion
 
     #region Rock
 
@@ -224,7 +228,7 @@ public class GroundSlamManager: MonoBehaviour
                 }
             }
             yield return null;
-            lerp -= Time.deltaTime / (closeDuration * localCracks.Count * crackPrefab.blendShapeCount);
+            lerp -= Time.deltaTime / closeDuration;
         }
         foreach (var c in localCracks)
         {

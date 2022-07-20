@@ -270,11 +270,11 @@ public class NetworkLauncher : MonoBehaviourPunCallbacks
         }
         foreach (var p in players)
         {
-            if (!IsPracticeMode && !p.CustomProperties.ContainsKey(Globals.PlayerIsCharacterConfirmedKey) || !(bool)p.CustomProperties[Globals.PlayerIsCharacterConfirmedKey])
+            if (!IsPracticeMode && (!p.CustomProperties.ContainsKey(Globals.PlayerIsCharacterConfirmedKey) || !(bool)p.CustomProperties[Globals.PlayerIsCharacterConfirmedKey]))
             {
                 return false;
             }
-            else if(IsPracticeMode && p.CustomProperties.ContainsKey(Globals.PlayerIsCharacterConfirmedKey) || (bool)p.CustomProperties[Globals.PlayerIsCharacterConfirmedKey]) 
+            else if(IsPracticeMode && p.CustomProperties.ContainsKey(Globals.PlayerIsCharacterConfirmedKey) && (bool)p.CustomProperties[Globals.PlayerIsCharacterConfirmedKey])
             {
                 return true;
             }

@@ -234,8 +234,8 @@ public abstract class WarriorCharacter : Character
                 jumpOrigin = rb.position;
                 stamina -= leapAttackStaminaCost;
                 forceRotation = true;
-                jumpTarget = Globals.ClampPointInsideRange(rb.position, attackTarget, leapAttackMaximumDistance, agent : agent);
-                SetRotationTarget(jumpTarget + (jumpTarget - rb.position).normalized * destinationMinimum);
+                jumpTarget = Globals.ClampPointInsideRange(rb.position, attackTarget, leapAttackMaximumDistance, agent: agent);
+                SetRotationTarget(jumpTarget + (jumpTarget - rb.position).normalized * destinationDistanceMinimum);
                 MoveTo(jumpTarget);
                 StartCoroutine(ManageCooldown(LeapAttackSkillNumber));
                 StartCoroutine(AddJumpForce());
@@ -260,22 +260,25 @@ public abstract class WarriorCharacter : Character
     {
         if (warriorAnimationManager.IsJumping && elapsedJumpingTime < JumpingTime)
         {
-            float x = (elapsedJumpingTime / JumpingTime);
-            float f = x * x;
-            float g = -(x - 1) * (x - 1) + 1;
-            float y = Mathf.Lerp(f, g, x);
-            var tempPosition = Vector3.Lerp(jumpOrigin, jumpTarget, y);
-            rb.MovePosition(new Vector3(tempPosition.x, rb.position.y, tempPosition.z));
+            var tempTarget = Vector3.Lerp(jumpOrigin, jumpTarget, GetJumpCurveValueAt(elapsedJumpingTime / JumpingTime));
+            var tempOrigin = Vector3.Lerp(jumpOrigin, jumpTarget, GetJumpCurveValueAt(Mathf.Max(elapsedJumpingTime-Time.fixedDeltaTime, 0) / JumpingTime));
+            rb.velocity = new Vector3((tempTarget.x - tempOrigin.x) / Time.fixedDeltaTime, rb.velocity.y, (tempTarget.z - tempOrigin.z) / Time.fixedDeltaTime);
             elapsedJumpingTime += Time.fixedDeltaTime;
         }
     }
+    private float GetJumpCurveValueAt(float x)
+    {
+        float f = x * x;
+        float g = -(x - 1) * (x - 1) + 1;
+        return Mathf.Lerp(f, g, x);
+    }    
 
     private IEnumerator ManageJumpAndRotationTarget()
     {
         yield return new WaitUntil(() => warriorAnimationManager.IsJumping);
         while (warriorAnimationManager.IsJumping)
         {
-            var tempTarget = leapAttackTarget.transform.position - (agentAvoidanceRadius * 2 * (leapAttackTarget.transform.position - jumpOrigin).normalized);
+            var tempTarget = leapAttackTarget.transform.position - (characterColliderRadius * 2 * (leapAttackTarget.transform.position - jumpOrigin).normalized);
             if ((tempTarget - jumpOrigin).magnitude > leapAttackMaximumDistance)
             {
                 tempTarget = jumpOrigin + (tempTarget - jumpOrigin).normalized * leapAttackMaximumDistance;
@@ -390,7 +393,6 @@ public abstract class WarriorCharacter : Character
                 StartCoroutine(ManageCooldown(GroundSlamSkillNumber));
             }
             attackTarget = Globals.ClampPointInsideRange(transform.position, attackTarget, groundSlamMaximumDistance, true);
-            
             SetRotationTarget(attackTarget);
             warriorAnimationManager.GroundSlam();
             groundSlamManager.Fire(attackTarget, GroundSlamStartDelay);

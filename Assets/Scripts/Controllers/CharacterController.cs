@@ -4,7 +4,7 @@ using UnityEngine;
 
 [DisallowMultipleComponent]
 /// <summary>
-/// Controls a character of the game.
+/// Controls a <see cref="Character"/> of the game.
 /// </summary>
 public class CharacterController : MonoBehaviour
 {
@@ -45,6 +45,8 @@ public class CharacterController : MonoBehaviour
 
     #region Methods
 
+    #region Initialize
+
     private void Awake()
     {
         mainCamera = Camera.main;
@@ -74,6 +76,8 @@ public class CharacterController : MonoBehaviour
         }
     }
 
+    #endregion
+
     #region Inputs
 
     private void HandleInputs()
@@ -81,10 +85,12 @@ public class CharacterController : MonoBehaviour
         RaycastHit hit;
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         var layerMask = (1 << Globals.GroundPlaneLayer) | (1 << Globals.CharacterLayer) | (1 << Globals.InteractableLayer);
-        bool isRaycastSuccessful = Physics.Raycast(ray, out hit, Globals.RaycastDistance,layerMask, QueryTriggerInteraction.Collide);
+        bool isRaycastSuccessful = Physics.Raycast(ray, out hit, Globals.RaycastDistance, layerMask, QueryTriggerInteraction.Collide);
         HandleMouseInputs(hit, isRaycastSuccessful);
         HandleKeyboardInputs(hit, isRaycastSuccessful);
     }
+
+    #region Mouse Input
 
     /// <summary>
     /// Handles mouse events. On left click the character should start an attack, interact or move.
@@ -149,7 +155,7 @@ public class CharacterController : MonoBehaviour
                     }
                     else if (isRightMouseButton)
                     {
-                        character.StartAttack(hit.point, enemyAtHit? hit.transform.parent.GetComponent<Character>() : null);
+                        character.StartAttack(hit.point, enemyAtHit ? hit.transform.parent.GetComponent<Character>() : null);
                         ignoreEverythingUntilRelease = true;
                         lastActionWasAttack = true;
                     }
@@ -163,12 +169,22 @@ public class CharacterController : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Keyboard Input
+
     /// <summary>
-    /// Handles keyboard events. The skills and the guarding should be triggered using the binded keys and the position of the mouse.
+    /// Handles keyboard events. Using skills, sprinting and guarding should be triggered using the corresponding binded keys.
     /// </summary>
     private void HandleKeyboardInputs(RaycastHit hit, bool isRaycastSuccessful)
     {
-        //skills
+        HandleSkillInputs(hit, isRaycastSuccessful);
+        HandleGuardInput(hit, isRaycastSuccessful);
+        HandleSprintInput();
+    }
+
+    private void HandleSkillInputs(RaycastHit hit, bool isRaycastSuccessful)
+    {
         if (AreInputsEnabled && isRaycastSuccessful && (Input.GetKeyDown(firstSkillKeyCode) || Input.GetKeyDown(secondSkillKeyCode) || Input.GetKeyDown(thirdSkillKeyCode)))
         {
             var target = (hit.transform.gameObject.layer == Globals.CharacterLayer || hit.transform.gameObject.layer == Globals.RigidbodyLayer) ? hit.transform.parent.GetComponent<Character>() : null;
@@ -203,26 +219,37 @@ public class CharacterController : MonoBehaviour
             character.EndSkill(3);
             characterUI.ChangeSkillButtonPress(3, false);
         }
-        //sprint
-        if (AreInputsEnabled && Input.GetKeyDown(sprintKeyCode))
-        {
-            character.SetIsSprintingRequested(true);
-        }
-        else if(Input.GetKeyUp(sprintKeyCode))
-        {
-            character.SetIsSprintingRequested(false);
-        }
-        //guard
+    }
+
+    private void HandleGuardInput(RaycastHit hit, bool isRaycastSuccessful)
+    {
         if (AreInputsEnabled && Input.GetKey(guardKeyCode))
         {
             character.StartGuarding();
-            character.SetGuardTarget(hit.point);
+            if (isRaycastSuccessful)
+            {
+                character.SetGuardTarget(hit.point);
+            }
         }
         else if (AreInputsEnabled)
         {
             character.EndGuarding();
         }
     }
+
+    private void HandleSprintInput()
+    {
+        if (AreInputsEnabled && Input.GetKeyDown(sprintKeyCode))
+        {
+            character.IsSprintingRequested = true;
+        }
+        else if (Input.GetKeyUp(sprintKeyCode))
+        {
+            character.IsSprintingRequested = false;
+        }
+    }
+
+    #endregion
 
     #endregion
 

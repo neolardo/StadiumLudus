@@ -256,10 +256,6 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
         {
             LocalCharacterReferenceDictionary.Add(c.PhotonView.ViewID, c);
         }
-        foreach (var c in characters)
-        {
-            c.InitializeCharacterList();
-        }
         RoundStarted = true;
         uiManager.OnRoundStarted();
     }

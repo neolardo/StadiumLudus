@@ -9,6 +9,7 @@ public class CharacterHUDUI : MonoBehaviour
     #region Fields and Properties
 
     [SerializeField] private InGameUIManager uiManager;
+    [SerializeField] private AudioSource cannotPerformSkillOrAttackAudioSource;
     [SerializeField] private List<SkillSlotUI> skillSlots;
     [SerializeField] private ValueBarUI healthBarUI;
     [SerializeField] private ValueBarUI staminaBarUI;
@@ -106,7 +107,10 @@ public class CharacterHUDUI : MonoBehaviour
 
     public void OnCannotPerformSkillOrAttack(bool notEnoughStamina, bool stillOnCooldown = false, int skillNumber = -1)
     {
-        AudioManager.Instance.PlayOneShotSFX(uiManager.uiAudioSource, SFX.CannotPerformSkillOrAttack);
+        if (!cannotPerformSkillOrAttackAudioSource.isPlaying)
+        {
+            AudioManager.Instance.PlayOneShotSFX(cannotPerformSkillOrAttackAudioSource, SFX.CannotPerformSkillOrAttack);
+        }
         if (notEnoughStamina)
         {
             staminaBarUI.ShowHideHighlight();
