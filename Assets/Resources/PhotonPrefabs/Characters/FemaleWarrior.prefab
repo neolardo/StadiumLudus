@@ -341,22 +341,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlight: {fileID: 6187385815121430876}
+  characterTrigger: {fileID: 1577072021}
+  characterAudioSource: {fileID: 8882034874765443999}
   healthMaximum: 100
   healthRecoveryDelay: 1.6
   healthRecoveryInitialAmount: 0
   staminaMaximum: 100
   staminaRecoveryDelay: 1.6
   staminaRecoveryInitialAmount: 10
-  movementSpeedInitialMaximum: 3.5
-  sprintingSpeedInitialMaximum: 5
-  acceleration: 20
-  deceleration: 20
-  attackRange: 1.6
-  characterAudioSource: {fileID: 8882034874765443999}
   transform: {fileID: 0}
   animationManager: {fileID: 526193272}
-  characterTrigger: {fileID: 1577072021}
   attackStaminaCost: 8
+  attackRange: 1.6
   hitBoxTransform: {fileID: 1179606459}
   rigColliderRoot: {fileID: 7994486552460301890}
   leapAttackJumpForce: 250

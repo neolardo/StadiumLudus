@@ -103,7 +103,7 @@ public class CharacterAnimationManager : MonoBehaviour
 
     #region Methods
 
-    #region Init
+    #region Initialize
 
     protected virtual void Awake()
     {
@@ -179,7 +179,6 @@ public class CharacterAnimationManager : MonoBehaviour
 
     public void Attack()
     {
-        Debug.Log("Animator Attack");
         IsAttacking = true;
         animator.SetTrigger($"{AnimatorAttack}{Random.Range(1, attackAnimationCount + 1)}");
     }
@@ -198,7 +197,6 @@ public class CharacterAnimationManager : MonoBehaviour
     {
         IsAttacking = false;
         CanDealDamage = false;
-        Debug.Log("Animator Attack Finished");
     }
 
     #endregion

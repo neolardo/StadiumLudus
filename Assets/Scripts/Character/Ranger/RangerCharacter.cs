@@ -162,7 +162,10 @@ public abstract class RangerCharacter : Character
         trapPool.MaximumDamage = trapMaximumDamage;
         trapPool.Duration = trapDuration;
         rangerAnimationManager = animationManager as RangerAnimationManager;
-        StartCoroutine(ManageTrapCooldownAndRecharge());
+        if (PhotonView.IsMine)
+        {
+            StartCoroutine(ManageTrapCooldownAndRecharge());
+        }
     }
 
     #endregion
@@ -261,7 +264,7 @@ public abstract class RangerCharacter : Character
                 Debug.Log("Invalid skill number for a ranger character.");
                 break;
         }
-        if (characterHUD != null)
+        if (PhotonView.IsMine)
         {
             characterHUD.StartSkillCooldown(skillNumber, cooldown);
         }
@@ -296,7 +299,7 @@ public abstract class RangerCharacter : Character
                 forceRotation = true;
                 dashOrigin = rb.position;
                 dashPoint = Globals.GetPointAtRange(rb.position, targetPoint, dashDistance, agent);
-                SetRotationTarget(dashPoint + (dashPoint - rb.position).normalized * destinationDistanceMinimum);
+                rotationTarget = dashPoint + (dashPoint - rb.position).normalized * destinationDistanceMinimum;
                 MoveTo(dashPoint);
                 StartCoroutine(ManageCooldown(DashSkillNumber));
                 StartCoroutine(ResetDestinationAfterDash());
@@ -305,7 +308,7 @@ public abstract class RangerCharacter : Character
             rangerAnimationManager.Dash();
             OnDash();
         }
-        else if (PhotonView.IsMine && characterHUD != null)
+        else if (PhotonView.IsMine)
         {
             characterHUD.OnCannotPerformSkillOrAttack(stamina < dashStaminaCost, !IsDashAvailable, DashSkillNumber);
         }
@@ -368,7 +371,7 @@ public abstract class RangerCharacter : Character
             smokeTransform.position = transform.position + smokePositionDelta;
             smokeParticleSystem.Play();
         }
-        else if (PhotonView.IsMine && characterHUD != null)
+        else if (PhotonView.IsMine)
         {
             characterHUD.OnCannotPerformSkillOrAttack(stamina < smokeStaminaCost, !IsSmokeAvailable, SmokeSkillNumber);
         }
@@ -388,14 +391,11 @@ public abstract class RangerCharacter : Character
                 PhotonView.RPC(nameof(PlaceTrap), RpcTarget.Others);
                 trapChargeCount -= 1;
                 trapPool.PlaceTrap(TrapPlacementDelay);
-            }
-            rangerAnimationManager.PlaceTrap();
-            if (characterHUD != null)
-            {
                 characterHUD.RemoveSkillCharge(TrapSkillNumber);
             }
+            rangerAnimationManager.PlaceTrap();
         }
-        else if (PhotonView.IsMine && characterHUD != null)
+        else if (PhotonView.IsMine)
         {
             characterHUD.OnCannotPerformSkillOrAttack(false, trapChargeCount == 0, TrapSkillNumber);
         }
@@ -408,16 +408,10 @@ public abstract class RangerCharacter : Character
             yield return new WaitUntil(() => trapChargeCount < trapMaximumChargeCount || !IsAlive);
             if (trapChargeCount < trapMaximumChargeCount)
             {
-                if (characterHUD != null)
-                {
-                    characterHUD.StartSkillCooldown(TrapSkillNumber, trapCooldown);
-                }
+                characterHUD.StartSkillCooldown(TrapSkillNumber, trapCooldown);
                 yield return new WaitForSeconds(trapCooldown);
                 trapChargeCount += 1;
-                if (characterHUD != null)
-                {
-                    characterHUD.AddSkillCharge(TrapSkillNumber);
-                }
+                characterHUD.AddSkillCharge(TrapSkillNumber);
             }
         }
     }

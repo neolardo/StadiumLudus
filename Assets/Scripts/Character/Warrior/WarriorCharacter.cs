@@ -199,7 +199,7 @@ public abstract class WarriorCharacter : Character
                 Debug.Log("Invalid skill number for a warrior character.");
                 break;
         }
-        if (characterHUD != null)
+        if (PhotonView.IsMine)
         {
             characterHUD.StartSkillCooldown(skillNumber, cooldown);
         }
@@ -235,7 +235,7 @@ public abstract class WarriorCharacter : Character
                 stamina -= leapAttackStaminaCost;
                 forceRotation = true;
                 jumpTarget = Globals.ClampPointInsideRange(rb.position, attackTarget, leapAttackMaximumDistance, agent: agent);
-                SetRotationTarget(jumpTarget + (jumpTarget - rb.position).normalized * destinationDistanceMinimum);
+                rotationTarget = jumpTarget + (jumpTarget - rb.position).normalized * destinationDistanceMinimum;
                 MoveTo(jumpTarget);
                 StartCoroutine(ManageCooldown(LeapAttackSkillNumber));
                 StartCoroutine(AddJumpForce());
@@ -248,7 +248,7 @@ public abstract class WarriorCharacter : Character
             warriorAnimationManager.LeapAttack();
             OnLeapAttack();
         }
-        else if (PhotonView.IsMine && characterHUD != null)
+        else if (PhotonView.IsMine)
         {
             characterHUD.OnCannotPerformSkillOrAttack(stamina < leapAttackStaminaCost, !IsLeapAttackAvailable, LeapAttackSkillNumber);
         }
@@ -284,7 +284,7 @@ public abstract class WarriorCharacter : Character
                 tempTarget = jumpOrigin + (tempTarget - jumpOrigin).normalized * leapAttackMaximumDistance;
             }
             jumpTarget = tempTarget;
-            SetRotationTarget(leapAttackTarget.transform.position);
+            rotationTarget = leapAttackTarget.transform.position;
             yield return null;
         }
     }
@@ -392,14 +392,14 @@ public abstract class WarriorCharacter : Character
                 stamina -= groundSlamStaminaCost;
                 StartCoroutine(ManageCooldown(GroundSlamSkillNumber));
             }
-            attackTarget = Globals.ClampPointInsideRange(transform.position, attackTarget, groundSlamMaximumDistance, true);
-            SetRotationTarget(attackTarget);
+            attackTarget = Globals.ClampPointInsideRange(transform.position, attackTarget, groundSlamMaximumDistance, true, agent);
+            rotationTarget = attackTarget;
             warriorAnimationManager.GroundSlam();
             groundSlamManager.Fire(attackTarget, GroundSlamStartDelay);
             OnGroundSlam(attackTarget);
             StartCoroutine(EndForceRotateAfterUsingSkill());
         }
-        else if (PhotonView.IsMine && characterHUD!=null)
+        else if (PhotonView.IsMine)
         {
             characterHUD.OnCannotPerformSkillOrAttack(stamina < groundSlamStaminaCost, !IsGroundSlamAvailable, GroundSlamSkillNumber);
         }

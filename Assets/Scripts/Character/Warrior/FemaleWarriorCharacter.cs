@@ -52,7 +52,7 @@ public class FemaleWarriorCharacter : WarriorCharacter
 
     protected override float JumpingTime => .65f;
 
-    protected override float LeapAttackForceDelay => 0.5f;
+    protected override float LeapAttackForceDelay => 0.1f;
 
 
     #endregion
@@ -108,7 +108,7 @@ public class FemaleWarriorCharacter : WarriorCharacter
         else
         {
             RequestAnotherComboAttack();
-            if (characterHUD != null && stamina < attackStaminaCost * (requestedComboCount - currentComboCount + 1))
+            if (PhotonView.IsMine && stamina < attackStaminaCost * (requestedComboCount - currentComboCount + 1))
             {
                 characterHUD.OnCannotPerformSkillOrAttack(true);
             }
@@ -275,7 +275,7 @@ public class FemaleWarriorCharacter : WarriorCharacter
         {
             leftBattleAxeTrigger.IsActive = true;
             rightBattleAxeTrigger.IsActive = true;
-            if (leapAttackTarget != null)
+            if (leapAttackTarget != null && (leapAttackTarget.transform.position - rb.position).magnitude < attackRange)
             {
                 leftBattleAxeTrigger.ForceAttackAfterDelay(leapAttackTarget, LeapAttackForceDelay);
                 rightBattleAxeTrigger.ForceAttackAfterDelay(leapAttackTarget, LeapAttackForceDelay);

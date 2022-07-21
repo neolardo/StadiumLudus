@@ -119,7 +119,7 @@ public class CharacterController : MonoBehaviour
                 }
                 if (lastActionWasAttack)
                 {
-                    character.SetRotationTarget(hit.point);
+                    character.SetAttackRotationTarget(hit.point);
                     if (isLeftMouseButtonUp || isRightMouseButtonUp)
                     {
                         character.EndAttack(hit.point, enemyAtHit ? hit.transform.parent.GetComponent<Character>() : null);

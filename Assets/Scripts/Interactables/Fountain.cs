@@ -79,6 +79,9 @@ public class Fountain :  Interactable
 
 
     #endregion
+
+    #region Methods
+
     void Start()
     {
         interactionPoints = new List<Vector3>();
@@ -182,4 +185,6 @@ public class Fountain :  Interactable
             smallWaterMaterial.SetFloat(waterShaderAlphaReference, waterAlphaFilled);
         }
     }
+
+    #endregion
 }

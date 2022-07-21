@@ -164,6 +164,10 @@ public abstract class Character : MonoBehaviour, IHighlightable
         }
         set
         {
+            if ((_destination - value).magnitude > refreshDestinationDelta)
+            {
+                agent.nextPosition = rb.position + destinationDistanceMinimum * 1.5f * transform.forward;
+            }
             _destination = value;
             agent.destination = value;
         }
@@ -195,7 +199,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
 
     #region Rotation
 
-    private Vector3 rotationTarget;
+    protected Vector3 rotationTarget;
     private float rotationVelocity;
     protected bool forceRotation = false;
     private const float rotationThreshold = 2f;
@@ -317,23 +321,28 @@ public abstract class Character : MonoBehaviour, IHighlightable
             characterTrigger.tag = Globals.IgnoreBoxTag;
             hitBoxTransform.gameObject.layer = Globals.IgnoreRaycastLayer; // prevent self hit
             hitBoxTransform.tag = Globals.IgnoreBoxTag;
+            InitializeHitBoxRecording();
+            StartCoroutine(RecoverHealth());
+            StartCoroutine(RecoverStamina());
         }
         else
         {
             Destroy(rb);
+            StartCoroutine(HighlightOnTriggered());
         }
-        InitializeHitBoxRecording();
         InitializeRigColliderTransforms();
         ClearDestination();
-        StartCoroutine(RecoverHealth());
-        StartCoroutine(RecoverStamina());
-        StartCoroutine(HighlightOnTriggered());
     }
 
-    public void InitializeAsLocalCharacter(CharacterHUDUI characterUI, InGameUIManager uiManager)
+    public void InitializeAsLocalCharacter(CharacterHUDUI characterHUD, InGameUIManager uiManager)
     {
-        this.characterHUD = characterUI;
+        this.characterHUD = characterHUD;
         this.uiManager = uiManager;
+    }
+
+    public void InitializeAsRemoteCharacter(CharacterHUDUI characterHUD)
+    {
+        this.characterHUD = characterHUD;
     }
 
     #endregion
@@ -355,38 +364,8 @@ public abstract class Character : MonoBehaviour, IHighlightable
 
     #region Movement
 
-    protected void SetDestination(Vector3 destination)
-    {
-        if (PhotonView.IsMine)
-        {
-            if ((Destination - destination).magnitude > refreshDestinationDelta)
-            {
-                agent.nextPosition = rb.position + transform.forward * destinationDistanceMinimum * 1.5f;
-            }
-            Destination = destination;
-        }
-    }
-
-    protected void ClearDestination()
-    {
-        if (PhotonView.IsMine)
-        {
-            Destination = rb.position;
-            agent.nextPosition = rb.position;
-        }
-    }
-
-    public void SetRotationTarget(Vector3 rotationTarget) // TODO refactor
-    {
-        if (PhotonView.IsMine)
-        {
-            this.rotationTarget = rotationTarget;
-        }
-    }
-
-
     /// <summary>
-    /// Set the destination of the <see cref="Character"/>.  This should only be called from the <see cref="CharacterController"/>.
+    /// Set the destination of the <see cref="Character"/>.
     /// </summary>
     /// <param name="position">The next destionation of the <see cref="Character"/>.</param>
     public void MoveTo(Vector3 position)
@@ -398,15 +377,23 @@ public abstract class Character : MonoBehaviour, IHighlightable
             if ((lastCorner - rb.position).magnitude < destinationDistanceMinimum)
             {
                 var dir = (lastCorner - rb.position).magnitude < Globals.CompareDelta ? lastMoveDirection : (lastCorner - rb.position).normalized;
-                SetDestination(rb.position + dir * destinationDistanceMinimum);
+                Destination = rb.position + dir * destinationDistanceMinimum;
             }
             else
             {
-                SetDestination(lastCorner);
+                Destination = lastCorner;
             }
             lastMoveDirection = (Destination - rb.position).normalized;
             chaseTarget = null;
             interactionTarget = null;
+        }
+    }
+    protected void ClearDestination()
+    {
+        if (PhotonView.IsMine)
+        {
+            Destination = rb.position;
+            agent.nextPosition = rb.position;
         }
     }
 
@@ -504,7 +491,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
         {
             AttackWithoutTarget(attackPoint);
         }
-        if (characterHUD!=null && stamina < attackStaminaCost)
+        if (PhotonView.IsMine && stamina < attackStaminaCost)
         {
             characterHUD.OnCannotPerformSkillOrAttack(true);
         }
@@ -525,7 +512,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
     {
         if (CanSetAttackRotationTarget)
         {
-            SetRotationTarget(rotationTarget);
+            this.rotationTarget = rotationTarget;
         }
     }
 
@@ -536,6 +523,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
     {
         if (!PhotonView.IsMine || CanAttack )
         {
+            Debug.Log("AttackWithoutTarget");
             if (PhotonView.IsMine)
             {
                 PhotonView.RPC(nameof(AttackWithoutTarget), RpcTarget.Others, attackPoint);
@@ -546,6 +534,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
 
     protected virtual void OnAttackWithoutTarget(Vector3 attackPoint)
     {
+        Debug.Log("OnAttackWithoutTarget");
         isChasing = false;
         chaseTarget = null;
         interactionTarget = null;
@@ -573,7 +562,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
     {
         if (isChasing && chaseTarget !=null)
         {
-            SetDestination(chaseTarget.position);
+            Destination = chaseTarget.position;
             AttackChaseTarget();
         }
     }
@@ -612,7 +601,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
     {
         while (animationManager.IsAttacking && chaseTarget != null)
         {
-            SetRotationTarget(chaseTarget.position);
+            this.rotationTarget = chaseTarget.position;
             yield return null;
         }
         chaseTarget = null;
@@ -656,7 +645,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
     {
         if (animationManager.IsGuarding)
         {
-            SetRotationTarget(guardTarget);
+            this.rotationTarget = guardTarget;
         }
     }
 
@@ -742,16 +731,26 @@ public abstract class Character : MonoBehaviour, IHighlightable
 
     public void DrinkFromFountain(Vector3 fountainPosition)
     {
-        if (IsAlive && !IsInAction)
+        if (PhotonView.IsMine && IsAlive && !IsInAction)
         {
-            SetRotationTarget(fountainPosition);
-            animationManager.Drink();
+            OnDrinkFromFountain(fountainPosition);
         }
+    }
+
+    [PunRPC]
+    public void OnDrinkFromFountain(Vector3 fountainPosition)
+    {
+        if (PhotonView.IsMine)
+        {
+            PhotonView.RPC(nameof(OnDrinkFromFountain), RpcTarget.Others, fountainPosition);
+        }
+        this.rotationTarget = fountainPosition;
+        animationManager.Drink();
     }
 
     public void TryHeal(float healthHealAmount, float staminaHealAmount)
     {
-        if (IsAlive && animationManager.IsInteracting)
+        if (PhotonView.IsMine && IsAlive && animationManager.IsInteracting)
         {
             health = Mathf.Min(health + healthHealAmount, healthMaximum);
             stamina = Mathf.Min(stamina + staminaHealAmount, staminaMaximum);
@@ -764,40 +763,43 @@ public abstract class Character : MonoBehaviour, IHighlightable
 
     public void KneelBeforeStatue(Vector3 statuePosition)
     {
-        if (IsAlive && !IsInAction)
+        if (PhotonView.IsMine && IsAlive && !IsInAction)
         {
-            SetRotationTarget(statuePosition);
-            animationManager.Kneel();
+            OnKneelBeforeStatue(statuePosition);
         }
+    }
+
+    [PunRPC]
+    public void OnKneelBeforeStatue(Vector3 statuePosition)
+    {
+        if (PhotonView.IsMine)
+        {
+            PhotonView.RPC(nameof(OnKneelBeforeStatue), RpcTarget.Others, statuePosition);
+        }
+        this.rotationTarget = statuePosition;
+        animationManager.Kneel();
     }
 
     public void AddBuff(Buff buff)
     {
-        if (IsAlive && animationManager.IsInteracting)
+        RemoveBuffs();
+        currentBuff = buff;
+        switch (buff.type)
         {
-            RemoveBuffs();
-            currentBuff = buff;
-            switch (buff.type)
-            {
-                case BuffType.HealthRecovery:
-                    healthRecoveryAmount = buff.applimentMode == BuffApplimentMode.Additive ? healthRecoveryInitialAmount + buff.effectValue : healthRecoveryInitialAmount * buff.effectValue;
-                    break;
-                case BuffType.StaminaRecovery:
-                    staminaRecoveryAmount = buff.applimentMode == BuffApplimentMode.Additive ? staminaRecoveryInitialAmount + buff.effectValue : staminaRecoveryInitialAmount * buff.effectValue;
-                    break;
-                case BuffType.MovementSpeed:
-                    movementSpeedMaximum = buff.applimentMode == BuffApplimentMode.Additive ? movementSpeedInitialMaximum + buff.effectValue : movementSpeedInitialMaximum * buff.effectValue;
-                    sprintingSpeedMaximum = buff.applimentMode == BuffApplimentMode.Additive ? sprintingSpeedInitialMaximum + buff.effectValue : sprintingSpeedInitialMaximum * buff.effectValue;
-                    agent.speed = sprintingSpeedMaximum;
-                    break;
-                default:
-                    Debug.LogWarning($"Invalid buff type: { buff.type}");
-                    break;
-            }
-        }
-        else
-        {
-            buff.ForceDeactivate();
+            case BuffType.HealthRecovery:
+                healthRecoveryAmount = buff.applimentMode == BuffApplimentMode.Additive ? healthRecoveryInitialAmount + buff.effectValue : healthRecoveryInitialAmount * buff.effectValue;
+                break;
+            case BuffType.StaminaRecovery:
+                staminaRecoveryAmount = buff.applimentMode == BuffApplimentMode.Additive ? staminaRecoveryInitialAmount + buff.effectValue : staminaRecoveryInitialAmount * buff.effectValue;
+                break;
+            case BuffType.MovementSpeed:
+                movementSpeedMaximum = buff.applimentMode == BuffApplimentMode.Additive ? movementSpeedInitialMaximum + buff.effectValue : movementSpeedInitialMaximum * buff.effectValue;
+                sprintingSpeedMaximum = buff.applimentMode == BuffApplimentMode.Additive ? sprintingSpeedInitialMaximum + buff.effectValue : sprintingSpeedInitialMaximum * buff.effectValue;
+                agent.speed = sprintingSpeedMaximum;
+                break;
+            default:
+                Debug.LogWarning($"Invalid buff type: { buff.type}");
+                break;
         }
     }
 
@@ -835,13 +837,8 @@ public abstract class Character : MonoBehaviour, IHighlightable
         }
     }
 
-    [PunRPC]
     public void TakeDamage(float amount, HitDirection direction, bool canBeGuarded)
     {
-        if (PhotonView.IsMine)
-        {
-            PhotonView.RPC(nameof(TakeDamage), RpcTarget.Others, amount, direction, canBeGuarded);
-        }
         if (animationManager.IsGuarding && direction != HitDirection.Back && canBeGuarded)
         {
             float guardedAmount = stamina - Mathf.Max(0, stamina - amount);
@@ -852,38 +849,43 @@ public abstract class Character : MonoBehaviour, IHighlightable
         if (IsAlive)
         {
             bool successfullyGuarded = stamina > 0 && animationManager.IsGuarding && canBeGuarded;
-            animationManager.Impact(successfullyGuarded, direction);
-            if (successfullyGuarded)
-            {
-                if (direction == HitDirection.Back)
-                {
-                    AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
-                }
-                else
-                {
-                    AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.GuardHit);
-                }
-            }
-            else
-            {
-                if (PhotonView.IsMine)
-                {
-                    EndGuarding();
-                }
-                AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
-            }
-            ClearDestination();
-            OnTakeDamage();
+            OnImpact(successfullyGuarded, direction);
         }
         else
         {
-            AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
-            AudioManager.Instance.PlayOneShotSFX(characterAudioSource, FightingStyle == CharacterFightingStyle.Heavy ? SFX.MaleDeath : SFX.FemaleDeath);
-            if (PhotonView.IsMine)
+            OnDie(direction);
+        }
+    }
+
+    [PunRPC]
+    public void OnImpact(bool successfullyGuarded, HitDirection direction)
+    {
+        if (PhotonView.IsMine)
+        {
+            PhotonView.RPC(nameof(OnImpact), RpcTarget.Others, successfullyGuarded, direction);
+        }
+        animationManager.Impact(successfullyGuarded, direction);
+        if (successfullyGuarded)
+        {
+            if (direction == HitDirection.Back)
             {
-                OnDie(direction);
+                AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
+            }
+            else
+            {
+                AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.GuardHit);
             }
         }
+        else
+        {
+            if (PhotonView.IsMine)
+            {
+                EndGuarding();
+            }
+            AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
+        }
+        ClearDestination();
+        OnTakeDamage();
     }
 
     protected virtual void OnTakeDamage() { }
@@ -893,24 +895,23 @@ public abstract class Character : MonoBehaviour, IHighlightable
     #region Die
 
     [PunRPC]
-    protected virtual void OnDie(HitDirection direction)
+    public virtual void OnDie(HitDirection direction)
     {
         if (PhotonView.IsMine)
         {
             PhotonView.RPC(nameof(OnDie), RpcTarget.Others, direction);
             rb.constraints = RigidbodyConstraints.FreezeAll;
+            uiManager.ShowEndScreen(false);
         }
-        health = -1; // making sure the character is no longer alive
+        AudioManager.Instance.PlayOneShotSFX(characterAudioSource, SFX.HitOnFlesh);
+        AudioManager.Instance.PlayOneShotSFX(characterAudioSource, FightingStyle == CharacterFightingStyle.Heavy ? SFX.MaleDeath : SFX.FemaleDeath);
+        health = -1;
         animationManager.Move(0);
         animationManager.Die(direction);
         ClearDestination();
         chaseTarget = null;
         interactionTarget = null;
-        if (uiManager != null)
-        {
-            uiManager.ShowEndScreen(false);
-        }
-        GameRoundManager.Instance.OnCharacterDied();
+        GameRoundManager.Instance.OnACharacterHasBeenSlain();
         allowUpdate = false;
     }
 
@@ -924,15 +925,12 @@ public abstract class Character : MonoBehaviour, IHighlightable
         if (PhotonView.IsMine)
         {
             PhotonView.RPC(nameof(OnWin), RpcTarget.Others);
+            uiManager.ShowEndScreen(true);
         }
         ClearDestination();
         animationManager.Move(0);
         chaseTarget = null;
         interactionTarget = null;
-        if (uiManager != null)
-        {
-            uiManager.ShowEndScreen(true);
-        }
         allowUpdate = true;
     }
 
@@ -1094,12 +1092,14 @@ public abstract class Character : MonoBehaviour, IHighlightable
         while (true)
         {
             yield return new WaitUntil(() => lastHighlightTriggerElapsedSeconds < Globals.HighlightDelay);
+            highlight.enabled = true;
+            characterHUD.ShowHighlightedPlayerName(PhotonNetwork.LocalPlayer.NickName);
             while (lastHighlightTriggerElapsedSeconds < Globals.HighlightDelay)
             {
-                highlight.enabled = true;
                 lastHighlightTriggerElapsedSeconds += Time.deltaTime;
                 yield return null;
             }
+            characterHUD.HideHighlightedPlayerName(PhotonNetwork.LocalPlayer.NickName);
             highlight.enabled = false;
         }
     }

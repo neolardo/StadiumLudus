@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 /// <summary>
@@ -15,11 +16,12 @@ public class CharacterHUDUI : MonoBehaviour
     [SerializeField] private ValueBarUI staminaBarUI;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private RectTransform infoContainer;
+    [SerializeField] private TextMeshProUGUI highlightedPlayerNameText;
+    [SerializeField] private GameObject highlightedPlayerNameContainer;
     [SerializeField] private InfoTextUI infoPrefab;
     private Character character;
-
-    public bool IsVisible { get; private set; } = true;
     private bool hasInitialized = false;
+    public bool IsVisible { get; private set; } = true;
 
     #endregion
 
@@ -118,6 +120,24 @@ public class CharacterHUDUI : MonoBehaviour
         if (stillOnCooldown)
         {
             skillSlots[skillNumber - 1].ShowHideHighlight();
+        }
+    }
+
+    #endregion
+
+    #region Highlighted Player Name
+
+    public void ShowHighlightedPlayerName(string name)
+    {
+        highlightedPlayerNameText.text = name;
+        highlightedPlayerNameContainer.SetActive(true);
+    }
+
+    public void HideHighlightedPlayerName(string name)
+    {
+        if (highlightedPlayerNameText.text == name)
+        {
+            highlightedPlayerNameContainer.SetActive(false);
         }
     }
 

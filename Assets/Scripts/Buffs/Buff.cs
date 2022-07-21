@@ -230,6 +230,10 @@ public class Buff : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Deactivate
+
     private IEnumerator DeactivateAfterDurationElapsed()
     {
         if (IsActive)

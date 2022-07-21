@@ -35,17 +35,15 @@ public class Projectile : PoolableObject
     private Character target;
     private bool doesPotentialHitPointExist;
     private Vector3 potentialHitPoint;
-
     private Vector3 originPoint;
     private Vector3 targetPoint;
     private Vector3 verticalTargetOffset = Vector3.up * 1f;
     private Vector3 currentOffset;
     private float verticalRandomOffsetRange = .5f;
     private const float velocity = 100;
-
     private const float triggerDelaySecondsAfterHit = 0.2f;
-
     private const float particleSystemStoppingDelaySeconds = 0.5f;
+    private const float maximumDirectionalChangePerFixedUpdateFrame = 90f;
     private bool IsStopped => rb.isKinematic;
 
     private bool hasInitialized = false;
@@ -133,7 +131,7 @@ public class Projectile : PoolableObject
                 targetPoint = target.transform.position + currentOffset;
             }
             var nextVelocity = (targetPoint - rb.position).normalized * velocity;
-            if (photonView.IsMine && target != null && (targetPoint - originPoint).magnitude < (rb.position - originPoint).magnitude)
+            if (photonView.IsMine && target != null && Vector3.Angle(nextVelocity.normalized, rb.velocity.normalized) > maximumDirectionalChangePerFixedUpdateFrame)
             {
                 ForceHitTarget();
             }
@@ -141,7 +139,7 @@ public class Projectile : PoolableObject
             {
                 OnProjectileWentTooFar();
             }
-            else if (photonView.IsMine  && ( projectileTrigger.AnyCharacterHit || projectileTrigger.AnyObjectHit || ( doesPotentialHitPointExist && (potentialHitPoint - originPoint).magnitude < (rb.position - originPoint).magnitude)))
+            else if (photonView.IsMine && ( projectileTrigger.AnyCharacterHit || projectileTrigger.AnyObjectHit || ( doesPotentialHitPointExist && (potentialHitPoint - originPoint).magnitude < (rb.position - originPoint).magnitude)))
             {
                 OnHit(rb.position);
             }
@@ -256,7 +254,7 @@ public class Projectile : PoolableObject
     {
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        rb.constraints = RigidbodyConstraints.FreezeAll;
+        //rb.constraints = RigidbodyConstraints.FreezeAll;
         rb.isKinematic = true;
         projectileTrailRenderer.emitting = false;
     }

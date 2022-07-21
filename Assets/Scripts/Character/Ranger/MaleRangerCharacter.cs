@@ -154,7 +154,7 @@ public class MaleRangerCharacter : RangerCharacter
     #region Die
 
     [PunRPC]
-    protected override void OnDie(HitDirection direction)
+    public override void OnDie(HitDirection direction)
     {
         base.OnDie(direction);
         crossbow.Die(direction);

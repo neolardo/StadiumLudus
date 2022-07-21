@@ -255,6 +255,10 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
         foreach (var c in characters)
         {
             LocalCharacterReferenceDictionary.Add(c.PhotonView.ViewID, c);
+            if (!c.PhotonView.IsMine)
+            {
+                c.InitializeAsRemoteCharacter(characterHUD);
+            }
         }
         RoundStarted = true;
         uiManager.OnRoundStarted();
@@ -264,7 +268,7 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
 
     #region Round End
 
-    public void OnCharacterDied()
+    public void OnACharacterHasBeenSlain()
     {
         OnPlayerPropertiesUpdate(null, null);
     }
@@ -310,6 +314,19 @@ public class GameRoundManager : MonoBehaviourPunCallbacks
         if (localCharacter.IsAlive)
         {
             localCharacter.OnWin();
+            characterHUD.AddInfo($"{PhotonNetwork.LocalPlayer.NickName} has won.");
+        }
+        else 
+        {
+            var aliveCharacters = LocalCharacterReferenceDictionary.Values.Where(_ => _.IsAlive).ToList();
+            if (aliveCharacters.Count > 0)
+            {
+                characterHUD.AddInfo($"{aliveCharacters[0].PhotonView.Owner.NickName} has won.");
+            }
+            else
+            {
+                characterHUD.AddInfo($"Nobody won this round.");
+            }
         }
         RoundEnded = true;
     }

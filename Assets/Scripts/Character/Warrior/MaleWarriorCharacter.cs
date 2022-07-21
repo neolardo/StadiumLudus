@@ -37,7 +37,7 @@ public class MaleWarriorCharacter : WarriorCharacter
 
     protected override float JumpingTime => .65f;
 
-    protected override float LeapAttackForceDelay => 0.5f;
+    protected override float LeapAttackForceDelay => 0.1f;
 
 
     #endregion
@@ -140,7 +140,7 @@ public class MaleWarriorCharacter : WarriorCharacter
         if (animationManager.CanDealDamage)
         {
             battleAxeTrigger.IsActive = true;
-            if (leapAttackTarget != null)
+            if (leapAttackTarget != null && (leapAttackTarget.transform.position - rb.position).magnitude < attackRange)
             {
                 battleAxeTrigger.ForceAttackAfterDelay(leapAttackTarget, LeapAttackForceDelay);
             }
