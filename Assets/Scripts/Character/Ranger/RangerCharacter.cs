@@ -201,7 +201,16 @@ public abstract class RangerCharacter : Character
         {
             PhotonView.RPC(nameof(OnEndAttack), RpcTarget.Others);
         }
-        rangerAnimationManager.SetIsDrawing(false);
+        StartCoroutine(StopDrawingWhileAttacking());
+    }
+
+    private IEnumerator StopDrawingWhileAttacking()
+    {
+        while (animationManager.IsAttacking)
+        {
+            rangerAnimationManager.SetIsDrawing(false);
+            yield return null;
+        }
     }
 
     #endregion

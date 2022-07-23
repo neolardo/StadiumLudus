@@ -1,9 +1,13 @@
+using UnityEngine;
 /// <summary>
 /// Manages a pool of <see cref="Projectile"/>s.
 /// </summary>
 public class ProjectilePoolManager : ObjectPoolManager<Projectile>
 {
     #region Properties and Fields
+
+    [Tooltip("The transform of the owner character.")]
+    public Transform ownerTransform;
 
     /// <summary>
     /// Represents the minimum damage of a fired projectile.
@@ -36,6 +40,7 @@ public class ProjectilePoolManager : ObjectPoolManager<Projectile>
             proj.ProjectilePool = this;
             proj.projectileTrigger.MinimumDamage = MinimumDamage;
             proj.projectileTrigger.MaximumDamage = MaximumDamage;
+            proj.projectileTrigger.ownerTransform = ownerTransform; 
             inactiveObjects.Add(proj);
         }
     }

@@ -274,7 +274,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
     /// <summary>
     /// The number of fixed update frames recorded for validating a hit info.
     /// </summary>
-    private const int NumberOfRecordedValidationFrames = 50 * 3;
+    private const int NumberOfRecordedValidationFrames = 50 * 3;  // at least the last 3 seconds are recorded
 
     #endregion
 
@@ -955,7 +955,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
 
     private void UpdateHitBoxInfo()
     {
-        var info = new HitBoxInfo(hitBoxTransform.position, hitBoxTransform.rotation, animationManager.CanBeInterrupted);
+        var info = new HitBoxInfo(hitBoxTransform.position, hitBoxTransform.rotation, animationManager.CanBeInterrupted, Time.fixedDeltaTime);
         hitBoxInfoCircularBuffer.Push(info);
     }
 
@@ -965,15 +965,22 @@ public abstract class Character : MonoBehaviour, IHighlightable
     /// <param name="colliderPoint1">The first colliderpoint of the <see cref="AttackTrigger"/>'s <see cref="Collider"/>.</param>
     /// <param name="colliderPoint2">The second colliderpoint of the <see cref="AttackTrigger"/>'s <see cref="Collider"/>.</param>
     /// <param name="colliderRadius">The radius of the <see cref="AttackTrigger"/>'s <see cref="Collider"/>.</param>
-    /// <param name="oldTimeStamp">The server timestamp when the collision has occured.</param>
+    /// <param name="sentTimeStamp">The server timestamp when the collision has occured.</param>
     /// <param name="isForced">True if the attack was forced, so it is unavoidable, unless the <see cref="Character"/> cannot be interrupted.</param>
     /// <returns>True if the hit was valid, otherwise false.</returns>
-    public bool IsHitValid(Vector3 colliderPoint1, Vector3 colliderPoint2, float colliderRadius, int oldTimeStamp, bool isForced)
+    public bool IsHitValid(Vector3 colliderPoint1, Vector3 colliderPoint2, float colliderRadius, int sentTimeStamp, bool isForced)
     {
-        int deltaFixedUpdateFrames = Mathf.RoundToInt((PhotonNetwork.ServerTimestamp - oldTimeStamp) / 20f); // 1000/50 ms is one fixed update frame delta
-        if (deltaFixedUpdateFrames < NumberOfRecordedValidationFrames)
+        float targetDeltaTime = (PhotonNetwork.ServerTimestamp - sentTimeStamp)/1000f;
+        float tempDeltaTime = 0;
+        int hitBoxInfoIndex = 0;
+        while (hitBoxInfoIndex < NumberOfRecordedValidationFrames && tempDeltaTime < targetDeltaTime)
         {
-            var info = hitBoxInfoCircularBuffer[deltaFixedUpdateFrames];
+            tempDeltaTime += hitBoxInfoCircularBuffer[hitBoxInfoIndex].fixedDeltaTime;
+            hitBoxInfoIndex++;
+        }
+        if (hitBoxInfoIndex < NumberOfRecordedValidationFrames)
+        {
+            var info = hitBoxInfoCircularBuffer[hitBoxInfoIndex];
             if (info.canBeInterrupted)
             {
                 if (isForced)
@@ -1093,13 +1100,13 @@ public abstract class Character : MonoBehaviour, IHighlightable
         {
             yield return new WaitUntil(() => lastHighlightTriggerElapsedSeconds < Globals.HighlightDelay);
             highlight.enabled = true;
-            characterHUD.ShowHighlightedPlayerName(PhotonNetwork.LocalPlayer.NickName);
+            characterHUD.ShowHighlightedPlayerName(PhotonView.Owner.NickName);
             while (lastHighlightTriggerElapsedSeconds < Globals.HighlightDelay)
             {
                 lastHighlightTriggerElapsedSeconds += Time.deltaTime;
                 yield return null;
             }
-            characterHUD.HideHighlightedPlayerName(PhotonNetwork.LocalPlayer.NickName);
+            characterHUD.HideHighlightedPlayerName(PhotonView.Owner.NickName);
             highlight.enabled = false;
         }
     }

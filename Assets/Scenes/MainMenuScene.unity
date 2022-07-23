@@ -1416,6 +1416,18 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3480610685903450370, guid: e295583d2d45fac4c95462bd0618a26d, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3480610685903450370, guid: e295583d2d45fac4c95462bd0618a26d, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3480610685903450371, guid: e295583d2d45fac4c95462bd0618a26d, type: 3}
+      propertyPath: m_Texture
+      value: 
+      objectReference: {fileID: 2800000, guid: bb444acc4a6944640a474483fbc715df, type: 3}
     - target: {fileID: 3480610686588410527, guid: e295583d2d45fac4c95462bd0618a26d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 

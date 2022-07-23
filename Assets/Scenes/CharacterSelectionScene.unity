@@ -2309,6 +2309,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1420733014541051452, guid: cf45bf08270578f4c8a1a5a736fdf68f, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2213584689089296034, guid: cf45bf08270578f4c8a1a5a736fdf68f, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -2416,6 +2420,18 @@ PrefabInstance:
     - target: {fileID: 2213584689089296038, guid: cf45bf08270578f4c8a1a5a736fdf68f, type: 3}
       propertyPath: m_Name
       value: CharacterSelectionUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 7248336258554736864, guid: cf45bf08270578f4c8a1a5a736fdf68f, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7403889115585016702, guid: cf45bf08270578f4c8a1a5a736fdf68f, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9092178667735113666, guid: cf45bf08270578f4c8a1a5a736fdf68f, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf45bf08270578f4c8a1a5a736fdf68f, type: 3}
