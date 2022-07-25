@@ -274,7 +274,7 @@ public abstract class Character : MonoBehaviour, IHighlightable
     /// <summary>
     /// The number of fixed update frames recorded for validating a hit info.
     /// </summary>
-    private const int NumberOfRecordedValidationFrames = 50 * 3;  // at least the last 3 seconds are recorded
+    private const int NumberOfRecordedValidationFrames = 50; 
 
     #endregion
 
@@ -483,6 +483,10 @@ public abstract class Character : MonoBehaviour, IHighlightable
     /// <param name="target">The optional attack target <see cref="Character"/>.</param>
     public virtual void StartAttack(Vector3 attackPoint, Character target = null)
     {
+        if (PhotonView.IsMine && stamina < attackStaminaCost)
+        {
+            characterHUD.OnCannotPerformSkillOrAttack(true);
+        }
         if (target != null)
         {
             SetChaseTarget(target.transform);
@@ -490,10 +494,6 @@ public abstract class Character : MonoBehaviour, IHighlightable
         else
         {
             AttackWithoutTarget(attackPoint);
-        }
-        if (PhotonView.IsMine && stamina < attackStaminaCost)
-        {
-            characterHUD.OnCannotPerformSkillOrAttack(true);
         }
     }
 

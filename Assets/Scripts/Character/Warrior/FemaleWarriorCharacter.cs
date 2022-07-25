@@ -107,11 +107,11 @@ public class FemaleWarriorCharacter : WarriorCharacter
         }
         else
         {
-            RequestAnotherComboAttack();
             if (PhotonView.IsMine && stamina < attackStaminaCost * (requestedComboCount - currentComboCount + 1))
             {
                 characterHUD.OnCannotPerformSkillOrAttack(true);
             }
+            RequestAnotherComboAttack();
         }
     }
 
